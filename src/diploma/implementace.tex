@@ -1,0 +1,1419 @@
+\renewcommand{\section}[1]{ 
+  \oldsection{#1}
+}
+
+
+\addtocontents{toc}{\protect\setcounter{tocdepth}{1}} 
+
+\chapter{Implementace}\label{implementace}
+
+  \paragraph{ } V této části implementujeme Algoritmus pro nalezení generátoru skoro štěpitelných 
+  posloupností modulu $X$ nad algebrou cest $KQ$ toulce $Q$, kde $K$ je libovolné těleso.    
+  Algoritmus implementujeme v sytému \cite{GAP4} (Groups, Algorithms, Programming -
+a System for Computational Discrete Algebra) s využitím balíku \cite{QPA} (Quivers and path 
+algebras).
+  
+  Algoritmem projdeme krok po kroku. Většina částí obsahuje nejprve teoretický popis
+  a poté algoritmus implementovaný v 
+  knihovně \cite{QPA}.  
+  Syntaxe skriptovacího jazyka užitého v systému \cite{GAP4} je podobná mnoha 
+  jiným  jazykům a nepotřebuje podrobnější výklad. Čtenář by měl být 
+  schopen většině komentovaných ukázek kódu porozumět bez větších problémů.
+
+    Teorie vychází převážně z \hyperref[teorie-reprezentaci]{části \ref*{teorie-reprezentaci}} 
+    a tedy $Mod(A)$ bude značit kategorií pravých modulů, což je navíc  
+    v souladu s balíkem \cite{QPA}. O levých modulech budeme tedy referovat jako 
+    o $A^{op}$-modulech.
+    
+  \section{Značení v kódu QPA}
+    \paragraph{ } Moduly budeme značit velkými písmenem s prefixem $m$. Tak například 
+    snadno odlišíme $A$ 
+    jako algebru a $A$ jako modul - značíme $mA$.    
+    Morfismy budeme psát malými písmeny a řecké znaky jejich přepisem latinkou 
+    (používaným v \LaTeX). Například rho, pi, ... .  
+        
+    Dále se budeme držet značení, které je využívano v celém \cite{QPA} balíku, 
+    tedy například jako $PP$ budeme značit pole nerozložitelných projektivních 
+    modulů tvaru $e_iA$ pro primitivní idempotent $e_i$ algebry $A$.
+
+  \section{Vstup a výstup algoritmu}
+  
+    %\subsection*{Teorie}    
+
+      \paragraph { } Nechť $K$ je komutativní těleso. 
+      Mějme konečný toulec $Q$ a $K$-algebru cest $KQ$.
+      Toulec je konečný, jde tedy o algebru s jednotkou (\hyperref[quiver-kq-lemma]{Lemma \ref*{quiver-kq-lemma}}). 
+      Dále mějme libovolný přípustný ideál $I$ algebry $KQ$. Pokuď je $Q$ bez 
+      cyklů, pak můžeme zvolit $I=0$. Dále položme $A=KQ/I$.
+      
+      Vstupem algoritmu je  $K$-algebra $A$  
+      a $X\in mod(A)$ nerozložitelný, konečně generovaný a neprojektivní $A$-modul.
+      
+      Výstupem algoritmu bude $0\rightarrow DTr(X)\rightarrow E\rightarrow X\rightarrow 0$ 
+      generátor všech skoro štěpitelných posloupnosté v $mod(A)$ končících v $X$.
+    
+      \subsection*{Příklad 1}
+        \subparagraph{}
+        \centerline{
+          Toulec $Q$: \xymatrix{
+            \circ^1 \ar@{->}[r]_a \ar@/^3pc/[rr]^c
+              & \circ^2 \ar@{->}[r]_b
+              & \circ^3
+          }
+          \rightaligned{
+            \space\space\space\space $I=\emptyset$ \space\space\space\space
+             $A$-modul $X$: \xymatrix{
+               K^2 
+                   \ar@{->}[r]_{\left[\begin{smallmatrix}
+	               1 & 0 \\
+	               0 & 1 \\
+                      \end{smallmatrix}\right]} 
+                   \ar@/^3pc/[rr]^{\left[\begin{smallmatrix}
+	               1 \\
+	               0 \\
+                      \end{smallmatrix}\right]}
+                 & K^2 
+                   \ar@{->}[r]_{\left[\begin{smallmatrix}
+	               0 \\
+	               1 \\
+                      \end{smallmatrix}\right]}   
+                 & K^1
+             }
+           }
+         }
+  
+      \begin{Verbatim}[frame=single,numbers=left]
+K := Rationals;
+Q := Quiver(3, [ [1, 2, "a"], 
+                 [2, 3, "b"],
+                 [1, 3, "c"] ]);
+KQ := PathAlgebra(K,Q);
+A := KQ;
+matrices := [ ["a", [[1,0],[0,1]]], 
+              ["b", [[0],[1]]], 
+              ["c", [[1],[0]]] ];
+mX := RightModuleOverPathAlgebra(A,matrices);
+        \end{Verbatim}
+        
+     \subsection*{Příklad 2}
+      
+        \subparagraph{}
+        \centerline{
+          $Q$: \xymatrix{
+            \circ^1 
+                \ar@/^1pc/[r]^a 
+                \ar@/_1pc/[r]_b 
+              & \circ^2 
+                \ar@{->}[r]_d
+                \ar@(lu,ru)[]^c
+              & \circ^3
+                \ar@/^3pc/[ll]^e
+          }
+          \rightaligned{
+            \space\space\space\space $I=\{c^2,acd-bd,ea,eb\}$ \space\space\space\space
+             $X$: \xymatrix{
+            K^2 
+                \ar@/^1pc/[r]^{\left[\begin{smallmatrix}
+	               0 & 1 \\
+	               1 & 1 \\
+                      \end{smallmatrix}\right]} 
+                \ar@/_1pc/[r]_{\left[\begin{smallmatrix}
+	               1 & 0 \\
+	               1 & 0 \\
+                      \end{smallmatrix}\right]} 
+              & K^2 
+                \ar@{->}[r]_{\left[\begin{smallmatrix}
+	               1 & 1 \\
+	               0 & 1 \\
+                      \end{smallmatrix}\right]}
+                \ar@(lu,ru)[]^{\left[\begin{smallmatrix}
+	               0 & 0 \\
+	               1 & 0 \\
+                      \end{smallmatrix}\right]}
+              & K^2
+                \ar@/^3pc/[ll]^{\left[\begin{smallmatrix}
+	               0 & 0 \\
+	               0 & 0 \\
+                      \end{smallmatrix}\right]}             
+             }
+           }
+         }
+
+        \begin{Verbatim}[frame=single,numbers=left]
+K := Rationals;
+Q := Quiver(3, [ [1, 2, "a"], 
+                 [1, 2, "b"], 
+                 [2, 2, "c"], 
+                 [2, 3, "d"], 
+                 [3, 1, "e"] ]);
+KQ := PathAlgebra(K, Q);
+gen := GeneratorsOfAlgebra(KQ);
+a := gen[4];
+b := gen[5];
+c := gen[6];
+d := gen[7];
+e := gen[8];
+rels := [c^2,a*c*d-b*d,e*a,e*b];
+A := KQ/rels;
+mat :=[["a", [[0,1],[1,1]]],
+       ["b", [[1,0],[1,0]]],
+       ["c", [[0,0],[1,0]]],
+       ["d", [[1,1],[0,1]]],
+       ["e", [[0,0],[0,0]]]
+      ];
+mX := RightModuleOverPathAlgebra(A,mat);
+        \end{Verbatim}
+    
+  \section{Modul $\Omega$}
+  
+    %\subsection*{Teorie} 
+      
+      \paragraph{ } Spočteme projektivní pokrytí $P_0$ modulu $X$ \\\\
+      \centerline{$Ker(t)\xrightarrow{i} P_{0}\xrightarrow{t}X$,} \\\\
+      položíme $\Omega:=Ker(t)$. Dostaneme krátkou exaktní posloupnost \\\\
+      \centerline{$0\rightarrow\Omega\xrightarrow{i} P_{0}\xrightarrow{t}X\rightarrow0$.}  \\\\
+      Dále označme $P_1$ projektivní pokrytí $\Omega$. Výsledkem je minimální 
+      projektivní prezentace modulu $X$: \\
+      \centerline{ \xymatrix{
+        P_1 \ar@{->}[rd]_w \ar@{->}[r]^{s=iw} &P_0 \ar@{->}[r]^t &X  \ar@{->}[r] &0 \\
+        &\Omega \ar@{->}[u]_i
+      } }      \\\\      
+      Kanonickou inkluzi $i:\Omega\rightarrow P_0$ budeme v kódu značit 
+      $kernel\_inc$, aby nedocházelo k záměně s  iterační proměnnou $i$.
+
+    %\subsection*{QPA kód}
+      \begin{Verbatim}[frame=single,numbers=left]
+t          := ProjectiveCover(mX);
+mP0        := Source(t);          
+mOmega     := Kernel(t);
+omega      := ProjectiveCover(mOmega);
+kernel_inc := KernelInclusion(t); 
+s          := omega * kernel_inc;  
+mP1        := Source(omega);
+       \end{Verbatim}
+       
+       Dále budeme potřebovat algebru $A^{op}$ a pole [$e_1A,e_2A,\ldots,e_mA$] nerozložitelných 
+       projektivních $A$-modulů, kde $\{e_1,e_2,\ldots,e_m\}$ je úplná množina 
+       primitivních ortogonálních idempotentů algebry $A$, a jemu korespondující 
+       pole algebry $A^{op}$. Toto pole spočteme s pomocí funkce 
+       $IndecProjectiveModules$.
+       
+      \begin{Verbatim}[frame=single,numbers=left]
+A_op  := OppositePathAlgebra(A);
+PP    := IndecProjectiveModules(A);
+PP_op := IndecProjectiveModules(A_op);
+      \end{Verbatim}
+      
+      Navíc ještě zkonstruujeme $A$ jako pravý $A$-modul. Ten je dle 
+      \hyperref[rozklad-A-na-proj]{Věty \ref*{rozklad-A-na-proj}} direktním součtem 
+      $A=e_1A\oplus e_2A\oplus \ldots \oplus e_mA$.
+    
+      \begin{Verbatim}[frame=single,numbers=left]
+mA := DirectSumOfModules(PP);      
+    \end{Verbatim}
+    
+    
+
+  \section{Rozložení $A^n\simeq P_1\oplus P_1'$}
+  
+    %\subsection*{Teorie}  
+      
+      \paragraph{ } Algebra $A$ může být zapsána dle \hyperref[rozklad-A-na-proj]{Věty \ref*{rozklad-A-na-proj}} jako direktní součet 
+      $A=e_1A\oplus e_2A\oplus \ldots \oplus e_mA$ 
+      a tedy dle \hyperref[rozklad-proj]{Věty \ref*{rozklad-proj}} lze projektivní modul $P_1$ vyjádřit jako
+      $P_1\simeq(e_1A)^{n_1}\oplus(e_2A)^{n_2}\oplus \ldots \oplus(e_mA)^{n_m}$.
+       Položme $n:=max_{i=1,\ldots,m}(n_i)$, pak \\\\
+       \centerline{$A^n\simeq P_1\oplus(e_1A)^{n-n_1}\oplus(e_2A)^{n-n_2}\oplus \ldots \oplus(e_mA)^{n-n_m}$.} \\\\ 
+       Definujeme-li \\\\
+       \centerline{$P_1':=(e_1A)^{n-n_1}\oplus(e_2A)^{n-n_2}\oplus \ldots \oplus(e_mA)^{n-n_m}$,}  
+       \\\\
+       dostáváme hledaný vztah  \\\\
+       \centerline{$A^n\simeq P_1\oplus P_1'$.}   
+
+    %\subsection*{QPA kód}
+      \paragraph{ }  S pomocí funkce $IndecProjectiveModules(A);$ spočteme 
+      moduly $e_iA$ a následně spočteme, kolikrát je každý z nich obsažen v 
+      rozkladu modulu $P$ na direktní součet nerozložitelných projektivních podmodulů. 
+      Číslo $n$ bude maximum z těchto čísel.
+      Výsledkem tedy bude čtveřice \\\\
+        \centerline{
+          [ $n$, $P'$, [$n_1,n_2,\ldots,n_m$], [$n-n_1,n-n_2,\ldots,n-n_m$] ]
+        }\\\\
+      taková, že
+      \begin{eqnarray}
+        A^n &\simeq&
+        \underbrace{((e_1A)^{n_1}\oplus \ldots \oplus(e_mA)^{n_m})}_{=P_1}
+            \oplus
+        \underbrace{((e_1A)^{n-n_1}\oplus \ldots \oplus(e_mA)^{n-n_m}).}_{=P_1'} 
+        \nonumber
+      \end{eqnarray}
+      
+      Algoritmus níže je zapsaný obecně pro libovolný projektivní $A$-modul. V našem 
+      případě $mP:=P_1$.
+        
+      \begin{Verbatim}[frame=single,numbers=left]
+SuppProjModule := function(mP)
+  local A, PP, mPs, n, common, i, j, diff,
+        in_multiplicities, ou_multiplicities;
+
+  A := RightActingAlgebra(mP);
+  PP:= IndecProjectiveModules(A);
+  in_multiplicities := [];
+  ou_multiplicities := [];
+  n := 0;
+
+  # Přes všechny moduly e_iA.
+  for i in [1..Length(PP)] do
+    Add(in_multiplicities, 0);
+
+    # Zkoušíme kolikrát je daný e_iA obsažen v P.
+    repeat
+      common := CommonDirectSummand(mP, PP[i]);
+      if IsList(common) then
+        in_multiplicities[i] := in_multiplicities[i] + 1;
+        mP := common[2];
+      fi;
+    until IsList(common) = false;
+
+    n := Maximum([n, in_multiplicities[i]]);
+  od;
+
+  # Spočteme P'.
+  mPs := [];
+  for i in [1..Length(PP)] do
+    diff := n - in_multiplicities[i];
+    ou_multiplicities[i] := diff;
+
+    for j in [1..diff] do
+      Add(mPs, PP[i]);
+    od;
+  od;
+  mPs := DirectSumOfModules(mPs);
+
+  return [n, mPs, in_multiplicities, ou_multiplicities];
+end;  
+      \end{Verbatim}      
+      Tuto funkci využijeme a dopočítáme další moduly potřebné pro náš výpočet.
+      
+      \begin{Verbatim}[frame=single,numbers=left]
+supp := SuppProjModule(mP1);
+mP1s := supp[3];                                    # P_1'
+n    := supp[2];
+mP1_mP1s := DirectSumOfModules([mP1, mP1s]);           
+mAn := DirectSumOfModules( List([1..n], i -> mA) ); # A^n  
+      \end{Verbatim}
+      
+      
+  \section{Pomocné funkce}\label{alg-opposite}
+ 
+          \paragraph{ } Nejprve definujeme pomocnou funkci, kterou použijeme 
+          ještě několikrát později. Funkce vrátí
+          pole $as\_algebra\_element$ velikosti $m$. Každé $as\_algebra\_element[i]$ spočteme následovně:
+          
+          Uvažujme bázi $B_i$ modulu $e_iA$. Modul $e_iA$ je 
+          generovaný jedním prvkem a to primitivním idempotentem $e_i$, 
+          takže všechny ostatní bázové prvky dostaneme 
+          působením algebry $A$ na něj. Položme $as\_algebra\_element[i][j]=\lambda\in A$, 
+          kde $\lambda$ je prvkem algebry $A$ takovým, že $e_i\lambda=B_i[j]$. \\
+ 
+    \begin{Verbatim}[frame=single,numbers=left,numbers=left] 
+ProjectiveBasisVectorGens := function(PP)
+  local A;
+
+  A := RightActingAlgebra(PP[1]);
+
+  return List(BasisOfProjectives(A), b -> Flat(b));
+end;
+    \end{Verbatim}         
+      
+      Druhá funkce bude konstruovat matice homomorfismu z obrazů báze modulu, 
+      jež je jeho definičním oborem. 
+      
+      Mějme například dva $A$-moduly $M$, $N$ a homomorfismus $f:M\to N$. 
+       Označme vektory dimenze reprezentací $M$ a $N$ po řadě 
+       $[m_1,m_2,\ldots,m_k]$ a $[n_1,n_2,\ldots,n_k]$ a položme $m:=\sum_{i=1}^k m_i$ 
+       a  $n:=\sum_{i=1}^k n_i$. Dále mějme bázi $B_M=\{u_1,u_2,\ldots,u_m\}$ modulu $M$, 
+       bázi $B_N=\{v_1,v_2,\ldots\,v_n\}$ modulu $N$ a matici $i$ velikosti $m\times n$, kde 
+       se na $j$-tém řádku nachází $f(m_j)$ vzhledem k bázi $B_N$.
+       Potom matice homomorfismu $f$ 
+       jsou následující:\\\\
+
+
+\hspace{-0.15\textwidth}     
+\resizebox{17cm}{!}{       
+\begin{array}{lccr}
+    \underbrace{\begin{bmatrix}
+      i[1,1] & \cdots & i[1,d_1] \\
+      \vdots & \ddots & \vdots \\
+      i[c_1,1] & \cdots & i[c_1,d_1)]
+    \end{bmatrix} }_{f_1}
+    &
+    &
+    &
+    \begin{array}{ccc}
+      \quad & \cdots & i[1,n] \\
+      & & \vdots \\
+      & & \quad
+    \end{array}
+    \\    
+    & 
+    \underbrace{\begin{bmatrix}
+      i[c_1+1,d_1+1] & \cdots & i[c_1+1,d_1+d_2] \\
+      \vdots & \ddots & \vdots \\
+      i[c_1+c_2,d_1+1] & \cdots & i[c_1+c_2,d_1+d_2)]
+    \end{bmatrix}}_{f_2}
+    \\ 
+    &
+    &
+    \ddots
+    \\ 
+    \begin{array}{ccc}
+      \quad \\ 
+      \vdots \\ 
+      i[m,1] & \cdots & \quad
+    \end{array}  
+    & 
+    & 
+    &       
+    \underbrace{\begin{bmatrix}
+      i[m-c_{k-1}+1,n-d_{k-1}+1] & \cdots & i[m-c_{k-1}+1,n] \\
+      \vdots & \ddots & \vdots \\
+      i[m,n-d_{k-1}+1] & \cdots & i[m,n]
+    \end{bmatrix}}_{f_k}
+\end{array}
+}}\\\\\\
+     Naše funkce pak vátí pole $[f_1,f_2,\ldots,f_k]$ obsahující $k$ matic. Ty slouží 
+     jako vstupní parametr pro výpočet homomorfismu funkcí 
+     $RightModuleHomOverAlgebra$. \\
+     
+      \begin{Verbatim}[frame=single,numbers=left] 
+ExtractHomMatrices := function(matrix, mM, mN)
+  local A, Q, d_mM, d_mN, used_x, used_y, i, j, k, dx, dy;
+
+  A := RightActingAlgebra(mM);
+  Q := QuiverOfPathAlgebra(A);
+
+  matrices := [];
+  d_mM := DimensionVector(mM);
+  d_mN := DimensionVector(mN);
+  used_x := 0;
+  used_y := 0;
+  for i in [1..NumberOfVertices(Q)] do
+    dx := d_mN[i];
+    dy := d_mM[i];
+
+    matrices[i] := [];
+
+    if dy = 0 and dx = 0 then
+      Add(matrices[i], [0]);
+    elif dy = 0 then
+      Add(matrices[i], List([1..dx], j -> 0));
+    elif dx = 0 then
+      Add(matrices[i], List([1..dy], j -> [0]));
+    else
+      for j in [1+used_y..dy+used_y] do
+        Add(matrices[i], 
+            List([1+used_x..dx+used_x], k -> matrix[j][k])
+          );
+      od;
+    fi;
+
+    used_x := used_x + dx;
+    used_y := used_y + dy;
+  od;
+
+  return matrices;
+end;        
+      \end{Verbatim}
+      
+      
+      
+      
+
+  \section{Dualita $P_1^*$}\label{dualita-p-hom}
+  
+    %\subsection*{Teorie}    
+      \paragraph{ }Nyní nám nastává problém jak vyjádřit libovolný homomorfismus $f:P_1\rightarrow A$ 
+      jakožto prvek reprezentace $P_1^*:=Hom_A(P_1,A)$. 
+      Využijeme dvou izomorfismů z \hyperref[izo-hom-aei]{Věty \ref*{izo-hom-aei}} 
+      a \hyperref[rozklad-proj]{Věty \ref*{rozklad-proj}}: \\\\
+         \centerline{
+           $Hom_A (e_iA, A)\simeq Ae_i$ daný předpisem $f \mapsto f(e_i)$
+         }*
+         \\\\
+         \centerline{$P_1\simeq\bigoplus_{i=1}^m\bigoplus_{j=1}^{n_i}e_iA$}**
+         \\\\
+       Z definice $P_1^*$, (**) a \hyperref[dir-sum-hom]{Věty \ref*{dir-sum-hom}} dostáváme vztah: 
+         \begin{eqnarray}           
+           P_1^* &\equiv& 
+             Hom_A (P_1,A) \nonumber \\
+             &\simeq& 
+             Hom_A (\bigoplus_{i=1}^m\bigoplus_{j=1}^{n_i}e_iA,A) \nonumber \\
+             &\simeq&
+             \bigoplus_{i=1}^m\bigoplus_{j=1}^{n_i}Hom_A (e_iA,A) \nonumber
+         \end{eqnarray}
+         }      
+      Na tuto posloupnost použijeme ještě izomorfismus (*) a dostaneme 
+       izomorfismus, který homomorfismu $P_1\rightarrow A$ přiřadí 
+       korespondující prvek reprezentace $P_1^*$:
+         \begin{eqnarray} 
+             Hom_A (P_1,A) &\simeq&  \bigoplus_{i=1}^m\bigoplus_{j=1}^{n_i}Ae_i \nonumber \\
+             f &\mapsto& \sum_{i=1}^m\sum_{j=1}^{n_i}f(e_i) \nonumber
+         \end{eqnarray}
+         
+       Samotná implemetace v knihovně QPA bude složitější a provedena v 
+       několika krocích. To je způsobeno tím, že $f(e_i)$ není automaticky prvkem $A^{op}$-modulu $e_iA$, 
+       ale z definice homomorfismu $f$ stále prvkem $A$-modulu $A$. Opačný jemu korespondující prvek 
+       musíme teprve spočíst. Stejně tak musíme prvky $e_i$ nejprve vnořit z modulů $e_iA$ do $P_1$. 
+       Pro každý sčítanec z rozkladu $P_1$ na direktní součet 
+       modulů $e_iA$ zobrazíme $e_i\in e_iA$ následujícím řetězcem zobrazení: 
+       \\\\
+       \centerline{\xymatrix{ 
+         & & & e_1A \\
+            e_iA 
+              \ar@{^{(}->}[r]^{\eta_{i,j}} 
+            & P_1  
+              \ar@{->}[r]^f
+            & A 
+              \ar@{->>}[ru]^{\beta_1}
+              \ar@{->>}[rd]_{\beta_m}
+            & \vdots \\            
+         & & & e_mA
+        }} \\\\\\     
+      kde $\eta_{i,j}$ je kanonické vnoření $e_iA\rightarrow P_1$ a $\beta_i$ 
+      kanonická projekce $A\rightarrow e_iA$. Prvek $\beta_k f \eta_{i,j}(e_i)$ je prvkem modulu 
+      $e_kA$ a je tedy tvaru $e_k \lambda_{i,j,k}$ pro nějaké $\lambda_{i,j,k}\in A$ a 
+      $e_k$ generátor modulu $e_kA$ odpovídající indempotentu $e_k$ algebry $A$. My 
+      vyjádříme prvky $\lambda_{i,j,k}$ ($i=1,2,\ldots,m$) jako prvky algebry $A$ a následně je všechny sečteme 
+      na 
+      $\tilde\lambda_{i,j}=\sum_{i=1}^m e_k\lambda_{i,j,k} \in A$. 
+      
+      Spočteme 
+      opačný prvek $\tilde\lambda_{i,j}^{op}\in A^{op}$, ten musí být ze vztahu výše z 
+      ideálu $Ae_i$, přesněji v \cite{QPA} implementaci z ideálu $e_i^{op} A^{op}$.
+      Dále spočteme prvek $e_i^{op}\tilde\lambda_{i,j}^{op}$ jakožto prvek reprezentace 
+      $e_i^{op}A^{op}$ a vnoříme ho kanonickým vnořením $\eta_{i,j}':Ae_i\to P^*$ do $P_1^*$.
+      
+      Všechny takto vnořené prvky sečteme a dostaneme tak hledaný prvek odpovídající 
+      homomorfismu $f$.
+        
+      Samotný izomorfismus  $Hom_A (P_1,A) \rightarrow \bigoplus_{i=1}^m\bigoplus_{j=1}^{n_i}Ae_i$
+      bude tedy, pomineme-li přechody mezi reprezentací $A$ a algebrou $A$ v samotné implementaci, 
+      dán předpisem: \\\\
+         \centerline{
+           $f\mapsto\sum_{i=1}^m\sum_{j=1}^{n_i} \eta_{i,j}'(e_i^{op} (\sum_{k=1}^m\beta_kf\eta_{i,j}(e_i))^{op})$
+         } \\\\
+
+
+    %\subsection*{QPA kód}    
+     
+     Níže je algoritmus zapsán obecně pro $P$  projektivní modul a homomorfismus $f:P\to A$. 
+     Prvním parametrem je $f:P\to A$ a druhým modul $P^*$.   
+         
+      \begin{Verbatim}[frame=single,numbers=left] 
+FromHomToProjRep := function(f, mP_star)
+  local i, j, incl, incl2, proj, mu, mu_f, pi, mu2,
+    A, e_i, e_i_op, fe_i, result, mP, me_iA, PP, mA,
+    as_algebra_element, lambda, lambda_op, pi_f_ei, coeffs;
+
+  mP := Source(f);
+  mA := Range(f);
+  A := RightActingAlgebra(mP);
+
+  # Moduly e_iA.
+  PP := IndecProjectiveModules(A);
+
+  incl := DirectSumInclusions(mP);
+  incl2:= DirectSumInclusions(mP_star);
+  proj := DirectSumProjections(mA);
+  as_algebra_element := ProjectiveBasisVectorGens(PP);
+
+  result := Zero(mP_star);
+
+  # Přes všechny inkluze z direktních sčítanců P tedy moduly e_iA.
+  for i in [1..Length(incl)] do
+    # Slozime s inkluzi na homomorfismus e_iA --> P -> A.
+    mu := incl[i];
+    mu_f := mu * f;
+
+    # Spočteme e_iA a e_i.
+    me_iA := Source(mu_f);
+    e_i := MinimalGeneratingSetOfModule(me_iA)[1];
+
+    # Zobrazíme e_i homomorfismem f.
+    fe_i := ImageElm(mu_f, e_i);
+
+    # Nyní budeme prvek f(e_i) projektovat do modulů e_iA ...
+    # ... k jeho obrazům najdeme korespondující prvek ...
+    # ... algebry A a výsledky sečteme.
+    lambda := Zero(A);
+    for j in [1..Length(proj)] do
+      pi := proj[j];
+      pi_f_ei := ImageElm(pi, fe_i);
+      coeffs  := Coefficients(Basis(PP[j]), pi_f_ei);
+      lambda  := lambda + coeffs * as_algebra_element[j];
+    od;
+
+    # Spočteme opposite prvek.
+    lambda_op := OppositePathAlgebraElement(lambda);
+
+    # Vnoříme do P*.
+    mu2 := incl2[i];
+    e_i_op := MinimalGeneratingSetOfModule(Source(mu2))[1];
+    result := result + ImageElm(mu2, e_i_op ^ lambda_op);
+  od;
+
+  return result;
+end;      \end{Verbatim}
+      
+      Tento izomorfismus budeme potřebovat i v opačném směru. Z důkazu věty 
+      \hyperref[izo-hom-aei]{Věty \ref*{izo-hom-aei}} máme inverzní 
+      izomorfismus k (*) a to:
+      \begin{eqnarray}
+        Ae_i &\to& Hom_A(e_iA,A) \nonumber \\
+        \lambda e_i &\mapsto& [e_i\lambda'\mapsto \lambda e_i\lambda']  \nonumber
+      \end{eqnarray}
+      Podobně jako v prvním případě, pak dostáváme izomorfismus:
+      \begin{eqnarray}
+        P_1^* &\to& Hom_A(P,A) \nonumber \\
+        \sum_{i=1}^m\sum_{j=1}^{n_i} \lambda_{i,j} e_i &\mapsto& \sum_{i=1}^m\sum_{j=1}^{n_i} [e_i\lambda'\mapsto \lambda_{i,j} e_i\lambda']  \nonumber      
+      \end{eqnarray}
+      Implementace bude opět složitější.
+      Budeme-li pro nějaký prvek $p\in P_1^*$ hledat odpovídající homomorfismus $P_1\to A$, budeme postupovat
+      následovně. Pro každé $i=1,2,\ldots,m$ a $j=1,2,\ldots,n_i$ zobrazíme $p$ na $Ae_i$ 
+      kanonickou projekcí $\varrho'_{i,j}:P_1^*\to Ae_i$. Poté spočteme prvek $\lambda\in A^{op}$, pro 
+      který je $\varrho'_{i,j}(e_i)=\lambda e_i$. K němu spočteme opačný prvek $\lambda^{op}\in 
+      A$. Výsledný homomorfismus $P_1\to A$ je tvaru \\\\
+      \centerline{$\alpha_i[e_i\lambda'\mapsto e_i\lambda^{op}\lambda']\varrho_{i,j}$,}\\\\
+      kde $\alpha_i$ je inklize $e_iA\to A$ a $\varrho_{i,j}$ je projekce $P_1\to e_iA$. 
+      Všechna tato zobrazení následně sečteme.
+
+      A zde je již výsledná funkce hledající korespondující homomorfismus 
+      k prvku $x$ projektivního $A^{op}$-modulu $P^*$,
+      dalšími parametry jsou $A$-modul $P$, $A^{op}$-modul $P^*$, $A$ jako 
+      $A$-modul a prvek $1_A$.\\
+     
+           
+      \begin{Verbatim}[frame=single,numbers=left] 
+FromProjRepToHom := function(p, mP, mP_star, mA, 1_mA)
+  local proj, proj2, i, j, k, Ae_i, e_iA, proj_p, coeffs,
+    as_algebra_element, PP, PP_op, A, A_op, lambda,
+    lambda_op, v, proj2_v, matrix, as_algebra_element2,
+    lambda2, result, K, image, matrices;
+
+  A    := RightActingAlgebra(mP);
+  A_op := RightActingAlgebra(mP_star);
+  K    := LeftActingDomain(A);
+
+  # Moduly e_iA resp. Ae_i.
+  PP    := IndecProjectiveModules(A);
+  PP_op := IndecProjectiveModules(A_op);
+
+  # Projekce P*->Ae_i resp. P->e_iA
+  proj  := DirectSumProjections(mP_star);
+  proj2 := DirectSumProjections(mP);
+
+  as_algebra_element := ProjectiveBasisVectorGens(PP_op);
+  as_algebra_element2 := ProjectiveBasisVectorGens(PP);
+
+  result := [];
+
+  # Přes všechny projekce Ae_i->P*.
+  for j in [1..Length(proj)] do
+    Ae_i := Range(proj[j]);
+
+    # Zjistíme na které Ae_i projektujeme.
+    for i in [1..Length(PP_op)] do
+      if (IsomorphicModules(PP_op[i], Ae_i)) then
+        break;
+      fi;
+    od;
+
+    # Projektujeme p do Ae_i, spočteme korespondující prvek
+    # algebry A_op a k němu opposite prvek algebry A.
+    proj_p := ImageElm(proj[j], p);
+    coeffs := Coefficients(Basis(Ae_i), proj_p);
+    lambda := coeffs * as_algebra_element[i];
+    lambda_op := OppositePathAlgebraElement(lambda);
+
+    # Sestavíme matici odpovídající zobrazení P->A.
+    matrix := [];
+    for v in BasisVectors(Basis(mP)) do
+      e_iA := Range(proj2[j]);
+
+      # Projektujeme v do e_iA.
+      proj2_v := ImageElm(proj2[j], v);
+
+      # Spočteme odpovídající prvek algebry A.
+      coeffs := Coefficients(Basis(e_iA), proj2_v);
+      lambda2 := coeffs * as_algebra_element2[i];
+      image := (1_mA ^ lambda_op) ^ lambda2;
+
+      Add(matrix, Coefficients(Basis(mA), image));
+    od;
+
+    result := result + matrix;
+  od;
+
+  matrices := ExtractHomMatrices(result, mP, mA);
+
+  return RightModuleHomOverAlgebra(mP, mA, matrices * One(K));
+end;      
+\end{Verbatim}
+    
+    
+    
+    
+  \section{Modul $Tr(X)$}
+  
+    %\subsection*{Teorie}    
+      Připomeňme následující definice:
+      \begin{description}
+        \item[(a)] $()^*:=Hom(-,A)$ kontravariantní funktor $mod(A)\rightarrow mod(A^{op})$
+        \item[(b)]
+          Použijeme funktor $()^*$ na následující krátkou exaktní posloupnost v $mod(A)$ \\\\
+          \centerline{$0\rightarrow\Omega\xrightarrow{i} P_{0}\xrightarrow{t}X\rightarrow0$,\\}  \\\\     
+          dostaneme exaktní posloupnost v $mod(A^{op})$\\\\
+          \centerline{ \xymatrix{ 
+            X^* 
+              \ar@{->}[r]^{t^*} &P_0^* 
+              \ar@{->}[r]^{s^*} &P_1^* 
+              \ar@{->}[r]^{\^{t}}
+            & Cok(s^*)  
+              \ar@{->}[r]
+            &0 & & }} \\\\     
+          Definujme funktor $Tr(X):=Cok(s^*):\underline{mod}(A)\rightarrow \underline{mod}(A^{op})$.
+          \item
+      \end{description}
+
+    Než se pustíme do funktoru $Tr$, tak
+       budeme nejprve potřebovat spočíst moduly $P_0^*$ a $P_1^*$. 
+      Z \hyperref[dualita-p-hom]{Části \ref*{dualita-p-hom}}  již víme, že pro $i=1,2$ existují 
+      $m,n_1, n_2, \ldots, n_m \in \mathbb N$ taková, že: 
+          \begin{eqnarray} 
+             P_i^* &\simeq&  \bigoplus_{i=1}^m\bigoplus_{j=1}^{n_i}Ae_i \nonumber 
+             \\
+             P_i &\simeq&  \bigoplus_{i=1}^m\bigoplus_{j=1}^{n_i}e_iA. \nonumber 
+         \end{eqnarray}
+       Výpočet je tedy jednoduchý:
+      \begin{Verbatim}[frame=single,numbers=left]
+multiplicities0 := SuppProjModule(mP0)[3];
+mP0_star := [];
+for i in [1..Length(multiplicities0)] do
+  for j in [1..multiplicities0[i]] do
+    Add(mP0_star, PP_op[i]);
+  od;
+od;
+mP0_star := DirectSumOfModules(mP0_star);
+
+multiplicities1 := SuppProjModule(mP1)[3];
+mP1_star := [];
+for i in [1..Length(multiplicities1)] do
+  for j in [1..multiplicities1[i]] do
+    Add(mP1_star, PP_op[i]);
+  od;
+od;
+mP1_star := DirectSumOfModules(mP1_star);        
+      \end{Verbatim}     
+      
+      Dále budeme potřebovat spočítat prvek $1_A$ jakožto prvek  pravého $A$-modulu 
+      $A$.   Toulec $Q$ je konečný, jednotka $1_A$ dle 
+   \hyperref[quiver-kq-lemma]{Lemma \ref*{quiver-kq-lemma}} 
+   a \hyperref[mega-veta-toulec-dsl]{Důsledku \ref*{mega-veta-toulec-dsl}} existuje a 
+   navíc je tvaru: \\
+   \centerline{$\sum_{i\in Q_0}e_i$}\\\\
+      Budeme počítat přes všechny nerozložitelné 
+      projektivní moduly $e_iA$, které získáme z rozkladu modulu $A$ na nerozložitelné direktní sčítance.     
+      Projektivní modul $e_iA$ je jako vektorový prostor
+      dle věty \hyperref[lem-proj-prezentace]{Věty \ref*{lem-proj-prezentace}}
+      generován množinou všech cest z vrcholu $i\in Q_0$. První dimenze je dána 
+      triviální cestou $(i||i)$ odpovídající idempotentu $e_i$ algebry $A$. 
+      Prvek modulu $e_iA$ korespondující s idempotentem $e_i$ tedy získáme 
+      takto:
+      \begin{Verbatim}[frame=single,numbers=left]
+e_i := MinimalGeneratingSetOfModule(e_iA)[1];         
+      \end{Verbatim}            
+      A zde je již celý výpočet:
+    
+      \begin{Verbatim}[frame=single,numbers=left]
+# Spočteme prvek 1_A reprezentace A  jakožto součet prvků
+# e_i z reprezentací e_iA  vnořených do A.
+1_mA := Zero(mA);
+incl := DirectSumInclusions(mA);
+for i in [1..Length(incl)] do
+  e_iA := Source(incl[i]);
+  e_i := MinimalGeneratingSetOfModule(e_iA)[1];
+  1_mA := 1_mA + ImageElm(incl[i], e_i);
+od;
+      \end{Verbatim}
+
+      
+      Nyní spočteme $Tr(X)$. V \cite{QPA} obsažená funkce $TransposeOfModule$ pro výpočet $Tr(X)$ vrací pouze modul $Tr(X)$.
+      My ale potřebujeme pracovat i s projekcí $\hat t$. 
+      Proto vytvoříme funkci  $S\_Star$, která nám vrátí homomorfismus $s^*:P_0^*\to 
+      P_1^*$, jehož je $Tr(X)$ kojádro.
+      
+      Postupovat budeme, tak že si každý prvek báze $P_0^*$ vyjádříme s pomocí 
+      duality $P_0^*$ a $Hom_A(P_0,A)$ (\hyperref[dualita-p-hom]{Část \ref*{dualita-p-hom}}) 
+      jako homomorfismus $P_0\to A$. Ten složíme s $s:P_1\to P_0$ na homomorfismus z 
+      $Hom_A(P_1,A)$ a ten si s pomocí inverzní duality vyjádříme jako prvek 
+      $P_1^*$. Z takto získaných obrazů báze $P_0^*$ již snadno spočteme výsledný 
+      homomorfismus. Postup ilustuje následující diagram:
+      \\\\\centerline{\xymatrix{
+        P_0^* \ar@{.>}[r]^{s^*} \ar[d]^\simeq & P_1^* \\
+        Hom_A(P_0,A) \ar[r]^{(-\circ s)_A} & Hom_A(P_1,A) \ar[u]_\simeq
+      }}\\\\
+      
+      \begin{Verbatim}[frame=single,numbers=left]
+S_Star := function(s, mP0, mP1, mP0_star, mP1_star, mA, 1_mA)
+  local v, f, fs, image, matrix, matrices, A, K;
+
+  A := RightActingAlgebra(mP1);
+  K := LeftActingDomain(A);
+
+  matrix := [];
+  for v in BasisVectors(Basis(mP0_star)) do
+    f  := FromProjRepToHom(v, mP0, mP0_star, mA, 1_mA);
+    fs := s * f;
+    image := FromHomToProjRep(fs, mP1_star);
+    Add(matrix, Coefficients(Basis(mP1_star), image));
+  od;
+
+  matrices := ExtractHomMatrices(matrix, mP0_star, mP1_star);
+
+  return RightModuleHomOverAlgebra(mP0_star, mP1_star, matrices);
+end;        
+      \end{Verbatim}
+      
+      
+      Nyní již můžeme spočíst $s^*$, $\hat t$, $Tr(X)$ i $DTr(X)$. Navíc si spočteme 
+      bázi $K$-vektorového prostoru $Hom_A(\Omega, DTr(X))$, kterou budeme 
+       později potřebovat při výpočtu tenzorového součinu $Tr(X)\otimes_A \Omega$. 
+       Tuto bázi spočteme jako pole složené z jednotlivých homomorfismů.
+    
+      \begin{Verbatim}[frame=single,numbers=left]
+s_star := S_Star(s, mP0, mP1, mP0_star, mP1_star, mA, 1_mA);
+t_hat  := CoKernelProjection(s_star);
+mTrX   := Range(t_hat);
+mDTrX  := DualOfModule(mTrX);
+B_hom_mDTrX_mOmega := HomOverAlgebra(mOmega, mDTrX);
+      \end{Verbatim}      
+                  
+  \section{Izomorfismus $P_1\oplus P_1' \simeq A^n$}\label{algoritmus-P1P1sA-izo}
+  
+    %\subsection*{Teorie}    
+      \paragraph{ } Máme následující dva izomorfismy:  \\\\
+      \centerline{$A^n \simeq (e_1A\oplus\ldots\oplus e_mA)^n$} \\\\
+      \centerline{$P_1\oplus P_1' 
+            \simeq 
+            ((e_1A)^{n_1}\oplus \ldots \oplus(e_mA)^{n_m})
+            \oplus
+            ((e_1A)^{n-n_1}\oplus \ldots \oplus(e_mA)^{n-n_m})
+          $} \\\\
+      Pro každé $i=1,2,\ldots,m$ je počet modulů $e_iA$ v obou rozkladech stejný. Uvažujme následující 
+      kononické projekce:      
+      \begin{eqnarray}        
+      \pi&:&P_1\oplus P_1' \rightarrow P \nonumber \\      
+      \pi'&:&P_1\oplus P_1' \rightarrow P' \nonumber \\      
+      \varrho_{i,j}&:&P_1 \rightarrow e_iA,  \quad i=1,2,\ldots,m, \quad j=1,2,\ldots,n_i \nonumber \\      
+      \varrho'_{i,j}&:&P_1' \rightarrow e_iA, \quad i=1,2,\ldots,m, \quad j=1,2,\ldots,n-n_i \nonumber 
+      \end{eqnarray}      
+      a následující kononická vnoření:      
+      \begin{eqnarray}             
+        \nu_j&:&A \rightarrow A^n, \quad i=1,2,\ldots,m  \nonumber \\
+        \alpha_{i,j}&:&e_iA \rightarrow A,    \quad i=1,2,\ldots,m, \quad j=1,2,\ldots,n   \nonumber 
+      \end{eqnarray}  
+      Ty nám znázorňuje následující diagram: \\\\
+         \centerline{ \xymatrix{ 
+            &  & e_1A 
+              \ar@{->}[rd]^{\alpha{1,j}}  \\ 
+            & P_1 
+              \ar@{->}[ru]^{\varrho_{1,j}} 
+              \ar@{->}[rd]_{\varrho_{n,j}}  
+            & \ldots 
+            & A 
+              \ar@/^1pc/[rdd]^{\nu_j}  \\
+            & & e_mA
+              \ar@{->}[ru]_{\alpha{n,j}}  \\
+            P_1\oplus P_1' 
+              \ar@/^1pc/[ruu]^{\pi}
+              \ar@/_1pc/[rdd]_{\pi'} 
+            & & & & \quad A^n\quad \\
+            & & e_1A 
+              \ar@{->}[rd]^{\alpha{1,j}}  \\ 
+            & P_1' 
+              \ar@{->}[ru]^{\varrho'_{1,j}} 
+              \ar@{->}[rd]_{\varrho'_{n,j}}
+             & \ldots 
+            & A 
+              \ar@/_1pc/[ruu]_{\nu_j} \\
+            & & e_mA
+              \ar@{->}[ru]_{\alpha{n,j}}  \\
+           }} \\\\\\
+      Náš hledaný izomorfismus $\psi$ pak bude součtem \\\\
+      \centerline{$
+        \psi:=          
+          \sum_{i=1,\ldots,m}\sum_{j=1,\ldots,n_i}\nu_j\alpha_{i,j}\varrho_{i,j}\pi
+          +
+          \sum_{i=1,\ldots,m}\sum_{j=1,\ldots,n-n_i}\nu_{n-j}\alpha_{i,n-j}\varrho'_{i,j}\pi'
+      $,} \\\\
+      což je součet $m\times n$ izomorfismů jednotlivých podmodulů $e_iA$ z rozkladů $A^n$ 
+      a $P_1\oplus P_1'$ na direktní součty nerozložitelných podmodulů.
+
+    %\subsection*{QPA kód}
+      \begin{Verbatim}[frame=single,numbers=left]
+IsomorphismProjAndAn := function(mP1_P2, mAn)
+  local iso, used, i, j,
+        proj_P1_P2, proj_P1_P2_fin, proj_PX,
+        incl_An, incl_An_fin, incl_A,
+        f, g;
+
+  # Projekce P1_P2 ->> P1 resp. P1_P2 ->> P2 ...
+  proj_P1_P2 := DirectSumProjections(mP1_P2);
+
+  # ... složíme s projekcemi P1 ->> e_iA resp. P2 ->> e_iA.
+  proj_P1_P2_fin := [];
+  for f in proj_P1_P2 do
+    proj_PX := DirectSumProjections( Range(f) );
+
+    for g in proj_PX do
+      Add(proj_P1_P2_fin, f * g);
+    od;
+  od;
+
+  # Inkluze A -> A^n ...
+  incl_An := DirectSumInclusions(mAn);
+
+  # ... složíme s inkluzemi e_iA ->> A.
+  incl_An_fin := [];
+  for f in incl_An do
+    incl_A := DirectSumInclusions( Source(f) );
+
+    for g in incl_A do
+      Add(incl_An_fin, g * f);
+    od;
+  od;
+
+  # Nyní spárujeme spočtené projekce a inkluze
+  # a vzniklá zobrazení P1_P2 -> A^n sečteme.
+  iso := ZeroMapping(mP1_P2, mAn);
+  used := [1..Length(incl_An_fin)];
+  for g in proj_P1_P2_fin do
+    for i in [1..Length(incl_An_fin)] do
+      f := incl_An_fin[i];
+
+      if (not used[i] = true) and Source(f) = Range(g) then
+        iso := iso + g * f;
+        used[i] := true;
+        break;
+      fi;
+    od;
+  od;
+
+  return iso;
+end;    
+      \end{Verbatim}
+      
+     Kromě izomorfismu $\psi$ budeme potřebovat jeho inverzi. Tu můžeme v \cite{QPA} 
+     jednoduše spočíst následujícím příkazem:
+     
+     \begin{Verbatim}[frame=single,numbers=left]
+psi_inv := InverseOfIsomophism(psi);       
+     \end{Verbatim}
+     
+     To je ale poměrně neefektivní, o mnoho rychleší bude v tomto jednoduchém si zavést funkci 
+     $IsomorphismAnAndProj$, která bude počítat přesně opačně k naší funkci
+     $IsomorphismProjAndAn$. 
+     
+     Namísto sčítání projekcí $P_1\oplus P_1'\to e_iA$ složených
+     s vnořeními $e_iA\to A^n$ sečteme projekce $A^n\to e_iA$ složené s patřičnými vnořeními
+     $e_iA\to P_1\oplus P_1'$. Vstup inverzní funkce bude tedy stejný jako u 
+     funkce původní.
+     
+     \begin{Verbatim}[frame=single,numbers=left]
+  IsomorphismAnAndProj := function(mP1_P2, mAn)
+       
+  ...
+       
+  return iso;
+end;
+     \end{Verbatim}
+     
+     Všimněme si, že naše funkce $IsomorphismAnAndProj$ zpracovává oba parametry 
+     stejným způsobem. Platí tedy vztah
+     \begin{Verbatim}[frame=single,numbers=left]
+IsomorphismAnAndProj(nAn,mP1_P2)=IsomorphismProjAndAn(mAn,mP1_P2);
+     \end{Verbatim}
+     a obě tyto funkce jsou totožné, mající pouze jinak pojmenované proměnné. 
+     Navíc není použitelná pouze pro dvojici s $A^n$,
+     ale jediná podmínka nalezení izomorfismu je, že 
+     oba parametry musí být direktní sumou 
+     direktních sum nerozložitelných projektivních $A$-modulů $e_iA$ a 
+     ty musejí být v obou rozkladech ve stejném počtu.
+           
+  \section{Izomorfismus $\varphi_{P_1, \Omega}}\label{vypocet-varphi}
+  
+    %\subsection*{Teorie}   
+      \paragraph{ } Dle \hyperref[varphi-izomorfismus]{Věty \ref*{varphi-izomorfismus}} máme izomorfismus \\\\
+      \centerline{$\varphi_{P_1,\Omega}:Hom_A(P_1,\Omega)\rightarrow Hom_A(P_1,A)\otimes_A \Omega$} 
+      \\\\
+      daný předpisem pro $h\in Hom_A(P_1,\Omega)$ následovně \\\\
+       \centerline{$h\mapsto\sum_{i=1}^n \rho_i\psi\mu\otimes h\pi\psi^{-1}\nu_i(1_A)$,} 
+       \\\\
+       kde jednotlivá zobrazení jsou: \\
+         
+         $ \mu: P_1\rightarrow P_1\oplus P_1'$ \quad kanonická inkluze
+         
+         $ \psi: P_1\oplus P_1' \simeq A^n $ 
+            \quad izomorfismus konstruovaný v 
+            \hyperref[algoritmus-P1P1sA-izo]{Sekci \ref*{algoritmus-P1P1sA-izo}}
+       
+         $ \rho_i: A^n\rightarrow A $ \quad kanonická projekce
+         
+         $ \nu_i: A\rightarrow A^n $ \quad kanonická inkluze
+         
+         $ \pi: P_1\oplus P_1'\rightarrow P_1$ \quad kanonická projekce\\\\
+      Spočteme jednotlivé homomorfismy nutné pro výpočet $\varphi_{P_1,\Omega}$:
+      \begin{Verbatim}[frame=single,numbers=left]
+# Levá strana tenzorového součinu
+mu     := DirectSumInclusions(mP1_mP1s)[1];
+psi    := IsomorphismProjAndAn(mP1_mP1s, mAn);
+rho    := DirectSumProjections(mAn);
+
+# Pravá strana tenzorového součinu
+nu     := DirectSumInclusions(mAn);
+psi_inv:= IsomorphismAnAndProj(mP1_mP1s, mAn);
+pi     := DirectSumProjections(mP1_mP1s)[1];
+      \end{Verbatim}      
+      Zatím si ale ponecháme $\varphi_{P_1,\Omega}$ jako
+      jednotlivé složky. Výsledné zobrazení spočteme později, jelikož zatím 
+      neumíme spočíst tenzorový součin obou stran.
+
+              
+  \section{Dualita $DTr(X)$}\label{dualita-DTrX}
+  
+    %\subsection*{Teorie}   
+      \paragraph{ } Nyní budeme řešit podobný problém jako v případě duality $P_1^*$ 
+      (\hyperref[dualita-p-hom]{Sekce \ref*{dualita-p-hom}}). 
+      Jak vyjádřit libovolný homomorfismus z $Hom_K(Tr(X), K)$ jako prvek 
+      reprezentace $DTr(X)$?
+      
+      Připomeňme, že $Tr(X)\in mod(A^{op})$. 
+      Pojmenujme vrcholy našeho toulce $Q=(Q_0, Q_1,s,t)$ čísly $1,2,\ldots,m$ (tedy $Q_0=\{1,\ldots,m\}$).
+      Uvažujme o $DTr(X)$ nejprve jako o $Hom_K(Tr(X), 
+      K)$. Ze vztahu modulů a reprezentací 
+      (\hyperref[ekvivalence-rep-a-mod]{Věta \ref*{ekvivalence-rep-a-mod}}) 
+      vypadá reprezentace $(DTr(X)_i,\varphi_\alpha)_{i\in Q_0,\alpha\in Q_1}$ toulce $Q$ korespondující s modulem $DTr(X)$ následovně:
+      \begin{description}
+      \item[(a)] Vektorový prostor $DTr(X)_i$ (pro $i\in Q_0$) je generovaný homomorfismy z množiny: \\\\ 
+        \centerline{$DTr(X)e_i=\{fe_i=f(e_i^{op}\cdot-)| f\in DTr(X)\}$} \\\\
+        Bází vektorového prostoru $DTr(X)_i$  jsou tedy homomorfismy z $DTr(X)$, 
+        které jsou nenulové právě na $e_i^{op}Tr(X)\subseteq Tr(X)$.
+      \item[(b)] Homomorfismus $f_\alpha$ (kde $\alpha\in Q_1$ je šipka $i \rightarrow j$, $i,j\in Q_0$) 
+      je homomorfismus \\\\
+      \centerline{$f_\alpha:DTr(X)_i\rightarrow DTr(X)_j$}\\\\
+      dáný předpisem $f \mapsto f(e_i^{op}v^{op}e_j^{op}\cdot-)$.
+      \end{description}
+      
+      
+       
+      \quad\\
+      
+      Nyní buď $(Tr(X)_i, \psi_\alpha)_{i\in Q_0,\alpha\in Q_1}$ reprezentace $Q$ korespondující s modulem 
+      $Tr(X)$, $n_i:=dim_K(Tr(X)_i)$ a mějme kanonickou bázi \\\\
+      \centerline{
+        $B_{Tr(X)}=\{v_1^1,v_1^2,\ldots,v_1^{n_1},
+                            v_2^1,v_2^2,\ldots,v_2^{n_2},
+                            \ldots,
+                            v_m^1,v_m^2,\ldots,v_m^{n_m}
+        \}$,} \\\\ 
+      kde $v_i^j$ je vektor s $1$ na $j$-té souřadnici vektorového prostoru $Tr(X)_i$
+      a nulami všude jinde. Báze $B_{Tr(X)}$ je kanonická báze vektorového  prostoru  
+      $(Tr(X)_i, \psi_\alpha)$. Pak máme duální bázi\\\\
+      \centerline{$
+        B_{DTr(X)}=\{g_i:Tr(X)\rightarrow K|g_i^j(v_l^k)=\delta_{i,l}\delta_{j,k}
+        $, $i,l\in Q_0
+        $, $j=1,\ldots,n_i
+        $, $k=1\ldots n_l\}
+      $} \\\\ 
+      reprezentace $DTr(X)$ o velikosti $\sum_{i\in Q_0}dim_K(Tr(X)_i)$, kde $\delta$ 
+      značí Kroneckerovu deltu.
+      
+      Máme-li homomorfismus $f:Tr(X)\rightarrow  K$, pak jemu 
+      korespondujícím elementem reprezentace $DTr(X)$ vzhledem k bázi $B_{DTr(X)}$ bude prvek \\\\
+      \centerline{$(
+      (f(v_1^1), f(v_1^2), \ldots, f(v_1^{n_1})), 
+      (f(v_2^1), f(v_2^2), \ldots, f(v_2^{n_2})), 
+      \ldots,
+      (f(v_m^1), f(v_m^2), \ldots, f(v_m^{n_m}))
+      )$.}
+
+    \subsection*{Příklad}
+        Nechť toulec $Q$, algebra $A$ a $A$-modul $X$ jsou dány následovně: \\\\
+        \centerline{
+          $Q$: \xymatrix{
+            \circ^1 \ar@{->}[r]_a \ar@/^3pc/[rr]^c
+              & \circ^2 \ar@{->}[r]_b
+              & \circ^3
+          }
+          \rightaligned{
+            ,\space\space\space\space $A=KQ$ \space\space,\space\space
+             $X$: \xymatrix{
+               K^2 
+                   \ar@{->}[r]_{\left[\begin{smallmatrix}
+	               1 & 0 & 0 \\
+	               0 & 1 & 0 \\
+                      \end{smallmatrix}\right]} 
+                   \ar@/^3pc/[rr]^{\left[\begin{smallmatrix}
+	               0 & 0 \\
+	               1 & 0 \\
+                      \end{smallmatrix}\right]}
+                 & K^3 
+                   \ar@{->}[r]_{\left[\begin{smallmatrix}
+	               0 & 1 \\
+	               1 & 0 \\
+	               0 & 1 \\
+                      \end{smallmatrix}\right]}   
+                 & K^2
+             }
+           }
+         }\\\\
+         Pak $A^{op}$-modul $Tr(X)$ pak vypadá následovně \\\\
+        \centerline{\xymatrix{
+               K^3 
+                   \ar@{->}[r]_{\left[\begin{smallmatrix}
+	               1 & 0 & 0 \\
+	               0 & 0 & 1 \\
+                      \end{smallmatrix}\right]} 
+                   \ar@/^3pc/[rr]^{\left[\begin{smallmatrix}
+	               0 & 0 & 0 \\
+	               0 & 1 & 0 \\
+	               0 & 0 & 1 \\
+                      \end{smallmatrix}\right]}
+                 & K^2 
+                   \ar@{->}[r]_{\left[\begin{smallmatrix}
+	               1 & 0 \\
+	               0 & 0 \\
+	               0 & 1 \\
+                      \end{smallmatrix}\right]}   
+                 & K^3
+         }}\\\\\\
+         kde jsou parametry reprezentace a jednotlivých vektorových prostorů 
+         $m=3$, $n_1=3$, $n_2=2$, $n_3=3$. Báze reprezentace $Tr(X)$ jako 
+         vektorového prostoru je:
+         \begin{eqnarray}
+         B_{Tr(X)}=&\{&\nonumber\\  
+           v_1^1&=&((1,0,0),(0,0),(0,0,0)),\nonumber\\
+           v_1^2&=&((0,1,0),(0,0),(0,0,0)),\nonumber\\     
+           v_1^3&=&((0,0,1),(0,0),(0,0,0)),\nonumber\\         
+           v_2^1&=&((0,0,0),(1,0),(0,0,0)),\nonumber\\         
+           v_2^2&=&((0,0,0),(0,1),(0,0,0)),\nonumber\\         
+           v_3^1&=&((0,0,0),(0,0),(1,0,0)),\nonumber\\         
+           v_3^2&=&((0,0,0),(0,0),(0,1,0)),\nonumber\\         
+           v_3^3&=&((0,0,0),(0,0),(0,0,1)) \nonumber\\    
+         \}\quad\quad\quad\nonumber
+         \end{eqnarray}
+         Což nám dává duální bázi reprezentace $DTr(X)$:
+         \\\\      
+         \centerline{$B_{DTr(X)}=\{g_i^j:Tr(X)\rightarrow K\,|\, i\in\{1,2,3\},\, j\in{1,\ldots,n_i},\, g_i^j(v_l^k)=\delta_{i,l}\delta_{j,k} 
+         \}$}
+         \\
+         
+         Homomorfismu $f:Tr(X)\rightarrow K$ z $A$-modulu $DTr(X)$, pak v 
+         $DTr(X)$ jakožto reprezentaci $Q$ odpovídá prvek (zapsaný vzhledem k bázi $B_{DTr(X)}$):\\
+         \begin{eqnarray}
+            (\underbrace{ \, \left(f(v_1^1),f(v_1^2),f(v_1^3),\right)}_{\in DTr(X)_1},
+            \underbrace{\left(f(v_2^1),f(v_2^2),\right)}_{\in DTr(X)_2},
+            \underbrace{\left(f(v_3^1),f(v_3^2),f(v_3^3) \right) \, \right)}_{\in DTr(X)_3})
+          \nonumber
+         \end{eqnarray}
+          
+  \section{Tenzorový součin $Tr(X)\otimes_A \Omega$}
+  
+    %\subsection*{Teorie}    
+      \paragraph{ } Dle \hyperref[thm-adjunkce]{Věty \ref*{thm-adjunkce}}
+      máme následující izomorfismus \\\\
+      \centerline{$Hom_K(M\otimes_A N,L)\simeq Hom_A(N, Hom_K(M,L))$}
+      \\\\
+      daný předpisem \\\\
+      \centerline{$f \mapsto [n \mapsto f(-\otimes n)]$.}
+      \\\\
+      Ten nám pro $M=Tr(X)$, $N=\Omega$ a $L=K$ dává izomorfismus \\\\
+      \centerline{$Hom_K(Tr(X)\otimes_A \Omega,K)\simeq Hom_A(\Omega, 
+      Hom_K(Tr(X),K))$,}
+      \\\\      
+      který můžeme dále upravit z defnice funktoru $D=Hom_K(-,K)$ na  \\\\
+      \centerline{$D(Tr(X)\otimes_A \Omega)\simeq Hom_A(\Omega,DTr(X))$.}
+      \\\\    
+      Aplikujeme-li funktor $D$ ještě jednou, dostaneme izomorfismus:
+      \begin{eqnarray}
+        Tr(X)\otimes_A\Omega &\simeq& DHom_A(\Omega,DTr(X))  \nonumber \\
+        t \otimes\omega &\mapsto& \left[f\mapsto f(\omega)(t)\right] \nonumber
+      \end{eqnarray}
+      Ten využijeme k našemu výpočtu.
+            
+      Tenzorový součin $Tr(X)\otimes_A \Omega$ je tedy izomorfní jako $K$-vektorový prostor s 
+      $DHom_A(\Omega,DTr(X))$, s nímž budeme v dalších částech pracovat. Otázkou ale 
+      zůstává, jak libovolné dvojici $(t,\omega)\in Tr(X)\times\Omega$ přiřadit $K$-homomorfismus 
+      \begin{eqnarray}
+        f &\in& DHom_A(\Omega,DTr(X)) \nonumber \\
+        f &:& Hom_A(\Omega,DTr(X))\rightarrow K \nonumber
+      \end{eqnarray}
+      odpovídající 
+      prvku tenzorového součinu $t\otimes\omega\in Tr(X)\otimes_A\Omega$.      
+      V \cite{QPA} spočteme poměrně jednoduše bázi\\\\
+      \centerline{$B_{Hom_A(\Omega,DTr(X))}=\{f_1,f_2,\ldots,f_n\}$,} \\\\
+      spočíst jednoduše $DHom_A(\Omega,DTr(X))$ už ale nejde. 
+      Proto použijeme následující algoritmus, počítající na základě výše 
+      uvedeného izomorfismu:
+      
+      \paragraph{Vstup:} Báze $B_{Hom_A(\Omega,DTr(X))}=\{f_1,f_2,\ldots,f_n\}$ a  
+      dvojice $(t,\omega)\in Tr(X)\times\Omega$.
+      \paragraph{Výstup:} Vektor  K-homomorfismu 
+      $Hom_A(\Omega,DTr(X))\rightarrow K$ (vzhledem k bázi  
+      $B_{Hom_A(\Omega,DTr(X))}$) odpovídající 
+      prvku tenzorového součinu $t\otimes\omega$.
+      \paragraph{Průběh:}
+      \begin{description}
+        \item[(1)]Pro každý $f_i\in B_{Hom_A(\Omega,DTr(X))}$:  
+          \begin{description} 
+             \item[(a)] Dosadíme $\omega$, čímž dostaneme $f_i(\omega)\in DTr(X)$ 
+             jakožto prvek reprezentace.
+             \item[(b)] Dle \hyperref[dualita-DTrX]{sekce \ref*{dualita-DTrX}} 
+             spočteme obrazy báze $B_{Tr(X)}$ při zobrazení $f_i(\omega)$. 
+             \item[(c)] Spočteme koeficienty prvku $t\in Tr(X)$ vzhledem bázi 
+             $B_{Tr(X)}$ a na základě obrazů bázových vektorů spočtených v 
+             předchozím bodě spočteme i $f_i(\omega)(t)\in K$. 
+          \end{description}
+        \item[(2)] Hledaný vektor je $(f_1(\omega)(t),f_2(\omega)(t),\ldots,f_n(\omega)(t))\in K^n$. 
+      \end{description} 
+                 
+      Algoritmus je zde zapsaný oběcně, v našem případě je: 
+      \begin{eqnarray}
+        mM &:=& Tr(X)   \nonumber \\
+        mN &:=&  \Omega \nonumber \\
+        m &:=& t   \nonumber \\
+        n &:=& \omega   \nonumber \\
+        mDM &:=& DTr(X) \nonumber \\
+        B\_hom\_mN\_mDM) &:=& Hom_A(\Omega, DTr(X)) \nonumber
+      \end{eqnarray}
+      
+    %\subsection*{QPA kód}
+      \begin{Verbatim}[frame=single,numbers=left]
+ TensorProductMap := function(m, n, mM, mN, mDM, B_hom_mN_mDM)
+  local coeffs_m, coeffs_f_i_n, i, B_hom_images, f_i_n;
+
+  coeffs_m := Coefficients(Basis(mM), m);
+  B_hom_images := [];
+
+  f_i_n := List(B_hom_mN_mDM, f_i -> ImageElm(f_i, n));
+
+  for i in [1..Length(f_i_n)] do
+    coeffs_f_i_n := Coefficients(Basis(mDM), f_i_n[i]);
+
+    B_hom_images[i] := coeffs_m * coeffs_f_i_n;
+  od;
+
+  return B_hom_images;
+end;
+      \end{Verbatim}
+
+  \section{Hlavní bázový prvek $\phi_\Omega(\omega)$}
+  
+    %\subsection*{Teorie}    
+      \paragraph{ } V této části spočteme prvek $\psi_\Omega(\omega)\in Tr(X)\otimes_A \Omega$, 
+      který bude hlavním prvkem báze tohoto tenzorového součinu, kterou budeme vzápětí konstruovat. 
+      V \hyperref[vypocet-varphi]{Části \ref*{vypocet-varphi}} jsme 
+      spočetli jdenotlivé složky izomorfismu \\\\
+      \centerline{$\varphi_{P_1,\Omega}:Hom_A(P_1,\Omega)\rightarrow Hom_A(P_1,A)\otimes_A \Omega$} 
+      \\\\
+      daného předpisem \\\\
+      \centerline{$h\mapsto\sum_{i=1}^n \rho_i\psi\mu\otimes h\pi\psi^{-1}\nu_i(1_A)$.} 
+      \\\\      
+      Připomeňme ještě komutativní diagram s exaktními řádky z
+      \hyperref[alg-sigma]{Části \ref*{alg-sigma}}:
+      \\\\
+        \centerline{ \xymatrix{
+          0  \ar@{->}[r] 
+          &Hom(X,\Omega) \ar@{->}[r]^{(-\circ t)_\Omega} 
+          &Hom(P_0,\Omega) \ar@{->}[r]^{(-\circ s)_\Omega}  \ar@{->}[d]^{\varphi_{P_0, \Omega}}
+          &Hom(P_1,\Omega)  \ar@{->}[d]^{\varphi_{P_1, \Omega}} \\
+          &
+          &Hom(P_0,A)\otimes_A\Omega \ar@{->}[r]^{(-\circ s)_A\otimes1_\Omega}
+          &Hom(P_1,A)\otimes_A\Omega \ar@{->}[r]^{\hat{t}\otimes1_\Omega}
+          &Tr(X)\otimes_A\Omega \ar@{->}[r]
+          &0
+        }}\\\\\\
+        Definujme homomorfismus \\\\        
+        \centerline{$\phi_\Omega:=[\hat{t}\otimes1_\Omega]\varphi_{P_1,\Omega}:\, Hom_A(P_1,\Omega)\rightarrow Tr(X)$}\\\\
+        a zobrazme jím homomorfismus
+        $\omega\in Hom_A(P_1,\Omega)$
+        projektivního pokrytí modulu $\Omega$. Dostaneme: 
+         \begin{eqnarray}
+           \phi_\Omega(w)
+           &=& [\hat{t}\otimes1_\Omega]\varphi_{P_1, \Omega}(w)  \nonumber \\
+           &=& [\hat{t}\otimes1_\Omega]\sum_{i=1}^n \rho_i\psi\mu\otimes w\pi\psi^{-1}\nu_i(1_A)  \nonumber \\
+           &=& \sum_{i=1}^n \hat{t}(\rho_i\psi\mu)\otimes w\pi\psi^{-1}\nu_i(1_A) \nonumber 
+         \end{eqnarray}   \\
+
+    %\subsection*{QPA kód}   
+      \begin{Verbatim}[frame=single,numbers=left]
+mu_psi_rho := mu * psi * rho;
+omega_pi_psi_inv_nu := nu * psi_inv * pi * omega;
+
+# omega * pi * psi^(-1) * nu(1_A).
+omega_pi_psi_inv_nu_1_A := List(omega_pi_psi_inv_nu, 
+    f -> ImageElm(f, 1_mA)
+  );
+
+# Spočteme zobrazení mu_psi_rho jako elementy modulu P1*.
+mu_psi_rho_el := List(mu_psi_rho, 
+    f -> FromHomToProjRep(f, mP1_star)
+  );
+t_mu_psi_rho_el := List(mu_psi_rho_el, el -> ImageElm(t_hat, el));
+
+# Spočteme náš hlavní bázovy prvek.
+psi_omega := [];
+for i in [1..Length(t_mu_psi_rho_el)] do
+  m := t_mu_psi_rho_el[i];
+  n := omega_pi_psi_inv_nu_1_A[i];
+
+  Add(psi_omega, TensorProductMap(
+      m, n, mTrX, mOmega, mDTrX, B_hom_mDTrX_mOmega)
+    );
+od;
+psi_omega := Sum(psi_omega);
+      \end{Verbatim}
+       
+  \section{Báze $Tr(X)\otimes_A \Omega$}\label{alg-baze}
+  
+    %\subsection*{Teorie}    
+      \paragraph{ }Naším cílem je nyní nalézt prvky $g_1,g_2,\ldots,g_n\in Tr(X)\otimes_A\Omega$
+      tak, aby\\\\
+      \centerline{$B_{Tr(X)\otimes_A\Omega}=\{\phi_\Omega(w),g_1,g_2,\ldots,g_n\}$}\\\\ 
+      byla bází $Tr(X)\otimes_A\Omega$. Nechť $B_{\Omega}$ je báze $\Omega$ 
+      a $B_{Tr(X)}$ je báze $Tr(X)$. Spočteme množinu  \\
+      \centerline{$\{t\otimes\omega|t\in B_{Tr(X)},\omega\in B_{\Omega}\}$.} \\\\
+      Ta nám zaručeně generuje
+      celý K-vektorový prostor  $Tr(X)\otimes_A\Omega$. Spočteme tedy $Tr(X)\otimes_A\Omega$ 
+      jako K-vektorový prostor a vezmeme jeho kakonickou bázi 
+      $B_c=\{g_1,g_2,\ldots,g_{n+1}\}$. Víme, že dle \hyperref[phi-omega-nenul]{úvahy v sekci 2.2}
+      $\phi_\Omega(w)$ je nenulový vektor. Nechť je $i$-tá pozice vektoru $\phi_\Omega(w)$ 
+      nenulová. Pak můžeme zvolit \\\\
+      \centerline{
+        $B_{Tr(X)\otimes_A\Omega}=\{\phi_\Omega(w),g_1,g_2,\ldots,g_{i-1},g_{i+1},\ldots,g_n\}$.
+      }\\     
+
+    %\subsection*{QPA kód}
+      \begin{Verbatim}[frame=single,numbers=left]
+# Pole obsahující na i-té pozici pole
+# [t_1\otimes\omega_i, ... ,t_n\otimes\omega_i].
+# To využijeme v následující části. Z důvodu
+# efektivnosti si ho ale předpočítáme nyní.
+mTrX_mOmega := [];
+
+# Pole nenulových prvků t_i\otimes\omega_i.
+B_mTrX_mOmega := [];
+
+# Spočteme bázi tenzorového součinu TrX a Omega.
+B_mOmega := BasisVectors(Basis(mOmega));
+B_mTrX := BasisVectors(Basis(mTrX));
+for n in B_mOmega do
+  n_images := [];
+
+  for m in B_mTrX do
+    m_n := TensorProductMap(
+        m, n, mTrX, mOmega, mDTrX, B_hom_mDTrX_mOmega
+      );
+
+    Add(n_images, m_n);
+    if not Sum(m_n) = 0 and not Sum(m_n) = Zero(K) then
+      Add(B_mTrX_mOmega, m_n);
+    fi;
+  od;
+
+  Add(mTrX_mOmega, n_images);
+od;
+
+# Jeden bázový prvek nahradíme význačným prvkem z přechozí sekce.
+V := VectorSpace(K, B_mTrX_mOmega);
+B_V := CanonicalBasis(V);
+B_V_new := [psi_omega];
+added := false;
+for i in [1..Length(B_V)] do
+  if not psi_omega[i] = Zero(K) and not added then
+    added := true;
+  else
+    Add(B_V_new, B_V[i]);
+  fi;
+od;
+      \end{Verbatim}
+          
+  \section{Homomorfismus $\xi:\Omega\rightarrow DTr(X)$} 
+  
+    %\subsection*{Teorie}    
+      \paragraph{ } Naším cílem je spočíst matice homomorfismu \\\\
+      \centerline{$\xi: \Omega\rightarrow DTr(X)$} \\
+      daného předpisem \\ \\
+      \centerline{$\omega\mapsto [t\mapsto$(první koeficient
+       $t\otimes\omega$ vzhledem k bázi $B_{Tr(X)\otimes_A \Omega})]$.}\\\\
+       Při \hyperref[alg-baze]{výpočtu báze \ref*{alg-baze}} $Tr(X)\otimes_A \Omega$ 
+       jsme  již spočetli pole $mTrX\_mOmega$ tvaru \\\\
+       \centerline{$mTrX\_mOmega[i]=[t_1\otimes\omega_i,\ldots,t_n\otimes\omega_i]$,} \\\\ 
+       kde
+       $\{t_1,t_2,\ldots,t_n\}$ je báze $Tr(X)$ a $\{\omega_1,\omega_2,\ldots,\omega_m\}$ 
+       je báze $\Omega$. Každý prvek $t_i\otimes\omega_i$ si vyjádříme vzhledem bázi 
+       $Tr(X)\otimes_A \Omega$ a první souřadnici si uložíme do pole $images$ na pozici 
+       $images[i][j]$.
+
+      \begin{Verbatim}[frame=single,numbers=left]
+images := [];
+for i in [1..Length(B_mOmega)] do
+  Add(images, List(mTrX_mOmega[i], 
+      v -> Coefficients(Basis(V, B_V_new), v)[1] 
+    ));
+od;
+      \end{Verbatim}             
+A zkonstruujeme hledaný homomorfismus:       
+       
+    %\subsection*{QPA kód}
+      \begin{Verbatim}[frame=single,numbers=left]
+matrices := ExtractHomMatrices(images, mOmega, mDTrX);
+xi := RightModuleHomOverAlgebra(mOmega, mDTrX, matrices * One(K));
+      \end{Verbatim}
+    
+  \section{Hledaný generátor $E$}
+  
+    %\subsection*{Teorie}   
+        E spočteme jako pushout homomorfismů $i$ a $\xi$. \\\\
+        \centerline{ \xymatrix{
+          \Omega \ar[r]^\xi \ar[d]_i & DTr(X) \ar@{..}[d] \\ 
+          P_0 \ar@{..}[r] & E
+        } }
+        
+    %\subsection*{QPA kód}
+      \begin{Verbatim}[frame=single,numbers=left]
+mE := PushOut(kernel_inc, xi);
+      \end{Verbatim}
+      
+      Stejně jako u funkce $AlmostSplitSequence$ vrátíme pole obsahující na 
+      prvním místě  homomorfismus $DTr(X)\to E$ a na druhém jeho kojádro, 
+       tedy homomorfismus $E\to X'$, kde $X'$ nemusí být přímo $X$, 
+      ale nějaký modul $X$ izomorfní. 
+      
+      \begin{Verbatim}[frame=single,numbers=left]
+return [mE[1], CoKernelProjection(mE[1])];
+      \end{Verbatim} 
+      
+      \begin{description}
+        \item[Tím jsme hotovi.]
+      \end{description}
+      
+    
+
+
+
+
+
+
+

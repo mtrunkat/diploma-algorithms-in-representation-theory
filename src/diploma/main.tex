@@ -1,0 +1,122 @@
+%\documentclass[12pt,a4paper]{report}
+\documentclass[12pt, a4paper, twoside, openright]{report}
+
+\usepackage{czech}
+\usepackage[utf8]{inputenc}   % pro unicode UTF-8
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xypic}
+\usepackage{comment}
+\usepackage{amsthm}
+\usepackage{hyperref}
+\usepackage{fancyvrb} 
+\usepackage{graphicx}
+\usepackage{pgfplots}
+\usepackage{emptypage}
+
+
+
+% Toto makro definuje kapitolu, která není očíslovaná, ale je uvedena v obsahu.
+\def\chapwithtoc#1{
+\chapter*{#1}
+\addcontentsline{toc}{chapter}{#1}
+}
+
+% metadata
+\hypersetup{pdftitle=Algoritmy v teorii reprezentací}
+\hypersetup{pdfauthor=Marek Trunkát}
+
+% pravidla MFF
+% Okraje: levý 40mm, pravý 25mm, horní a dolní 25mm
+% (ale pozor, LaTeX si sám přidává 1in)
+\setlength\textwidth{145mm}
+\setlength\textheight{247mm}
+\setlength\oddsidemargin{15mm}
+\setlength\evensidemargin{15mm}
+\setlength\topmargin{0mm}
+\setlength\headsep{0mm}
+\setlength\headheight{0mm}
+% \openright zařídí, aby následující text začínal na pravé straně knihy
+\let\openright=\clearpage
+
+%%%%% Základní nastavení pro oboustranný tisk:
+%%%%% ----------------------------------------------------
+ \setlength\textwidth{145mm}
+ \setlength\textheight{247mm}
+ \setlength\oddsidemargin{15mm}
+ \setlength\evensidemargin{0mm}
+ \setlength\topmargin{0mm}
+ \setlength\headsep{0mm}
+ \setlength\headheight{0mm}
+ \let\openright=\cleardoublepage
+
+
+% Tato makra přesvědčují mírně ošklivým trikem LaTeX, aby hlavičky kapitol
+% sázel příčetněji a nevynechával nad nimi spoustu místa. Směle ignorujte.
+\makeatletter
+\def\@makechapterhead#1{
+  {\parindent \z@ \raggedright \normalfont
+   \Huge\bfseries \thechapter. #1
+   \par\nobreak
+   \vskip 20\p@
+}}
+\def\@makeschapterhead#1{
+  {\parindent \z@ \raggedright \normalfont
+   \Huge\bfseries #1
+   \par\nobreak
+   \vskip 20\p@
+}}
+\makeatother
+
+\theoremstyle{plain}
+\newtheorem{thm}{Věta}[chapter]
+\newtheorem{lem}[thm]{Lemma}
+
+\theoremstyle{definition}
+\newtheorem{dfn}[thm]{Definice}
+\newtheorem{pzn}[thm]{Poznámka}
+\newtheorem{dsl}[thm]{Důsledek}
+\newtheorem{pr}[thm]{Příklad}
+
+% Zalamovat za sekci, radek. Zrusime to v sekci Implementace.
+\let\oldsection = \section
+\renewcommand{\section}[1]{
+	\pagebreak
+	\oldsection{#1}
+}
+
+\hypersetup{
+   colorlinks=false,       % false: boxed links; true: colored links
+    linkcolor=blue,          % color of internal links (change box color with linkbordercolor)
+    citecolor=magenta,        % color of links to bibliography
+    filecolor=magenta,      % color of file links
+    urlcolor=cyan           % color of external links
+}
+
+\begin{document} 
+  
+  \include{titulka} 
+  \include{empty}
+  \include{podekovani} 
+  \include{empty}
+  \include{prohlaseni}
+  \include{empty}
+  \include{abstract}
+  \include{empty} 
+
+\pagenumbering{gobble}
+  \tableofcontents
+\cleardoublepage
+\pagenumbering{arabic}
+  \include{empty} 
+  \include{empty} 
+  
+  \include{uvod} 
+  \include{prerekvizity} 
+  \include{algoritmus}
+  \include{implementace}
+  \include{priklady}
+  \include{zaver}
+  \include{literatura}
+  \include{prilohy}
+\end{document}

@@ -1,0 +1,2104 @@
+\section{Algebry a moduly}\label{algebry-moduly}
+
+  \paragraph{ }V této části budeme pracovat s pevně zvoleným
+  asociativním okruhem s jednotkou $R$, který navíc bude 
+  komutativní, lokální a artinovský. Nejprve si tyto definice připomeneme:
+    
+  \begin{dfn}
+    Komutativní okruh $R$ je lokální, pokud má právě jeden maximální pravý ideál a ten je nenulový.
+  \end{dfn}
+  
+  Pokud je $R$ je lokální s maximálním pravým ideálem $\underline 
+  m$, pak $\underline m$ je oboustranný ideál a je zároveň maximálním 
+  levým ideálem dle \cite{1} Lemma I.4.6.
+  
+  My ale budeme pracovat s komutativním okruhem $R$, ten je 
+  lokální jednoduše právě tehdy, 
+  když má právě jeden maximální nenulový ideál.
+  
+  \begin{lem}\label{faktor-lokalniho-lokalni}
+    Pokud je $R$ lokální okruh, pak $R/J$ je lokální okruh pro každý vlastní 
+    ideál $J$ okruhu $R$.
+  \end{lem}
+  \begin{proof}
+    Buď $R$ lokální okruh, $J$ jeho vlastní ideál a nechť $\underline{m}$ 
+    značí maximální ideál okruhu $R$. Dokážeme, že $J/\underline{m}$ je 
+    maximální jednoznačně určený ideál okruhu $R/J$.
+    
+    Mějme libovolný ideál $Y$ okruhu $R/J$, pak $Y$ je tvaru $Y=X/J$ pro nějaký 
+    ideál $X$ okruhu $R$ takový, že $X\subsetneq Y\subsetneq R$. 
+    Jelikož ideál $\underline{m}$ 
+    je maximální, musí být $X\subseteq \underline{m}$ a tedy \\\\
+    \centerline{$Y=X/J \subseteq \underline{m}/J$.}
+  \end{proof}
+  
+  \begin{dfn}
+    Okruh $R$ je zleva (resp. zprava) artinovský, pokud se každý klesající 
+    řetězec jeho levých (resp. pravých) ideálů zastaví. Neboli máme-li klesající řetězec 
+    levých (resp. pravých) ideálů okruhu $R$ \\\\
+    \centerline{$R=I_0\supseteq I_1\supseteq I_2\supseteq\ldots$,} \\\\
+    pak existuje $n\in \mathbb{N}$ takové, že $I_j=I_i$ pro každé $i,j\geq n$.
+  \end{dfn}
+  
+  \begin{dfn}
+     Jakobsonův radikál $rad(R)$ okruhu R definujeme jako průnik všech 
+     maximálních ideálů $R$.    
+  \end{dfn}
+  
+    Dále tedy nechť $R$ značí pevně zvolený komutativní, lokální a artinovský okruh.
+    Nyní zavedeme klíčový pojem $R$-algebry.
+        
+    \begin{dfn}
+      $R$-algebra $A$ je okruh, který je zároveň $R$-modulem takovým, že pro 
+      $\alpha,\beta,\lambda\in A$ a $r,s\in R$ platí:
+      \begin{description}
+        \item[(a)] $(r\alpha+s\beta)\lambda=r(\alpha\lambda)+s(\beta\lambda)$ 
+        \item[(b)] $\alpha(r\beta+s\lambda)=r(\alpha\beta)+s(\alpha\lambda)$ 
+      \end{description}      
+      Artinovská $R$-algebra je $R$-algebra, která je konečně generovaná jako 
+      $R$-modul.  
+      Opačná algebra $A^{op}$ k algebře $A$ je algebra se stejnou 
+      modulovou strukturou,  která má ale okruhové násobení definováno opačně: \\\\
+      \centerline{$a\cdot_{A^{op}}b:=b\cdot_A a$}  \\\\
+      Kategorii levých $A$-modulů značíme $Mod(A)$. O pravých $A$-modulech
+      budeme referovat jako o $A^{op}$-modulech. 
+      Poznamenejme, že v části \hyperref[teorie-reprezentaci]{části \ref*{teorie-reprezentaci}}  
+      zabývající se teorií reprezentací a poté v 
+      \hyperref[teorie-reprezentaci]{Kapitole \ref*{implementace}}  zabývájící se implementací algoritmu budeme pracovat s pravýmu 
+      moduly a $Mod(A)$ bude tedy značit kategorii pravých modulů. Na vše později upozorníme.
+      
+      $R$-podmodul $I$ 
+      $R$-algebry $A$ je pravým (resp. levým) ideálem $A$, pokud $xa\in I$ (resp. $ax\in I$)
+      pro každý $x\in I$ a $a\in A$. Oboustranný ideál je ideál, který je 
+      zároveň levým i pravým ideálem.  
+    \end{dfn}
+    
+    Dále bude $A$ značit pevně zvolenou artinovskou $R$-algebru a pojďme se 
+    podívat na vztah $R$-modulů a $A$-modulů.
+        
+    \begin{dfn}
+      Nechť $S$ je okruh. Označme $mod(S)$ úplnou podkategorii $Mod(S)$ konečně 
+      generovaných modulů.
+    \end{dfn}
+    
+    \begin{lem}\label{lem-mod-Mod} Platí:
+      \begin{description}
+        \item[(a)] $Mod(A)\subseteq Mod(R)$
+        \item[(b)] $Hom_A(M,N)\subseteq Hom_R(M,N)$ pro $M,N\in Mod(A)$ 
+        \item[(c)] $mod(A)\subseteq mod(R)$   
+        \item[(d)] Pokud $M\in Mod(A)\cap mod(R)$, pak $M\in mod(A)$.  
+      \end{description}
+      Poznamenejme, že v případech (a) i (c) se jedná o podmnožinu, ne o úplnou 
+      podkategorii.
+    \end{lem}
+    \begin{proof}
+      \begin{description}
+        \item
+        \item[(a)] Pro $M\in Mod(A)$ definujeme násobení $R\times M\rightarrow M$ následovně: 
+          \\\\
+          \centerline{$(r,m)\mapsto (r\cdot 1_A)m$}\\\\
+          Protože $r\cdot 1_A\in A$, je násobení dobře definované. 
+        \item[(b)] Nechť $M,N\in Mod(A)$ a $f\in Hom_A(M,N)$. Pak pro $m_1,m_2\in M$ 
+          $a\in A$ máme \\
+          \centerline{$f(am_1+m_2)=af(m_1)+f(m_2)$.}\\\\
+          A tedy pro každé $r\in R$ dle bodu (a) platí, že
+          $f(rm_1+m_2)=f((r1_A)m_1+m_2)=(r1_A)f(m_1)+f(m_2)=rf(m_1)+f(m_2)$.
+        \item[(c)] Nechť $M\in mod(A)$, pak pro nějaké $n\in\mathbb{N}$ existuje
+          $A$-modulový epimorfismus \\
+          \centerline{$g:A^n\rightarrow M$.}\\\\
+          Ten je dle bodu (b) také $R$-modulovým epomorfismem. Algebra $A$ je 
+          artinovská, tedy konečně generovaná jako $R$-modul. Pak existuje  
+          $R$-modulový epimorfismus \\
+          \centerline{$h:R^m\rightarrow A$}\\\\
+          a také $R$-modulový epimorfismus \\\\
+          \centerline{$h^n:R^{mn}\rightarrow A^n$.}\\\\
+          Složením $g$ a $h^n$ dostaneme $R$-modulový epimorfismus \\\\
+          \centerline{$gh^n:R^{mn}\rightarrow M$,}\\\\
+          z jehož existence plyne, že $M\in mod(R)$
+        \item[(d)] Struktura $R$-modulu je na $M$ definována následovně:\\\\
+          \centerline{$rm=(r1_A)m$} \\\\
+          Nechť $\{m_1,m_2,\cdots,m_n\}\subseteq M$  generuje $M$ jako $R$-modul. 
+          Pak pro každé $m\in M$ platí: 
+          \begin{eqnarray}
+            m &=& \sum_{i=1}^n r_i m_i=\sum_{i=1}^n \underbrace{(r_i1_A)}_{\in A} m_i\subseteq\sum_{i=1}^n Am_i 
+            \nonumber
+          \end{eqnarray} 
+          A tedy množina $\{m_1,m_2,\cdost,m_n\}\subseteq M$  generuje $M$ i jako 
+          $A$-modul.
+      \end{description}    
+    \end{proof}
+    
+    \begin{thm}\label{dir-sum-hom} Nechť $S$ je okruh, $\bigoplus_{i=1}^nX_i$ je direktní součet 
+       $S$-modulů a pro $i=1,\ldots,n$ jsou $\nu_i:X_i\rightarrow \bigoplus_{i=1}^nX_i$
+       kanonické inkluze a $\rho_i:\bigoplus_{i=1}^nX_i\rightarrow X_i$ 
+       kakonické projekce. Pak máme pro $Y\in Mod(S)$ následující izomorfismus: \\\\
+       \centerline{$\xi:Hom_S(\bigoplus_{i=1}^nX_i,Y)\rightarrow \bigoplus_{i=1}^nHom_S(X_i,Y)$}\\\\
+       daný předpisem $f\mapsto\{f\nu_i\}_{i=1}^n$ a jeho inverz\\\\
+       \centerline{$\xi^{-1}:\bigoplus_{i=1}^nHom_S(X_i,Y)\rightarrow Hom_S(\bigoplus_{i=1}^nX_i,Y)$}\\\\
+       daný předpisem $\{f_i\}_{i=1}^n\mapsto \sum_{i=1}^nf_i\rho_i$.    
+       
+       Pokud buď $Y=S$, nebo pro všechny $n=1,2,\ldots,n$ je $X_i=S$, pak $\xi$ 
+       a $\xi^{-1}$ jsou izomorfismy $S$-modulů.
+     \end{thm}
+     
+     \begin{proof}
+       Dokážeme pouze první část, druhá část je přímočaré ověření modulových axiomů. 
+       
+       Nechť tedy $f\in Hom_S(\bigoplus_{i=1}^nX_i,Y)$. Pak 
+       \begin{eqnarray}
+         \xi^{-1}\xi(f) 
+         &=& \xi^{-1}(\{f\nu_i\}_{i=1}^n) \nonumber \\
+         &=& \sum_{i=1}^n f\nu_i\rho_i \nonumber \\
+         &=& f \sum_{i=1}^n \nu_i\rho_i \nonumber \\
+         &=& f 1_{\otimes_{i=1}^n X_i} \nonumber \\
+         &=& f.  \nonumber
+       \end{eqnarray}
+       
+       Opačně nechť $\{f_i\}_{i=1}^n\in {\bigoplus_{i=1}^n Hom_S(X_i,Y)$, pak
+       \begin{eqnarray}
+         \xi\xi^{-1}(\{f_i\}_{i=1}^n)
+         &=& \xi \left( \sum_{i=1}^n f_i\rho_i \nonumber \right)\\
+         &=& \left\{  \left( \sum_{i=1}^n f_i\rho_i \right) \nu_j \right\}_{j=1}^n \nonumber \\
+         &=& \left\{ \sum_{i=1}^n f_i(\rho_i \nu_j) \right\}_{j=1}^n  \nonumber \\
+         &=& \left\{ \sum_{i=1}^n f_i \delta_{i,j} \right\}_{j=1}^n  \nonumber \\
+         &=& \left\{ f_j \}_{j=1}^n  \nonumber
+       \end{eqnarray}
+     \end{proof}
+    
+    Dále budeme pracovat s pojmem tenzorového součinu, ten zde nebudeme zavádět. 
+    Definici a všechny potřebné vlastnosti je možné nalézt například v \cite{5} 
+    Kapitole 2.2, nebo v \cite{3} Kapitole 2.8. 
+    
+    Připomeňme pouze, že pro $M\in Mod(A^{op})$, $N\in Mod(A)$
+    tenzorový součin $M\otimes_A N$ vždy existuje, má strukturu $R$-modulu a 
+    máme následující dva funktory
+    \\\\ \centerline{$M\otimes_A -: Mod(A)\to Mod(R)$} \\\\ 
+    \centerline{$-\otimes_A N: Mod(A^{op})\to Mod(R)$} \\\\ 
+     z nichž první je zleva exaktní. 
+          
+     \begin{thm}\label{thm-adjunkce}
+       Nechť $M\in Mod(A^{op})$, $N\in Mod(A)$ a $L\in Mod(R)$. Pak máme 
+       následující izomorfismus abelovských grup 
+       \\\\
+       \centerline{$\theta_{M,N,L}:Hom_R(M\otimes_A N, L)\rightarrow Hom_A(N,Hom_R(M,L))$} 
+       \\\\
+       daný předpisem \\
+       \centerline{$\theta_{M,N,L}(f):=[n\mapsto f(-\otimes n)]$}
+       \\\\
+       pro $f\in Hom_R(M\otimes_A N,L)$. Navíc $\theta_{M,N,L}$ je přirozený v 
+       $M$, $N$ i $L$.
+     \end{thm}
+     \begin{proof}
+       \cite{5} Theorem 2.75, 2.76.
+     \end{proof}     
+     
+     \begin{lem}[Lemma five]\label{lemma-five} Uvažujme následující diagram 
+       v $Mod(A)$ s exaktními řádky:\\
+       \centerline{\xymatrix{
+       A_1 \ar@{->}[r]_{f_1} \ar@{->}[d]_{t_1} 
+         & A_2 \ar@{->}[r]_{f_2} \ar@{->}[d]_{t_2} 
+         & A_3 \ar@{->}[r]_{f_3} \ar@{->}[d]_{t_3} 
+         & A_4 \ar@{->}[r]_{f_4} \ar@{->}[d]_{t_4} 
+         & A_5 \ar@{->}[d]_{t_5}  \\
+       B_1 \ar@{->}[r]_{h_1}
+         & B_2 \ar@{->}[r]_{h_2} 
+         & B_3 \ar@{->}[r]_{h_3}  
+         & B_4 \ar@{->}[r]_{h_4} 
+         & B_5  \\
+      }}\\\\
+      Pak platí:
+      \begin{description}
+        \item[(a)] Jsou-li $t_2$ a $t_4$ epimorfismy a $t_5$ monomorfismus, pak 
+        je $t_3$ epimorfismus.
+        \item[(b)] Jsou-li $t_2$ a $t_4$ monomorfismy a $t_1$ epimorfismus, pak 
+        je $t_3$ monomorfismus.
+        \item[(c)] Jsou-li $t_1$, $t_3$, $t_4$ a $t_5$ izomorfismy, pak je i $t_3$ 
+        izomorfismus.
+      \end{description}
+     \end{lem}
+     
+     \begin{proof}
+       Tvrzení (c) jasně plyne z (a) a (b). Dokážeme zde pouze (a), jelikož 
+       (b) se dokáže analogicky.
+       
+       Nechť $b_3\in B_3$. Protože $t_4$ je epimorfismus, tak existuje $a_4\in A_4$ 
+       takové, že $t_4(a_4)=h_3(b_3)$. Z komutativity posledního čtverce a 
+       exaktnosti spodního řádku v $B_4$ dostaneme \\
+       \centerline{$t_5h_4(a_4)=h_4t_4(a_4)=h_4h_3(b_3)=0$.} \\\\
+       Protože $f_5$ je monomorfismus musí být $f_4(a_4)=0$ a $a_4\in 
+       Ker(f_4)=Im(f_3)$. Tedy existuje $a_3\in A_3$ takové, že $a_4=f_3(a_4)$ a 
+       tedy platí, že \\\\
+       \centerline{$h_3t_3(a_3)=t_4f_3(a_3)=t_4(a_4)=h_3(b_3)$.} \\\\
+       Pak $b_3-t_3(a_3)\in Ker(h_3)=Im(h_2)$ a tedy existuje $b_2\in B_2$ takové, že 
+       $h_2(b_2)=b_3-t_3(a_3)$. Protože $t_2$ je epimorfismus, musí existovat $a_2\in A_2$, 
+       pro které $t_2(a_2)=b_2$. Z komutativity diagramu plyne \\\\
+       \centerline{$t_3f_2(a_2)=h_2t_2(a_2)=h_2(b_2)=b_3-t_3(a_3)$} \\
+       a \\
+       \centerline{$t_3(f_2(a_2)+a_3)=b_3$.} \\\\     
+       Homomorfismus $t_3$ je tedy epimorfismem.  
+     \end{proof}
+     
+     \begin{lem}\label{lem-komut-schod}
+       Nechť $S$ je okruh a nechť \\\\
+       \centerline{\xymatrix{
+         0 \ar@{->}[r] 
+           & M \ar@{->}[r]^f
+           & N \ar@{->}[r]^g \ar@{->}[d]_\alpha^\simeq
+           & L \ar@{->}[d]_\beta^\simeq \\
+        & & N' \ar@{->}[r]^u
+           & L' \ar@{->}[r]^v
+           & K' \ar@{->}[r]
+           & 0   
+      }}\\\\\\
+      je komutativní diagram s exaktními řádky v $Mod(S)$. Pak\\\\
+       \centerline{\xymatrix{
+         0 \ar@{->}[r] 
+           & M \ar@{->}[r]^f
+           & N \ar@{->}[r]^g 
+           & L \ar@{->}[r]^{v\beta}
+           & K' \ar@{->}[r]
+           & 0   
+      }}\\\\      
+      je exaktní posloupnost v $Mod(S)$.
+     \end{lem}
+     
+     \begin{proof}
+       Exaktnost v $M$ a $N$ plyne z exaktnosti původního diagramu. 
+       Protože $v$ a $\beta$ jsou epimorfismy, pak je $v\beta$ také epimorfismem, takže 
+       posloupnost je exaktní i v $K'$. 
+       
+       Protože $(v\beta)g=(vu)\alpha=0$ máme $Im(g)\subseteq Ker(v\beta)$. Zbývá dokázat 
+       opačnou inkluzi.
+       
+       Nechť $c\in Ker(v\beta)$, pak $v\beta(c)=0$ a tedy $\beta(c)\in 
+       Ker(v)=Im(u)$. Potom existuje $b'\in N'$ takové, že \\\\
+       \centerline{$u(b')=\beta(c)$.}\\\\
+       Pak $\alpha^{-1}(b')\in N$ a
+       \\\\
+       \centerline{$\beta g \alpha^{-1}(b')=u(b')=\beta(c)$.}\\\\
+       Protože $\beta$ je epimorfismus, tak nám tato úvaha dává
+       \\\\
+       \centerline{$g(\alpha^{-1}(b'))=c$}\\\\
+       a tedy $c\in Im(g)$.
+     \end{proof}
+     
+   \subsection{Projektivní moduly}
+   
+     \begin{dfn}
+       $A$-modul $P$ nazveme projektivním, pokud pro každé $A$-moduly $M,N$, 
+       epimorfismus $h\in Hom_A(M,N)$ a homomorfismus $f\in Hom_A(P,N)$ existuje 
+       $f'\in Hom(P,M)$ takový, že následující diagram komutuje:\\\\
+       \centerline{\xymatrix{
+         & P \ar@{.>}[ld]_{f'} \ar@{->}[d]^f \\
+         M \ar@{->}[r]_h & N \ar@{->}[r] & 0     
+      }}
+     \end{dfn}
+   
+     \begin{lem}\label{lem-faktorizuje-skrze-proj}
+       Nechť $M,N\in mod(A)$, $P\in Mod(A)$, $f\in Hom_A(M,N)$ se faktorizuje skrze projektivní modul 
+       a $g\in Hom_A(P,N)$ je \textbf{na}. Pak $f$ se faktorizuje skrze $P$.
+     \end{lem}
+     
+     \begin{proof}
+       Uvažujme následující diagram v $Mod(A)$:\\\\
+       \centerline{\xymatrix{
+         & 
+           & M \ar@{->}[dd]^f \ar@{->}[dl] \\
+         & P' \ar@{->}[rd] \ar@{.>}[ld]_{\exists h} \\
+         P \ar@{->}[rr]_g
+           & 
+           & N \ar@{->}[r]
+           & 0      
+      }}\\\\
+      Homomorfismus $f$ se faktorizuje skrze nějaký projektivní modul $P'$. 
+      Protože $P'$ je projektivní a $g$ je \textbf{na}, existuje $h:P'\rightarrow P$ 
+      takové, že diagram výše komutuje a $f$ se tedy faktorizuje skrze $P$.
+     \end{proof}
+        
+     \begin{dfn}
+       Prvek $e\in A$ nazveme idempotentem, pokud $e^2=e$. 
+       Množinu idempotentů $\{e_1,e_2,\ldots,e_n\}$
+       nazveme ortogonální, pokud pro každé $i\neq j$ je $e_ie_j=e_je_i=0$. Primitivní 
+       idempotent je takový, který není možné zapsat jako součet alespoň 
+       dvou nenulových ortogonálních idempotentů. 
+       Idempotent je centrální, pokud $ea=ae$  pro každý prvek $a\in A$.
+     \end{dfn}
+     
+     \begin{thm}\label{rozklad-A-na-proj}
+       Nechť $A$ je Artinovská algebra. Pak $A=Ae_1\oplus Ae_2\oplus\ldots\oplus 
+       Ae_n$ právě tehdy, když $e_1,$ $e_2,\ldots,e_n$ je množina po dvou ortogonálních 
+       primitivních idempotentů $A$ a navíc $1=e_1+e_2+\ldots+e_n$.
+     \end{thm}
+     
+     \begin{proof}
+       Každá algebra má alespoň dva idempotenty a to $0$ a $1$. Nemá-li žádné 
+       jiné, pak máme množinu nenulových primitivních ortogonálních idempotentů 
+       $\{1\}$ a rozklad $A=A1$.
+       
+       Existuje-li netriviální idempotent $e$ algebry $A$, pak je netriviálním 
+       idempotentem také $1-e$, protože 
+       $(1-e)^2=1-2e+e^2=1-2e+e=1-e$. Ty jsou 
+       navíc ortogonální, protože $e(1-e)=e-e^2=e-e=0$. 
+       Algebru $A$ tedy můžeme 
+       rozložit na $A=Ae\oplus A(1-e)$ a $1=e + (1-e)$.
+       
+       Protože algebra $A$ je konečně generovaná, můžeme ji rozložit na direktní součet 
+       nerozložitelných levých ideálů $A=P_1\oplus P_2\oplus\ldots\oplus P_n$. 
+       Ty musejí být z diskuze výše tvaru $P_i=Ae_i$ pro $e_1,e_2,\ldots,e_n$ po 
+       dvou ortogonální primitivní idempotenty takové, že $1=e_1+e_2+\ldots+e_n$.
+       
+       Naopak máme-li $1=e_1+e_2+\ldots+e_n$ rozklad $1$ na součet po dvou 
+       ortogonálních primitivních idempotentů je existence rozkladu $A=Ae_1\oplus Ae_2\oplus\ldots\oplus 
+       Ae_n$ zřejmá.
+     \end{proof}
+       
+     \begin{dfn}
+       Množinu po dvou ortogonálních primitivních idempotentů $e_1,$ $e_2,\ldots,e_n$ 
+       takových, že $A=Ae_1\oplus Ae_2\oplus\ldots\oplus Ae_n$ nazveme úplnou 
+       množinou primitivních ortogonálních idempotentů $A$.
+     \end{dfn}
+                       
+     \begin{thm}\label{rozklad-proj}
+       Nechť $e_1,e_2,\ldots,e_n$ je úplná množina primitivních ortogonálních idempotentů $A$ 
+       a $P$ projektivní $A-modul$. Pak existují $m_1,m_2,\ldots,m_n\in\mathbb N$ taková, že\\
+       \centerline{$P=(Ae_1)^{m_1}\plus (Ae_2)^{m_2}\oplus\ldots\oplus (Ae_n)^{m_n}$.}       
+     \end{thm}
+     \begin{proof}
+       Dle \cite{5} Theorem 3.5 je modul $P$ projektivní právě tehdy, když existuje $n\in\mathbb 
+       N$ takové, že $P$ je direktním sčítancem $A^n$. Výsledný tvar dostáváme 
+       aplikací \hyperref[rozklad-A-na-proj]{Věty \ref*{rozklad-A-na-proj}} na $A^n$.
+     \end{proof}
+     
+    \begin{dsl}\label{Ae-projektivni}
+       Prvek $e\in A$ je primitivní idempotent právě tehdy, když $Ae$ je 
+       nerozložitelný projektivní $A$-modul.
+     \end{dsl} 
+     
+     \begin{thm}\label{izo-hom-aei}
+       Buď $e\in A$ je idempotent, pak zobrazení \\\\
+       \centerline{$Hom_A(Ae,A)\simeq eA$}\\
+       dané předpisem\\
+       \centerline{$f\mapsto f(e)$} \\\\
+       je izomorfismem $A$-modulů.
+     \end{thm}
+     \begin{proof}
+       Že se jedná o homomorfismus je zřejmé.
+       Označme si tento homomorfismus $Hom_A(Ae,A)\simeq eA$ jako $\psi_1$.  
+       Definujme zobrazení
+       \begin{eqnarray}
+         \psi_2:eA &\simeq& Hom_A(Ae,A) \nonumber \\
+         ea &\mapsto& [a'e\mapsto a'ea].  \nonumber
+       \end{eqnarray}
+       Pak pro $f\in Hom_A(Ae,A)$ a $a\in A$ máme
+       \begin{eqnarray}
+         \psi_1\psi_2(ea)&=&\psi_1([a'e\mapsto a'ea]) \nonumber \\
+         &=&ea \nonumber
+       \end{eqnarray}
+       a
+       \begin{eqnarray}
+         \psi_2\psi_1(f)(ae)&=&\psi_2(f(e))(ae) \nonumber\\
+         &=&\psi_2(ef(e))(ae) \nonumber\\
+         &=&[xe\mapsto xe(fe)] \nonumber\\
+         &=&aef(e) \nonumber \\
+         &=&f(ae). \nonumber
+       \end{eqnarray}
+       Jde tedy o izomorfismus.
+     \end{proof}
+     
+     \begin{thm}\label{rozklad-A-na-P}
+       Buď $P$ projektivní $A$-modul. Pak existuje druhý projektivní $A$-modul $P'$ 
+       a $n\in \mathbb N$ takové, že $P\oplus P'\simeq A$.
+     \end{thm}
+     \begin{proof}
+       Dle \hyperref[rozklad-A-na-proj]{Věty \ref*{rozklad-A-na-proj}} můžeme algebru $A$ vyjádřit jako \\\\
+        \centerline{$A=A e_1\oplus A e_2\oplus\ldots\oplus A e_m$,} \\\\
+        kde $A e_i$ jsou 
+        nerozložitelné projektivní $A$-moduly takové, že $Ae_i\not\simeq Ae_j$ 
+        pro $i,j\in{1\ldots m}$ a $i\neq j$. Pak lze projektivní modul $P$  dle
+        \hyperref[rozklad-proj]{Věty \ref*{rozklad-proj}} vyjádřit jako 
+        \\\\
+        \centerline{$P\simeq(A e_1)^{n_1}\oplus(A e_2)^{n_2}\oplus\ldots\oplus(A 
+        e_m)^{n_m}$.} \\\\       
+       Položme $n=max_{1\leq i \leq m}(n_i)$, pak \\\\
+       \centerline{$
+         A^n\simeq P_0
+           \oplus(A e_1)^{n-n_1}
+           \oplus(A e_2)^{n-n_2}
+           \oplus\ldots
+           \oplus(A e_m)^{n-n_m}
+       $.} \\\\
+       Definujme projektivní $A$-modul \\\\ 
+       \centerline{$
+         P_0':= 
+           (A e_1)^{n-n_1}
+           \oplus(A e_2)^{n-n_2}
+           \oplus\ldots 
+           \oplus(A e_m)^{n-n_m}
+       $,} \\\\ 
+       pak $P_0\oplus P_0'\simeq A^n$.
+     \end{proof}
+     
+   \subsection{Funktor Ext}
+   
+     \begin{dfn}
+       Injektivní rezolventa E modulu $M\in Mod(R)$ je exaktní posloupnost  \\
+       \centerline{\xymatrix{
+       \textbf E: 0 \ar@{->}[r] 
+         & M \ar@{->}[r]^{\eta}
+         &  E^0 \ar@{->}[r]^{d^0}
+         &  E^1 \ar@{->}[r]^{d^1}
+         &  E^2 \ar@{->}[r]^{d^2}
+         &  \cdots,
+      }}\\\\
+      kde každé $E^n$ je injektivní. 
+    \end{dfn}
+     
+     \begin{lem}
+       Pro každý modul $M\in mod(R)$ existuje injektivní rezolventa.
+     \end{lem}
+     \begin{proof}
+       Dle \cite{5} Theorem 3.38 může být každý $R$-modul vnořený jako 
+       podmodul do injektivního $R$-modulu. Tedy existuje injektivní $R$-modul $E^0$ a 
+       kanonické vnoření $\nu^0:M\rightarrow E^0$. Dostáváme exaktní posloupnost\\\\
+       \centerline{\xymatrix{
+         0 \ar@{->}[r]
+         & M \ar@{->}[r]^{\nu^0}
+         & E^0 \ar@{->}[r]^{\pi^0}
+         & Cok(\nu^0) \ar@{->}[r]
+         & 0  
+      },}\\\\
+      kde $\pi^0$ je kanonická projekce. Tento postup můžeme iterativně opakovat 
+      pro $Cok(\nu^0)$ namísto M a dále s 
+      $Cok(\nu^1),$ $Cok(\nu^2),$ $\ldots$:\\\\
+       \centerline{\xymatrix{
+         0 \ar@{->}[r]
+         & M \ar@{->}[r]^{\nu^0}
+         & E^0 \ar@{->}[rr]^{d^0:=\nu^1\pi^0} \ar@{->}[rd]_{\pi^0}
+         & & E^1 \ar@{->}[rr]^{d^0:=\nu^2\pi^1} \ar@{->}[rd]_{\pi^1}
+         & & \ldots \\
+         &
+         &
+         & Cok(\nu^0) \ar@{->}[ru]_{\nu^1}
+         &
+         & Cok(\nu^1) \ar@{->}[ru]_{\nu^2}
+      }}     
+    \end{proof}     
+    
+    \begin{dfn}
+      Buď $\mathcal A$ libovolná abelovská katergorie. Komplex $C$ v kagorii $\mathcal A$ je 
+      (konečná či nekonečná) posloupnost morfismů a objektů\\\\
+       \centerline{\xymatrix{
+       \textbf C:  \cdots \ar@{->}[r]^{d_{n+2}}
+         &  C_{n+1} \ar@{->}[r]^{d_{n+1}}
+         &  C_{n} \ar@{->}[r]^{d_{n}}
+         &  C_{n-1} \ar@{->}[r]^{d_{n-1}}
+         &  \cdots
+      },}\\\\
+      kde $d_nd_{n+1}=0$ pro všechna $n\in\mathbb Z$. Dále položme:
+      \begin{eqnarray}
+        Z_n(C) &:=& Ker(d^n) \nonumber \\
+        B_n(C) &:=& Im(d^{n+1}) \nonumber\\
+        H_n(C) &:=& Z_n(E)/B_n(E) = Ker(d^n)/Im(d^{n+1}) \nonumber
+      \end{eqnarray} 
+     \end{dfn}
+     
+     \begin{dfn}
+       Nechť $M,N\in Mod(R)$ a zvolme libovolně injektivní rezolventu modulu $N$\\
+       \centerline{\xymatrix{
+       \textbf E: 0 \ar@{->}[r] 
+         & N \ar@{->}[r]^{\eta}
+         &  E^0 \ar@{->}[r]^{d^0}
+         &  E^1 \ar@{->}[r]^{d^1}
+         &  E^2 \ar@{->}[r]^{d^2}
+         &  \cdots
+      }.}\\\\
+      Aplikujeme-li kovariantní funktor $Hom(M,-)$ na injektivní rezolventu $\textbf 
+      E$, dostaneme komplex $Hom_R(M,\textbf E)$:\\\\
+       \centerline{\xymatrix{
+         0\ar@{->}[r]
+         &  Hom_R(M,E^0) \ar@{->}[r]^{d^0_*}
+         &  Hom_R(M,E^1) \ar@{->}[r]^{d^1_*}
+         &  Hom_R(M,E^2) \ar@{->}[r]^{d^2_*}
+         &  \cdots
+      }.}\\\\
+      Definujme nyní \\\\
+      \centerline{$Ext^n_R(M,N):=H^n(Hom_R(M,\textbf E))=\frac{Ker(d_*^n)}{Im(d_*^{n-1})}$,}\\
+      kde \\
+      \centerline{$d_*^n:Hom_R(M,E^n)\rightarrow Hom_R(M,E^{n+1})$}\\\\
+      je dáno předpisem $f\mapsto d^nf$.
+     \end{dfn}
+     
+     Nebudeme zde dokazovat podrobně vlastnosti funktoru $Ext$, vše je obsaženo 
+     například v \cite{5} kapitole 6.2.3.
+     Pouze bez důkazu uvedeme následující tvrzení: 
+     
+     \begin{thm}
+       \begin{description}
+         \item 
+         \item[(a)] $Ext^n_R(M,N)$ je nezávislý na volbě injektivní rezolventy 
+           modulu $N$.
+         \item[(b)] Pro $R$ komutativní je $Ext^n_R(M,-)$ funktor $Mod(R)\rightarrow 
+           Mod(R)$.
+       \end{description}
+     \end{thm}
+
+   \subsection{Funktor $D$}
+     
+     \begin{dfn}
+       Nechť $S$ je okruh.
+       \begin{description}
+         \item[(a)] Nechť  navíc $M,N\in Mod(S)$ a $M\subseteq N$. Řekneme, že $N$ je esenciálním rozšířením 
+         $M$, pokud $X\cap M\neq0$ pro každý podmodul $0\neq X\subseteq N$. 
+         \item[(b)] Injektivní obal $I$ modulu $N\in Mod(S)$ je injektivní $S$-modul $I$ společně s 
+         monomorfismem $i:M\rightarrow I$, kde $I$ je esenciální rozšíření $Im(i)$. 
+       \end{description}
+     \end{dfn}
+     
+     Náš okruh $R$ je komutativní a lokální, má tedy jednoznačně určený maximální ideál, který 
+     budeme značit $\underline{m}$. 
+     Jako $I$ budeme dále značit injektivní obal 
+     jednoduchého $R$-modulu $R/\underline{m}$ (jednoduchost plyne z maximality $\underline{m}$).
+     
+     \begin{dfn}
+       Definujme funktor $D:=Hom_R(-,I)$. Funktor D se nazývá duál.
+     \end{dfn}
+     
+     \begin{thm}\label{lem-dual}
+       Funktor $D$ je exaktní a kontravariantní funktor 
+       \begin{description}
+         \item[(a)] $D:mod(R)\rightarrow mod(R)$ 
+         \item[(b)] $D:mod(A)\rightarrow mod(A^{op})$ 
+         \item[(c)] V obou předchozích případech je funktor $D$ navíc dualita kategorií.
+       \end{description}
+     \end{thm}
+     \begin{proof}
+         Víme, že v obou případech $D$ je zleva exaktní kontravariantní funktor 
+         v kategorii abelovských grup. Navíc $D$ je exaktní, protože
+       modul $I$  je injektivní dle \cite{5} Proposition 3.25. Dále dokážeme, že 
+       $D$ je zároveň funktorem v obou výše uvedených kategoriích:
+        
+       \begin{description}
+         
+         \item[(a)] Nechť $M\in Mod(R)$, pak $Hom_M(R,I)\in mod(R)$. Dokážeme,
+         že máme-li navíc libovolný modul $M'\in Mod(R)$ a $h\in Hom_R(M,M')$, pak $Dh\in 
+         Hom_R(DM,DM')$.
+         Nechť tedy $f\in DM'$ a $r\in R$. Pak
+         \begin{eqnarray}
+           Dh(rf')(m) &=& (-\circ h)_I(rf')(m)\nonumber \\
+           &=& (rf'h)(m') \nonumber \\ 
+           &=& r(f'h)(m')\nonumber \\
+           &=& r(-\circ h)_I(f')(m)\nonumber \\
+           &=& rDh(f')(m)\nonumber
+         \end{eqnarray}
+         pro každé $m\in M$ a tedy \\\\
+         \centerline{$Dh(rf')=rDh(f')$.}\\\\
+         Platnost rovnosti \\\\
+         \centerline{$Dh(f_1'+f_2')=Dh(f_1')+Dh(f_2')$}\\\\
+         pro každé $f_1',f_2'\in DM'$ dokazovat nebudeme a přenecháme ji 
+         čtenáři.
+                  
+         \item[(b)] Nechť $M\in mod(A)$, pak $Hom_R(M,I)\in Mod(A^{op})$ a navíc 
+         je $Hom_R(M,I)$ konečně generovaný jako $R$-modul a tedy $Hom_R(M,I)\in 
+         mod(A^{op})$. 
+         Ukážeme pouze, že $D$ zobrazí homomorfismus $A$-modulů na homomorfismus 
+         $A^{op}$-modulů, zbytek důkazu opět ponecháme čtenáři. 
+         Nechť $M,M'\in mod(A)$ a $h\in Hom_A(M,M')$. Pak pro $f'\in DM'$ 
+         a $\lambda\in A$ máme
+         \begin{eqnarray}
+           Dh(f'\lambda)(m)&=& (-\circ)_I(f'\lambda)(m)  \nonumber   \\    
+           &=& (f'\lambda)(\underbrace{h(m)}_{\in M'}) \nonumber \\      
+           &=& f'(\lambda h (m)) \nonumber       \\
+           &=& f'(h(\lambda m)) \nonumber       \\
+           &=& (-\circ h)_I (f')(\lambda m) \nonumber       \\
+           &=& \underbrace{Dh(f')}_{\in Hom_R(M,I)}(\lambda m) \nonumber       \\
+           &=& (Dh(f')\lambda)(m) \nonumber         
+         \end{eqnarray}
+         pro každé $m\in M$ a tedy \\\\
+         \centerline{$Dh(f'\lambda)=Dh(f')\lambda$.}
+         
+         \item[(c)] Dokážeme, že  zobrazení $\alpha: 1_{mod(R)}\to D^2$,
+         definované pro $M\in mod(R)$ 
+         \begin{eqnarray}
+           \alpha_M: M &\to& Hom_R(Hom_R(M,I),I) \nonumber \\
+           m&\mapsto&[f\mapsto f(m)] \nonumber
+         \end{eqnarray}
+         je přirozenou ekvivalencí funktorů. Zvolme pevně $M\in mod(R)$. Zřejmě máme 
+         $\alpha_M(m)\in  Hom_R(Hom_R(M,I),I)$ 
+         pro každé $m\in M$. Mějme 
+         $f_1,f_2\in Hom_R(M,I)$ a $r\in R$ , pak         
+         \begin{eqnarray}
+           \alpha_M(m)(rf_1+f_2) &=& (rf_1+f_2)(m) \nonumber \\
+           &=& rf_1(m)+f_2(m) \nonumber \\
+           &=& r\alpha_M(f_1) + \alpha_M(f_2).\nonumber 
+         \end{eqnarray}                 
+         Navíc pro $m_1,m_2\in M$ a $r\in R$ je 
+         \begin{eqnarray}
+           \alpha_M(rm_1+m_2)(f)&=& f(rm_1+m_2)\nonumber \\
+           &=& rf(m_1)+f(m_2)\nonumber \\
+           &=& r\alpha_M(m_1)(f_1)+\alpha_M(m_2))f\nonumber \\
+           &=& (r\alpha_M(m_1)+\alpha_M(m_2))(f)\nonumber 
+         \end{eqnarray}
+         pro každé $f\in Hom_R(M,I)$, tedy platí, že         
+         \begin{eqnarray}
+           \alpha_m(rm_1+m_2) &=& r\alpha_M(m_1) + \alpha_M(m_2) \nonumber
+         \end{eqnarray}
+         a $\alpha_M$ je tedy $R$-modulovým homomorfismem. Dále dokážeme, že jde 
+         o přirozenou transformaci. Nechť $M,M'\in Mod(R)$ a $h\in Hom_R(M,M')$. 
+         Pak 
+         \begin{eqnarray}
+           D^2(h) &=& Hom_R(-,I)Hom_R(-,I)(h)\nonumber \\
+           &=& Hom_R(-,I)((-\circ h)_I)\nonumber\\
+           &=& (-\circ(-\circ h)_I)_I.\nonumber 
+         \end{eqnarray}
+         Musíme dokázat, že následující diagram komutuje:
+         \\\\
+         \centerline{$\xymatrix{
+           M \ar[rrr]^{\alpha_M} \ar[d]^h
+          &&& Hom_R(Hom_R(M,I),I) 
+           \ar[d]^{(-\circ(-\circ h)_I)_I}\\
+           M' \ar[rrr]^{\alpha_{M'}}
+          &&& Hom_R(Hom_R(M',I),I) \\
+         }$}\\\\
+         Nechť $m\in M$ a uvažujme následující diagram:
+         \\\\
+         \centerline{$\xymatrix{
+           m \ar@{|->}[rrr] \ar@{|->}[d]
+          &&& [f\mapsto f(m)] 
+           \ar@{|.>}[d]^?\\
+           h(m) \ar@{|->}[rrr]
+          &&& [f'\mapsto f'h(m)] \\
+         }$}\\\\
+         Musíme dokázat, že \\\\
+         \centerline{$
+         (-\circ(-\circ h)_I)_I([f\mapsto f(m)])= [f'\mapsto f'h(m)].
+         $}\\\\
+         Pro $f'\in Hom_R(Hom_R(M',I),I)$ platí, že 
+         \begin{eqnarray}
+           (-\circ(-\circ h)_I)_I([f\mapsto f(m)])(f')
+           &=& [f\mapsto f(m)]\circ (-\circ h)_I (f')\nonumber \\
+           &=& [f\mapsto f(m)](f'h)\nonumber \\
+           &=& f'h(m)\nonumber 
+         \end{eqnarray}
+         a $\alpha$ je přirozenou transformací. Zbývá dokázat, že pro každé $M\in mod(R)$ 
+         je $\alpha_M$ izomorfismem $R$-modulů. Začneme s důkazem, že jde o 
+         monomorfismus, neboli že prokaždé $0\neq m\in M$ existuje $f\in Hom_R(M,I)$, že $\alpha_M(m)(f)=f(m)\neq 
+         0$.
+         Uvažujme homomorfismus $R$-modulů 
+         \begin{eqnarray}
+           \hat f: Rm&\to& I \nonumber \\
+           rm &\mapsto& r+\underline m. \nonumber
+         \end{eqnarray}
+         Připomeňme, že $\underline m$ značí maximální ideál $R$. Protože $Rm\subseteq M$ 
+         je podmodul, tak inkluze $i: Rm\to M$ je monomorfismem $R$-modulů. Z 
+         injektivity $I$ existuje $R$-modulový homomorfismus $f:M\to I$ takový, 
+         že následující diagram komutuje:  \\\\
+         \centerline{$\xymatrix{
+           Rm \ar[r]^i  \ar[d]_{\hat f} & M \ar@{.>}[ld]^f \\
+           I
+         }$}\\\\
+         Pak \\\\
+         \centerline{$f(m)=fi(m)=\hat f(m)=\hat f(1_Rm)=1_R+ \underline m\neq 0$} 
+         \\\\
+         a $\alpha_M$ je tedy monomorfismem. Že jde zároveň o epimorfismus a tedy i o izomorfismus se 
+         dokáže na základě tvrzení \cite{2} Proposition 1.4 (Kapitola 1). 
+         Zároveň vynecháme i důkaz, že $\alpha_M$ s výše uvedenou definicí 
+         je pro $M\in mod(A)$ izomorfismem $A$-modulů. 
+         Ten se provede přímočaře a přenecháme ho tedy čtenáři.
+       \end{description}
+     \end{proof}
+     
+     \begin{dsl}\label{lem-dual-teleso}
+       Pro $R=K$ těleso je funktor $D$ daný vztahem $D=Hom_K(-,K)$
+       jako funktor $mod(K)\rightarrow mod(K)$.
+     \end{dsl}
+     \begin{proof}
+       Pokud $R$ je těleso, pak  je jeho maximální ideál $\underline{m}=0$, tedy 
+       \\\\
+       \centerline{$R=R/\underline{m}=K$.}\\\\
+       Navíc $R$ jakožto $R$-modul je injektivní a jelikož každý nenulový 
+       podmodul $R$ má s $R$ nenulový průnik, je $R$ svým vlastním injektivním 
+       obalem a tedy \\\\
+       \centerline{$I=R=K$.}
+     \end{proof}
+     
+     \begin{dfn}
+       Buď $V\in mod(K)$, kde $K$ je libovolné těleso, a nechť \\\\
+       \centerline{$B_V:=\{v_1,v_2,\ldots,v_l\}$}\\\\
+       je K-báze V. Definujme zobrazení \\\\
+       \centerline{$d_{B_V}:B_V\rightarrow D(V)$} \\\\
+       předpisem $d_{B_V}(v_i)(v_j):=\delta_{i,j}$, kde $\delta$ je Kroneckerova 
+       delta.
+     \end{dfn}
+     
+     \begin{lem}
+       Buď $V\in mod(K)$, kde $K$ je libovolné těleso, a nechť \\\\
+       \centerline{$B_V:=\{v_1,v_2,\ldots,v_n\}$}\\\\
+       je $K$-báze $V$. Položme \\\\
+       \centerline{$dB_V:=\{d_{B_V}(v_1),d_{B_V}(v_2),\ldots,d_{B_V}(v_l)\},$}  \\\\
+       lak $dB_V$ je $K$-báze D(V).  Nazveme ji duální bází $D(V)$ 
+       vzhledem k $B_V$.
+     \end{lem}
+     
+     \begin{proof}
+       Nejprve dokážeme, že jsou prvky $dB_V$ lineárně nezávislé. 
+       Nechť $\alpha_1,\ldots,\alpha_l \in K$ jsou takové, že 
+       $\sum_{i=1}^l \alpha_i d_{B_V}(v_i)=0$. To znamená, že 
+       $\sum_{i=1}^l \alpha_i d_{B_V}(v_i)(v)=0$ pro každé $v\in V$, neboli,  že 
+       pro každé $j=1,2,\ldots,l$ máme \\\\
+       \centerline{$0
+         =\sum_{i=1}^l \alpha_i d_{B_V}(v_i)(v_j)
+         =\sum_{i=1}^l \alpha_i \delta_{i,j}
+         =\alpha_j$.} \\\\
+       A tedy $dB_V$ je lineárně nezávislá množina.
+       
+       Nyní dokážeme, že libovolné $f\in D(V)$ vyjádříme jako lineární kombinaci 
+       prvků $dB_V$. Máme vztah 
+       \begin{eqnarray}
+         d_{B_V}(v_i)\left(\sum_{j=1}^l\alpha_jv_j\right)
+         =\sum_{j=1}^l\alpha_jd_{B_V}(v_i)(v_j)       
+         =\alpha_i.  \nonumber          
+       \end{eqnarray}
+       Pro každé $v=\sum_{j=1}^l\alpha_jv_j$ pak platí
+       \begin{eqnarray}
+         f(v)
+         &=& f\left(\sum_{j=1}^l\alpha_jv_j\right)  \nonumber \\        
+         &=& \sum_{j=1}^l\alpha_j f(v_j)  \nonumber \\        
+         &=& \sum_{j=1}^l d_{B_V}(v_j)(v) f(v_j)  \nonumber \\     
+         &=& \sum_{j=1}^l f(v_j) d_{B_V}(v_j)(v)  \nonumber \\              
+         &=& \left( \sum_{j=1}^l f(v_j) d_{B_V}(v_j) \right)(v) \nonumber         
+       \end{eqnarray}
+       Z toho plyne, že $f=\sum_{j=1}^l f(v_j) d_{B_V}(v_j)$ a tím jsme hotovi.
+     \end{proof}
+     
+     \begin{dsl}
+       Nechť $B_V$ je báze vektorového prostoru $V$.
+       Koeficienty $f\in D(V)$ vzhledem k bázi $dB_V$ pak spočteme 
+       jako obrazy korespondujících prvků báze $B_V$ při zobrazení $f$.
+     \end{dsl}
+         
+     \begin{lem}\label{lem-baze-dual-xi}
+       Nechť $V,W\in mod(K)$, kde $K$ je\, těleso.\,\, Dále \, nechť $\xi \in Hom_K(V,W)$ 
+       je izomorfismus,  \\\\
+       \centerline{$B_V:=\{v_1,v_2,\ldots,v_l\}$}\\\\
+       je K-báze V a  \\\\
+       \centerline{$\xi(B_V):=\{\xi(v_1),\xi(v_2),\ldots,\xi(v_l)\}$}\\\\
+       je korespondující K-báze W. Pak pro každé $1\leq j \leq l$ máme: \\\\
+       \centerline{$(D\xi^{-1})(d_{B_V}(v_j))=d_{\xi(B_V)}(\xi(v_j))$}\\
+     \end{lem}
+     \begin{proof}
+       Nechť $1\leq j \leq l$ a $\sum_{i=1}^l\alpha_i\xi(v_i)\in W$. Pak
+       \begin{eqnarray}
+         (D\xi^{-1})(d_{B_V}(v_j)) \left( \sum_{i=1}^l\alpha_i\xi(v_i) \right)
+         &=& d_{B_V}(v_j) \circ \xi^{-1} \left( \sum_{i=1}^l\alpha_i\xi(v_i) \right) \nonumber \\      
+         &=& d_{B_V}(v_j) \left( \sum_{i=1}^l\alpha_i v_i \right) \nonumber \\      
+         &=& \alpha_j \nonumber \\      
+         &=& d_{\xi(B_V)}(\xi(v_j)) \left( \sum_{i=1}^l\alpha_i\xi(v_i) \right) \nonumber        
+       \end{eqnarray}
+       Z toho již přímo plyne hledaná rovnost.
+     \end{proof}
+     
+   \subsection{Funktor $()^*$}
+     
+     \begin{dfn}       
+       \begin{description} \item
+         \item[(a)] Nechť P(A) značí kategorii, jejíž objekty jsou konečně generované 
+            projektivní $A$-moduly a $Hom_{P(A)}(P,P')=Hom_A(P,P')$ pro $P,P'\in P(A)$. 
+         \item[(b)] Pro $A,B\in mod(A)$ definujeme esenciální epimorfismus $t\in Hom_A(A,B)$
+           jako epimorfismus $A$-modulů takový, že platí: Pro každé $M\in mod(A)$ a 
+           $u\in Hom_A(M,A)$ takové, že složený 
+           homomorfismus $tu$ je epimorfismus, je $u$ epimorfismus.  
+           \\\\      
+           \centerline{\xymatrix{           
+              A
+                \ar@{->}[r]^t
+              & B  \\
+              M
+                \ar[ru]_{tu}
+                \ar[u]^u
+           }}\\
+         \item[(c)] Projektivní pokrytí modulu $X$ je projektivní $A$-modul $P$ 
+           spolu s esenciálním epimorfismem $t:P\rightarrow X$. Poznamenejme, že 
+           někdy budeme o projektivním pokrytí referovat jako o dvojici 
+           $(P,t)$, jindy pouze jako o modulu či epimorfismu, pokud nebude druhé 
+           v našich úvahach potřeba.
+       \end{description}       
+     \end{dfn}
+     
+     \begin{lem}\label{lem-proj-pokryti}
+       Nechť $X\in mod(A)$, pak
+       \begin{description}
+         \item[(a)] je-li $P$ projektivní pokrytí $X$, pak $P\in P(A)$ a $P$ je tedy konečně generovaný. 
+         \item[(b)] projektivní pokrytí modulu $X$ je dáno jednoznačně až na izomorfismus. 
+         \item[(c)] projektivní pokrytí modulu $X$ existuje.
+       \end{description} 
+     \end{lem}
+     \begin{proof}
+       \begin{description}
+         \item
+         \item[(a)] Buď $P$ projektivní pokrytí $X\in mod(A)$. Pak máme 
+         esenciální epimorfismus $t\in Hom_A(P,X)$ a navíc jelikož je $X$ konečně generovaný,  
+         existuje $n\in \mathbb{N}$ a epimorfismus $u\in Hom_A(A^n,X)$.\\\\      
+           \centerline{\xymatrix{           
+               & A^n \ar[d]^u \ar@{.>}[ld]_{\exists v} \\
+             P \ar[r]_t
+               & X \ar[r] \ar[d] 
+               & 0 \\
+             & 0  
+           }} \\\\ 
+         Pak existuje $v\in Hom_A(A^n,P)$ takové, že diagram výše komutuje. Protože $tv=u$ 
+         je epimorfismus a $t$ je esenciální epimorfismus, musí být také $v$ 
+         epimorfismem a modul $P$ konečně generovaný.
+         \item[(b)] Buďte $P$ a $P'$ dvě projektivní pokrytí modulu $X$ a $t,t'$ 
+         jejich esenciální epimorfismy. Pak z vlastností projektivního pokrytí 
+         existují homomorfismy $h\in Hom_A(P,P')$ a $h'\in Hom_A(P',P)$ takové, 
+         že \\\\
+         \centerline{$t'h=t$ a $th'=t'$.}\\\\      
+         \centerline{\xymatrix{           
+               & P \ar[d]^t \ar@/_0.3pc/[ld]_{h} \\
+             P' \ar[r]_{t'} \ar@/_0.3pc/[ru]_{h'}
+               & X \ar[r] \ar[d] 
+               & 0 \\
+             & 0  
+         }} \\\\ 
+         Protože $t$ a $t'$ jsou esenciální epimorfismy, $th'$ a $t'h$ 
+         epimorfismy, tak jsou i zobrazení $h$ a $h'$ epimorfismy. Dále máme \\\\
+         \centerline{$t'(hh')=(t'h)h'=th'=t'$} 
+         \\\\
+         a $hh'$ je také epimorfismus. Modul $P'$ je konečně generovaný a $hh'$ 
+         je identita. To nám implikuje, že $h$ je monomorfismus a tedy 
+         i izomorfimus modulů $P$ a $P'$.
+         \item[(c)] Plyne z \cite{2} Theorem 4.2, jelikož $A$ je artinovská $R$-algebra.
+       \end{description} 
+     \end{proof}
+     
+     \begin{pzn}
+       Připomeňme, že homomorfismus konečně generovaných $A$-modulů má jádro v 
+       $mod(A)$, které je určeno jednoznačně až na izomorfismus.
+     \end{pzn}
+     
+     \begin{dfn}
+       Minimální projektivní prezentace modulu $X\in mod(A)$ je exaktní 
+       posloupnost 
+      \\\\      
+      \centerline{\xymatrix{     
+         P_1 \ar@{->}[r]^s 
+           & P_0 \ar@{->}[r]^t 
+           & X \ar@{->}[r]
+         & 0
+      },}\\\\ 
+      kde $P_0$ je projektivní pokrytí modulu $X$ a $P_1$ je projektivní 
+      pokrytí modulu $Ker(t)\subseteq P_0$. Přesněji $s=iw$, kde $i:Ker(t)\rightarrow P_0$ 
+      je kanonická inkluze jádra homomorfismu a $w:P_1\rightarrow Ker(t)$ je 
+      projektivní pokrytí modulu $Ker(t)$.\\\\
+       \centerline{\xymatrix{
+         P_1 \ar@{->}[rr]^{s=iw} \ar@{->}[rd]_w
+           & & P_0 \ar@{->}[r]^t 
+           & X \ar@{->}[r]
+           & 0 \\
+         & Ker(t) \ar@{->}[ru]_i
+      },}
+     \end{dfn}
+     
+     \begin{lem} 
+       Minimální projektivní prezentace modulu $X\in mod(A)$ je dána jednoznačně 
+       až na izomorfismus.
+     \end{lem}
+     \begin{proof}
+      Mějme následující dvě projektivní prezentace modulu $X$:\\\\
+       \centerline{\xymatrix{
+         P_1 \ar@{->}[r]^{s} 
+         & P_0 \ar@{->}[r]^t 
+         & X \ar@{->}[r]
+         & 0 \\
+      }}\\\\
+       \centerline{\xymatrix{
+         P_1' \ar@{->}[r]^{s'} 
+         & P_0' \ar@{->}[r]^{t'} 
+         & X \ar@{->}[r]
+         & 0 \\
+      }}\\\\
+      Uvažujme inkluze
+      \begin{eqnarray}
+          i:Ker(t) &\to& P_0 \nonumber \\
+         i':Ker(t') &\to& P_0' \nonumber 
+      \end{eqnarray}
+      a projekce
+      \begin{eqnarray}
+          \pi:P_1 &\to& Im(s)=Ker(t) \nonumber \\
+          \pi':P_1' &\to& Im(s')=Ker(t') \nonumber 
+      \end{eqnarray}
+       Máme následující diagram:
+      \\\\      
+      \centerline{\xymatrix{     
+         P_1 \ar@{->}[rr]^s \ar@{->}[rd]^{\pi} \ar@{.>}[ddd]^{h_1}
+           & & P_0 \ar@{->}[r]^t \ar@{->}[ddd]^{h_0}_{\simeq}
+           & X \ar@{->}[r] \ar@{=}[ddd]
+         & 0 \\
+         & Ker(t) \ar@{->}[ru]_{i} \ar@{.>}[ddd]^{u}_{\simeq} \\
+         \\
+         P_1' \ar@{->}[rr]^{s'} \ar@{->}[rd]^{\pi'} \ar@{.>}[ddd]^{h_1'} 
+           & & P_0' \ar@{->}[r]^{t'} \ar@{->}[ddd]^{h_0'}_{\simeq} 
+           & X' \ar@{->}[r] \ar@{=}[ddd]
+         & 0 \\
+         & Ker(t') \ar@{->}[ru]_{i'} \ar@{.>}[ddd]^{u'}_{\simeq}\\
+         \\
+         P_1 \ar@{->}[rr]^s \ar@{->}[rd]^{\pi}
+           & & P_0 \ar@{->}[r]^t 
+           & X \ar@{->}[r]
+         & 0 \\
+         & Ker(t) \ar@{->}[ru]_{i}\\
+      }}\\\\ 
+      Izomorfismy $h_0$ a $h_0'$ existují dle 
+      \hyperref[lem-proj-pokryti]{Lemma \ref*{lem-proj-pokryti}}. Existence 
+      izomorfismů $u$ a $u'$ takových, že 
+      \begin{eqnarray}
+        h_0i &=& i'u \nonumber \\
+        h_0'i'&=&iu'.  \nonumber
+      \end{eqnarray}
+      plyne z \hyperref[lemma-five]{Lemma \ref*{lemma-five}}.
+      
+      Protože $\pi'$ je epimorfismus a $P_1$ projektivní, existuje
+      $h_1\in Hom_A(P_1,P_1')$ takové, že\\
+      \centerline{$u\pi=\pi'h_1$.}\\\\
+      Navíc protože je $u\pi$ epimorfismus a $\pi'$ esenciální epimorfismus,
+      musí být i $h_1$ epimorfismus. Ekvivalentně existuje epimorfosmus 
+      $h_1\in Hom_A(P_1,P_1')$ takový, že\\\\
+      \centerline{$u'\pi'=\pi h_1'$.}\\\\
+      Složené zobrazení $h_1'h_1$ je epimorfismus a jelikož je modul $P_1$ 
+      dle \hyperref[lem-proj-pokryti]{Lemma \ref*{lem-proj-pokryti}} 
+      konečně generovaný, je $h_1'h_1$ izomorfismus. To implikuje, že 
+      homomorfismus $h_1$ je monomorfismem a tedy i izomorfismem.
+     \end{proof}
+     
+     \begin{dfn}
+       Definujme hom funktor $()^* := Hom_A(-,A)$. 
+     \end{dfn}
+     
+     \begin{thm}\label{lem-star}
+       Funktor $()^*$ je
+       \begin{description}
+         \item[(a)] kontravariantním zleva exaktním funktorem $mod(A)\rightarrow mod(A^{op})$. 
+         \item[(b)] kontravariantním funktorem $P(A)\rightarrow P(A^{op})$.
+       \end{description}
+     \end{thm}
+     \begin{proof}
+       Víme, že $Hom_A(-,A)$ je kontravariantním zleva exaktním funktorem 
+       abelovských grup.
+       \begin{description}
+         \item[(a)] Buď $M\in mod(A)$, pak $Hom_A(M,A)\in mod(R)$. Definujme na 
+         $Hom_A(M,A)$ násobení prvky $A$ zprava předpisem 
+         \begin{eqnarray} 
+           Hom_A(M,A)\times A&\to& Hom_A(M,A)\nonumber \\
+            f\lambda &\mapsto& [f\lambda(m) \mapsto f(m)\lambda]. \nonumber 
+         \end{eqnarray}          
+         Že je násobení dobře definované a asociativní ke sčítání homomorfismů je zřejmé.
+         Ověříme, že $()^*$ přenaší homomorfismus $A$-modulů na homomorfismus 
+         $A^{op}$-modulů. Nechť $M,M'\in mod(A)$, $h\in Hom_A(M,M')$, $f'\in M^*'$ 
+         a $\lambda\in A$. Pak
+         \begin{eqnarray}
+           (h^*(f'\lambda))(m)&=& ((f'\lambda)h)(m)\nonumber \\
+           &=& (f'\lambda)(h(m)) \nonumber \\
+           &=& f'(h(m))\lambda \nonumber \\
+           &=& (f'h)(m)\lambda\nonumber \\
+           &=& ((f'h)\lambda)(m)\nonumber \\
+           &=& (h^*(f')\lambda)(m)\nonumber 
+         \end{eqnarray}
+         pro všechna $m\in M$ a tedy \\\\
+         \centerline{$h^*(f'\lambda)=h^*(f')\lambda$.}\\\\
+         Obdobně se dokáže rovnost \\\\
+         \centerline{$h^*(f'_1 + f'_2)=h^*(f'_1 + f'_2)$.}\\\\
+         Pak $Hom_A(M,A)\in Mod(A^{op})\cap mod(R)$ a tedy dle 
+           \hyperref[lem-mod-Mod]{Lemma \ref*{lem-mod-Mod}} máme $Hom_A(M,A)\in 
+           mod(A)$.
+           
+         \item[(b)] Buď $P$ projektivní $A$-modul. Pak dle 
+         \hyperref[rozklad-A-na-P]{Věty \ref*{rozklad-A-na-P}} 
+         existuje projektivní $A$-modul  $P'$ a 
+         $n\in \mathbb N$ takové, že $A^n=P\oplus P'$. Potom máme následující izomorfismus 
+         $A^{op}$-modulů: \\\\
+         \centerline{$ Hom_A(A^n,A)\simeq Hom_A(P\oplus P', A)$.} \\\\
+         Navíc dle 
+         \hyperref[dir-sum-hom]{Věty \ref*{dir-sum-hom}} následující izomorfismy 
+         $A^{op}$-modulů:\\\\
+         \centerline{$ Hom_A(P, A) \oplus Hom_A(P', A) \simeq Hom_A(A, A)$.} \\\\
+         \centerline{$ Hom_A(A^n, A) \simeq Hom_A(A, A)^n$.} \\\\
+         Pak s využitím \hyperref[izo-hom-aei]{Věty \ref*{izo-hom-aei}} 
+         dostáváme izomorfismus  $A^{op}$-modulů\\\\
+         \centerline{$ Hom_A(P, A) \oplus Hom_A(P', A) \simeq Hom_A(A^n, A) \simeq (A^{op})^n$.} \\\\
+         Z toho již plyne, že $P^*=Hom_A(P,A)$ je direktním sčítancem $(A^{op})^n$ 
+         a tedy projektivní.
+       \end{description}
+     \end{proof}
+     
+   \subsection{Funktor $Tr$}
+    
+     \begin{lem}\label{lemma-cok*}
+       Nechť $X\in mod(A)$ a posloupnost  \\\\
+       \centerline{\xymatrix{
+       P_1 \ar@{->}[r]^s 
+         & P_0 \ar@{->}[r]^t 
+         & X \ar@{->}[r]
+         & 0
+      },}\\\\ je minimální projektivní prezentace modulu $X$. Pak
+       \begin{description}
+         \item[(a)] Následující posloupnost je exaktní v $mod(A^{op})$: \\\\
+         \centerline{\xymatrix{
+           0 \ar@{->}[r] 
+             & X^* \ar@{->}[r]^{t^*} 
+             & P_0^* \ar@{->}[r]^{s^*} 
+             & P_1^* \ar@{->}[r] 
+             & Cok(s^*) \ar@{->}[r]
+             & 0
+          }}       
+         \item[(b)] Je-li navíc  \\
+         \centerline{\xymatrix{
+           P_1' \ar@{->}[r]^{s'} 
+             & P_0' \ar@{->}[r]^{t'} 
+             & X \ar@{->}[r]
+             & 0
+          }} \\\\
+          druhá projektivní prezentace modulu $X$, pak máme izomorfismus 
+          $A^{op}$-modulů: \\\\
+          \centerline{$Cok(s^*)\simeq Cok(s'^*)$}
+       \end{description}
+     \end{lem}
+     \begin{proof}
+       \begin{description}
+         \item
+         \item[(a)] Plyne z \hyperref[lem-star]{Lemma \ref*{lem-star}} a z toho, 
+           že kojádro morfismu konečně generovaných modulů je konečně 
+           generované.
+         \item[(b)] Dle \hyperref[lem-proj-pokryti]{Lemma \ref*{lem-proj-pokryti}}
+           existují izomorfismy $h_0\in Hom_A(P_0,P_0')$ a $h_1\in Hom_A(P_1,P_1')$ 
+           takové, že následující diagram komutuje: \\\\
+           \centerline{\xymatrix{
+             0 \ar@{->}[r] 
+               & P_1 \ar@{->}[r]^s \ar@{.>}[d]_{h_1} 
+               & P_0 \ar@{->}[r]^t \ar@{.>}[d]_{h_0} 
+               & X \ar@{->}[r] \ar@{=}[d] 
+               & 0 \\
+             0 \ar@{->}[r] 
+               & P_1' \ar@{->}[r]^{s'} 
+               & P_0' \ar@{->}[r]^{t'} 
+               & X \ar@{->}[r]
+               & 0
+           }}\\\\\\       
+           Aplikujeme-li funktor $()^*$ dostaneme následující komutativní 
+           diagram:\\\\
+           \centerline{\xymatrix{
+             0 \ar@{->}[r]
+               & X^{*} \ar@{->}[r]^{t^{'*}} \ar@{=}[d]
+               & P_0^{'*} \ar@{->}[r]^{s^{'*}} \ar@{->}[d]^{h_0^*}
+               & P_1^{'*} \ar@{->}[r]  \ar@{->}[d]^{h_1^*}
+               & Cok(s^{'*}) \ar@{->}[r]  \ar@{.>}[d]^{\simeq}
+               & 0 \\
+             0 \ar@{->}[r]
+               & X^{*} \ar@{->}[r]^{t^{*}} 
+               & P_0^{*} \ar@{->}[r]^{s^{*}} 
+               & P_1^{*} \ar@{->}[r] 
+               & Cok(s^{*}) \ar@{->}[r]
+               & 0
+           }}\\\\\\       
+           Z \hyperref[lemma-five]{Lemma \ref*{lemma-five}} pak plyne hledaný $S^{op}$-modulový 
+           izomorfismus $Cok(s^{*})\simeq Cok(s^{*'})$.
+         \end{description} 
+     \end{proof}
+     
+     \begin{dfn}
+       Na základě předchozího \hyperref[lemma-cok*]{Lemma \ref*{lemma-cok*}} 
+       definujme zobrazení \\\\  
+       \centerline{$Tr:mod(A)\rightarrow mod(A^{op})$} \\\\
+       předpisem $Tr(X):=Cok(s^*)$, kde \\\\
+       \centerline{\xymatrix{
+         P_1 \ar@{->}[r]^s 
+           & P_0 \ar@{->}[r]^t 
+           & X \ar@{->}[r]
+           & 0
+       },}\\\\
+       je libovolná projektivní prezentace modulu $X$.       
+     \end{dfn}
+     
+     \begin{dfn}
+       \begin{description} \item
+         \item[(a)] Pro $M,N\in mod(A)$ položme: 
+           \\\\
+           $P_A(M,N):=\{f\in Hom_A(M,N)|f$ se faktorizuje skrze projektivní modul$\}$ \\
+           \\
+          \centerline{$\underline{Hom}_A(M,N):=Hom_A(M,N)/P_A(M,N)$} \\
+         \item[(b)] Definujme kategorii $\underline{mod}(A)$: \\\\
+           \centerline{$Ob(\underline{mod}(A)):=Ob(mod(A))$}\\\\
+           \centerline{$Hom_{\underline{mod}(A)}(M,N):=\underline{Hom}_A(M,N)$}\\ 
+       \end{description}       
+     \end{dfn}
+     
+     \begin{thm}
+       Pro dva moduly $X,X'\in mod(A)$ a jejich dvě projektivní prezentace 
+       \\\\      
+       \centerline{\xymatrix{
+         P_1 \ar@{->}[r]^s 
+           & P_0 \ar@{->}[r]^t 
+           & X \ar@{->}[r]
+           & 0
+       }}\\\\       
+       \centerline{\xymatrix{
+         P_1' \ar@{->}[r]^{s'} 
+           & P_0' \ar@{->}[r]^{t'} 
+           & X' \ar@{->}[r]
+           & 0
+       },}\\\\\\
+       dodefinujme $Tr:\underline{Hom}_A(X,X')\rightarrow 
+       \underline{Hom}_{A^{op}}(Tr(X'),Tr(X))$ předpisem \\\\
+       \centerline{$h+P_A(X,X')\mapsto (h_1^*)_{Cok}+P_{A^{op}}(Tr(X'),Tr(X))$,}
+       \\\\kde $h_0\in Hom_A(P_0,P_0')$ a $h_1\in Hom_A(P_1,P_1')$ jsou 
+       libovolně zvolené homomorfismy takové, že následující diagram komutuje: 
+       \\\\
+           \centerline{\xymatrix{
+             X^{'*} \ar@{->}[r]^{t^{'*}} \ar@{->}[d]^{h^*}
+               & P_0^{'*} \ar@{->}[r]^{s^{'*}} \ar@{->}[d]^{h_0^*}
+               & P_1^{'*} \ar@{->}[r]  \ar@{->}[d]^{h_1^*}
+               &Tr(X') \ar@{->}[r]  \ar@{->}[d]^{(h_1^*)_{Cok}}
+               & 0 \\
+             X^{*} \ar@{->}[r]^{t^{*}} 
+               & P_0^{*} \ar@{->}[r]^{s^{*}} 
+               & P_1^{*} \ar@{->}[r] 
+               & Tr(X)\ar@{->}[r]
+               & 0
+           },}\\\\\\     
+       Pak je $Tr$ kontravariantním funktorem $Tr: \underline{mod}(A)\rightarrow 
+       \underline{mod}(A^{op})$. 
+     \end{thm}
+     \begin{proof}
+       Důkaz rozdělíme na 3 části:
+       \begin{description}
+         \item[(1)] Pro morfismy $g_0,h_0\in Hom_A(P_1,P_1')$ a $g_0,h_0\in Hom_A(P_0,P_0')$ 
+         takové, že následující diagramy komutují, \\\\
+         \centerline{\xymatrix{
+         P_1 \ar@{->}[r]^s  \ar[d]^{h_1}
+           & P_0 \ar@{->}[r]^t   \ar[d]^{h_0}
+           & X \ar@{->}[r] \ar[d]^{h}
+           & 0 \\
+         P_1' \ar@{->}[r]^{s'} 
+           & P_0' \ar@{->}[r]^{t'} 
+           & X' \ar@{->}[r]
+           & 0
+       } \\ \xymatrix{
+         P_1 \ar@{->}[r]^s  \ar[d]^{g_1}
+           & P_0 \ar@{->}[r]^t   \ar[d]^{g_0}
+           & X \ar@{->}[r] \ar[d]^{h}
+           & 0 \\
+         P_1' \ar@{->}[r]^{s'} 
+           & P_0' \ar@{->}[r]^{t'} 
+           & X' \ar@{->}[r]
+           & 0
+       } \\}\\\\\\
+       platí, že \\\\
+       \centerline{$(h_1^*)_{Cok}-(g_1^*)_{Cok}\in P_{A^{op}}(Tr(X'),Tr(X))$.} 
+       \\\\
+       Neboli $(h_1^*)_{Cok}$ a $(g_1^*)_{Cok}$ reprezentují stejný prvek z 
+       $\underline{Hom}_{A^{op}}(Tr'(X),Tr(X))$.
+       
+         \item[(2)] Pro $h\in P_A(X,X')$ je \\\\
+         \centerline{$(h_1^*)_{Cok}\in P_{A^{op}}(Tr(X'),Tr(X))$.}\\\\
+         Neboli prvek $\underline{Hom}_{A}(X',X)$ se zobrazuje na prvek 
+         $\underline{Hom}_{A^{op}}(Tr'(X),Tr(X))$
+         nezávisle na zvoleném reprezentantu.
+
+         \item[(3)] Funktor $Tr$ kontravariantním funktorem $\underline{mod}(A)\rightarrow 
+       \underline{mod}(A^{op})$.
+       \end{description}
+       
+       
+       \begin{description}
+         \item[(1)] Uvažujme následující diagram: \\\\
+         \centerline{\xymatrix{
+         P_1 \ar@{->}[rr]^s  \ar@/^1pc/[dd]^{h_1} \ar@/_1pc/[dd]_{g_1}
+           && P_0 \ar@{->}[rr]^t   \ar@/_1pc/[dd]_{g_0}  \ar@/^1pc/[dd]^{h_0}  \ar@{.>}[lldd]_u
+           && X \ar@{->}[rr] \ar[dd]^{h}
+           && 0 \\\\
+         P_1' \ar@{->}[rr]^{s'} \ar[rd]
+           && P_0' \ar@{->}[rr]^{t'} 
+           && X' \ar@{->}[rr]
+           && 0 \\
+           & Ket(t') \ar[ru]
+         }\\}\\\\\\
+         Protože $ht=t'h_0=t'g_0$, pak $t'(h_0-g_0)=0$ a tedy $h_0-g_0$ se 
+         faktorizuje skrze $Ker(t')$. Pak z projektivity $P_0$ existuje 
+         kanonická projekce $P_1'$ na $Im(s')=Ker(t')$ a $(g_0-h_0)$ se 
+         faktorizuje skrze $P_1'$. Proto existuje $u\in Hom_A(P_0,P_1')$ takové, 
+         že \\\\
+         \centerline{$s'u=g_0-h_0$.}\\\\
+         Aplikujeme-li funktor $()^*$, dostaneme následující diagram v 
+         $mod(A^{op})$:\\\\
+         \centerline{\xymatrix{
+         P_0'^* \ar@{->}[rr]^{s'^*}  \ar@/^1pc/[dd]^{h_0'^*} \ar@/_1pc/[dd]_{g_0'^*}
+           && P_1'^* \ar@{->}[rr]^{\hat t'}   \ar@/_1pc/[dd]_{g_1'^*}  \ar@/^1pc/[dd]^{h_1'^*}  
+           \ar[lldd]_{u^*}
+           && Tr(X') \ar@{->}[rr] \ar@/^1pc/[dd]^{(h_1^*)_{Cok}} \ar@/_1pc/[dd]_{(g_1^*)_{Cok}}
+           \ar@{.>}[lldd]_{v}
+           && 0 \\\\
+         P_0^* \ar@{->}[rr]^{s^*}
+           && P_0^* \ar@{->}[rr]^{\hat t} 
+           && X' \ar@{->}[rr]
+           && 0 \\
+           & \quad\quad &
+           & \quad\quad &
+         }\\}\\
+         Protože platí 
+         \\\\\centerline{$u^*s'^*=g_0^*-h_0^*$,} \\\\
+         pak 
+         \\\\\centerline{$s^*u^*s'^*=s^*(g_0^*-h_0^*)=(g_1^*-h_1^*)s'^*$}\\\\
+          a tedy
+         \\\\\centerline{$(g_1^*-h_1^*-s^*u^*)s'^*=0$.}\\\\
+         Pak se $(g_1^*-h_1^*-s^*u^*)$ faktorizuje skrze kojádro $s'^*$, 
+         konkrétně $\hat t'$. To znamená, že existuje $u\in Hom_{mod(A^{op})}(Tr(X'),P_1^*)$ 
+         takové, že 
+         \\\\\centerline{$v \hat t'=g_1^*-h_1^*-s^*u^*$.}\\\\
+         Přenásobíme-li poslední řádek $\hat t$, dostaneme
+         \\\\\centerline{$\hat t v \hat t'=\hat t (g_1^*-h_1^*-s^*u^*)=((g_1^*)_{Cok} - (h_1^*)_{Cok})\hat t '$,}\\\\
+         a protože $\hat t'$ je epimorfismus, pak 
+         \\\\\centerline{$\hat t v=(g_1^*)_{Cok}-(h_1^*)_{Cok}$.}\\\\
+         A tedy $(g_1^*)_{Cok}-(h_1^*)_{Cok}$ se faktorizuje skrze $P_1^*$ a 
+         \\\\\centerline{$(g_1^*)_{Cok}-(h_1^*)_{Cok} \in P_{A^{op}}(Tr(X'),Tr(X))$.}
+                  
+         \item[(2)] Uvažujme diagram:\\\\
+         \centerline{\xymatrix{
+         P_1 \ar@{->}[rr]^s   \ar[dd]_{h_1}
+           && P_0 \ar@{->}[rr]^t  \ar[dd]^{h_0} \ar@{.>}[lldd]_v  \ar@{.>}[lddd]_v
+           && X \ar@{->}[rr] \ar[dd]^{h}  \ar@{.>}[lldd]_u
+           && 0 \\\\
+         P_1' \ar@{->}[rr]^{s'} \ar[rd]
+           && P_0' \ar@{->}[rr]^{t'} 
+           && X' \ar@{->}[rr]
+           && 0 \\
+           & Ket(t') \ar[ru]
+         }\\}\\\\\\
+         Předpokládejme, že se $h$ faktorizuje skrze projektivní $A$-modul $P$. 
+         Pak protože $t'$ je epimorfismus, tak se $h$ faktorizuje i skrze $t'$. 
+         Neboli existuje $u'\in Hom_A(X,P_0)$ takové, že 
+         \\\\\centerline{$t'u=h$.}\\\\
+         Uvažujme $A$-homomorfismus $(h_0-ut)$, ten se faktorizuje skrze 
+         $Ket(t')$. Přenásobením $t'$ zleva 
+         dostaneme rovnost
+         \\\\\centerline{$t'(h_0-ut)=t'h_0-t'ut=t'h_0-ht=0$.}\\\\
+         Pak protože $P_0$ je projektivní modul a z existence kanonické 
+         projekce $P_1'$ na $Im(s')=Ket(t')$, se musí $h_0-ut$ faktorizovat 
+         skrze $P_1'$. Tedy existuje $v\in Hom_A(P_0,P_1')$ takové, že
+         \\\\\centerline{$s'v=h_0-ut$.}\\\\
+         Aplikací funktoru $()^*$ získáme rovnost
+         \\\\\centerline{$v^*s'^*=h_0^*-t^*u^*$}\\\\
+         a následující diagram komutuje:\\\\
+         \centerline{\xymatrix{
+          0 \ar[r]
+           & X'^* \ar@{->}[rr]^{t'^*}  \ar[dd]^{h^*}
+           && P_0'^* \ar@{->}[rr]^{s'^*}  \ar[dd]^{h_0^*} \ar@{->}[lldd]_{u^*}
+           && P_1'^* \ar@{->}[rr]^{\hat t'} \ar[dd]^{h_1^*}  \ar@{->}[lldd]_{v^*}
+           && Tr(X')  \ar@{->}[r] \ar[dd]^{(h_1^*)_{Cok}}  \ar@{.>}[lldd]_{w}
+           & 0 \\\\
+         0 \ar[r]
+           & X^* \ar@{->}[rr]^{t^*}
+           && P_0^* \ar@{->}[rr]^{s^*} 
+           && P_1 \ar@{->}[rr]^{\hat t}           
+           && Tr(X) \ar@{->}[r]
+           & 0
+         }\\}\\\\\\
+         Ukážeme, že se $(h_1^*-s^*v^*)$ faktorizuje skrze $Cok(s'^*)=Tr(X'):$
+         \begin{eqnarray}
+           (h_1^*-s^*v^*)s'^* &=& h^*s'^*-s^*v^*s'^*   \nonumber \\
+           &=&  h^*s'^*-s^*(h_0^*-t^*u^*)  \nonumber \\
+           &=&  h^*s'^*-s^* h_0^*-s^*t^*u^*    \nonumber \\
+           &=& 0.   \nonumber 
+         \end{eqnarray}
+         Pak existuje $w\in Hom_A(Tr(X'),P_1^*)$ takové, že
+         \\\\\centerline{$w\hat t'=h_1^*-s^*v^*$,}\\\\
+         a my konečně vidíme, že
+         \\\\\centerline{$\hat w\hat t'=\hat t(h_1^*-s^*v^*)=\hat t h_1^*=(h_1^*)_{Cok}\hat t'$.}\\\\
+         A protože $\hat t'$ je epimorfismus, musí být
+         \\\\\centerline{$(h_1^*)_{Cok}=\hat t w$.}\\\\
+         Tedy $(h_1^*)_{Cok}\in P_{A_{op}}(Tr(X'),Tr(X))$.
+         \item[(3)] Již víme, že zobrazení
+           \\\\\centerline{$Tr:Ob(\underline{mod}(A))\to Ob(\underline{mod}(A^{op}))$}\\\\
+           je dobře definované a z (1) a (2) navíc, že pro $X,X'\in \underline{mod}(A)$ 
+           je dobře definované i zobrazení
+           \\\\\centerline{$Tr: \underline{Hom}_A(X,X') \to \underline{Hom}_{A^{op}}(Tr(X'),Tr(X))$.}\\\\
+           Zbývá tedy dokázat, že $Tr$ je kompatibilní se skládáním morfismů a 
+           že zachovává identitu. Nechť tedy $X,Y,Z\in \underline{mod}(A)$, $f\in Hom_A(X,Y)$ 
+           a $g\in Hom_A(Y,Z)$. Chceme ukázat, že 
+           \\\\\centerline{$Tr(gf)=Tr(f)Tr(g)$.}\\\\
+           Máme následující  komutativní diagram v $mod(A)$, kde jednotlivé 
+           řádky jsou minimální  projektivní prezentace modulů $X$, $Y$ a $Z$:
+           \\\\\centerline{$\xymatrix{
+                P_{X,1} \ar[r]^{s_X} \ar[d]^{f_1}
+             & P_{X,0} \ar[r]^{t_X} \ar[d]^{f_0}
+             & X \ar[r]  \ar[d]^{f}
+             & 0 \\
+                P_{Y,1} \ar[r]^{s_Y} \ar[d]^{g_1}
+             & P_{Y,0} \ar[r]^{t_Y} \ar[d]^{g_0}
+             & Y \ar[r]  \ar[d]^{g}
+             & 0 \\
+                P_{Z,1} \ar[r]^{s_Z} 
+             & P_{Z,0} \ar[r]^{t_Z}
+             & Z \ar[r]
+             & 0
+           }$} \\\\\\
+           Dle bodu (1) si můžeme při hledání $Tr(gf)$ zvolit libovolné dva 
+           homomorfismy $(gf)_0$ a $(gf)_1$ takové, že následující diagram 
+           komutuje:
+           \\\\\centerline{$\xymatrix{
+                P_{X,1} \ar[r]^{s_X} \ar[d]^{(gf)_1}
+             & P_{X,0} \ar[r]^{t_X} \ar[d]^{(gf)_0}
+             & X \ar[r]  \ar[d]^{gf}
+             & 0 \\
+                P_{Z,1} \ar[r]^{s_Z} 
+             & P_{Z,0} \ar[r]^{t_Z}
+             & Z \ar[r]
+             & 0
+           }$} \\\\\\
+           Tuto podmínku jasně splňuje i volba:
+           \begin{eqnarray}
+            (gf)_0 &:=& g_0f_0 \nonumber \\
+            (gf)_1 &:=& g_1f_1.\nonumber
+           \end{eqnarray}
+           Aplikací funktoru $()^*$ dostaneme následující diagram v $mod(A^{op})$, 
+           na který je možné zároveň nahlížet jako na diagram v 
+           $\underline{mod}(A^{op})$, kde jednotlivé homomorfismy jsou zástupci 
+           svých tříd ekvivalence:
+           \\\\\centerline{$\xymatrix{
+                P_{Z,0}^* \ar[r]^{s_Z^*} \ar[d]^{g_0^*}
+             & P_{Z,1}^* \ar[r]^{\hat t_Z} \ar[d]^{g_1^*}
+             & Tr(Z) \ar[r]  \ar[d]^{Tr(g)} \ar@/^6pc/[dd]^{Tr(gf)}
+             & 0 \\
+                P_{Y,0}^* \ar[r]^{s_Y^*} \ar[d]^{f_0^*}
+             & P_{Y,1}^* \ar[r]^{\hat t_Y} \ar[d]^{f_1^*}
+             & Tr(Y) \ar[r]  \ar[d]^{Tr(f)}
+             & 0 \\
+                P_{X,0}^* \ar[r]^{s_X^*} 
+             & P_{X,1}^* \ar[r]^{\hat t_X}
+             & Tr(X) \ar[r]
+             & 0
+           }$} \\\\\\
+          V tomto diagramu vidíme následující rovnost
+           \\\\\centerline{$
+             Tr(gf)\hat t_Z
+             =\hat t_X f_1^*g_1^*
+             =\hat t_X f_1^*g_1^*
+             = Tr(f) \hat t_Y g_1^*
+             = Tr(f)Tr(g)\hat t_Z$}\\\\
+           a tedy, protože $\hat t_Z$ je epimorfismus, máme
+           \\\\\centerline{$Tr(gf)=Tr(f)Tr(g)$.}\\\\
+           Nyní zbývá ukázat, že
+           \\\\\centerline{$Tr(1_X)=1_{Tr(X)}$,}\\\\
+           pro každé $X\in\underline{mod}(A)$. Uvažme diagram
+           \\\\\centerline{$\xymatrix{
+                P_{1} \ar[r]^{s} \ar[d]^{1_{P_0}}
+             & P_{0} \ar[r]^{t} \ar[d]^{1_{P_1}}
+             & X \ar[r]  \ar[d]^{1_X}
+             & 0 \\
+                P_{1} \ar[r]^{s} 
+             & P_{0} \ar[r]^{t}
+             & X \ar[r]
+             & 0
+           }$} \\\\\\
+           Aplikujeme-li funktor $()^*$ dostaneme
+           \\\\\centerline{$Tr(1_X)=(1_{P_1}^*)_{Cok}=1_{Tr(X).}$}\\\\
+       \end{description}
+     \end{proof}
+     
+     \begin{pzn}
+       Zmiňme bez důkazu ještě několik užitečných vlastností funktoru $Tr$, 
+       jejichž důkaz a věškeré podrobnosti lze nalézt hned v několika zdrojích, 
+       například \cite{2}:
+       \begin{description}
+         \item[(a)] $Tr^2=1_{\underline{mod}(A)}$.
+         \item[(b)] $Tr(\bigoplus_{i=1}^n M_i)=\bigoplus_{i=1}^n Tr(M_i)$. 
+         \item[(c)] $Tr(M)=0$ $\Leftrightarrow$ $M$ je projektivní. 
+         \item[(d)] $Tr(M)\simeq$ neprojektivní části $M$.
+       \end{description}
+     \end{pzn}
+     
+   \subsection{Funktory $\delta^*$ a $\delta_*$} 
+     
+     \begin{dfn}\label{def-delta-*}
+       Nechť $X\in mod(A)$ a $\delta$ značí následující exaktní posloupnost \\\\
+       \centerline{\xymatrix{
+         0 \ar@{->}[r] 
+           & M \ar@{->}[r]^f 
+           & N \ar@{->}[r]^g 
+           & L \ar@{->}[r]
+           & 0
+       }.}\\
+       \begin{description}
+         \item[(a)] Definujme $\delta_*(X)$ exaktností následující posloupnosti $R$-modulů: \\\\
+           \centerline{\xymatrix{
+             0 \ar@{->}[r] 
+               & Hom_A(L,X) \ar@{->}[r]^{(-\circ g)_X}
+               & Hom_A(N,X) \ar@{->}[r]^{(-\circ f)_X}
+               & Hom_A(M,X) \ar@{->}[r]
+               & \delta_*(X) \ar@{->}[r]
+               & 0 &\,&             
+             }}\\ 
+         \item[(b)] Definujme $\delta^*(X)$ exaktností následující posloupnosti $R$-modulů: \\\\
+           \centerline{\xymatrix{
+             0 \ar@{->}[r] 
+               & Hom_A(X,M) \ar@{->}[r]^{(f\circ -)_X}
+               & Hom_A(X,N) \ar@{->}[r]^{(g\circ -)_X}
+               & Hom_A(X,L) \ar@{->}[r]
+               & \delta^*(X) \ar@{->}[r]
+               & 0 &\,&
+           }}  
+       \end{description}
+     \end{dfn}
+     
+     \begin{thm}\label{thm-delta}
+       Nechť $X,X'\in mod(A)$ a $h\in Hom_A(X,X')$ a $\delta$ je jako v definici 
+       \hyperref[def-delta-*]{Definici \ref*{def-delta-*}}. Pak platí:
+       \begin{description}
+         \item[(a)] Položme $\delta_*(h):=((h \circ -)_M)_{Cok}$ jako na následujícím diagramu:  \\\\
+           \centerline{\xymatrix{
+             0 \ar@{->}[r] 
+               & Hom_A(L,X) \ar@{->}[r]^{(-\circ g)_X} \ar@{->}[d]^{(h\circ -)_L}
+               & Hom_A(N,X) \ar@{->}[r]^{(-\circ f)_X} \ar@{->}[d]^{(h\circ -)_N}
+               & Hom_A(M,X) \ar@{->}[r] \ar@{->}[d]^{(h\circ -)_M}
+               & \delta_*(X) \ar@{->}[r] \ar@{->}[d]^{((h \circ -)_M)_{Cok}}
+               & 0\\
+             0 \ar@{->}[r] 
+               & Hom_A(L,X') \ar@{->}[r]^{(-\circ g)_X'}
+               & Hom_A(N,X') \ar@{->}[r]^{(-\circ f)_X'}
+               & Hom_A(M,X') \ar@{->}[r]
+               & \delta_*(X') \ar@{->}[r]
+               & 0 &\,&\\
+           }}\\\\\\
+           Spolu s tímto zobrazením je $\delta_*$ kovariantní funktor $mod(A)\rightarrow mod(R)$.
+
+         \item[(b)] Položme $\delta^*(h):=((-\circ h)_L)_{Cok}$ jako na následujícím diagramu: \\\\
+          \centerline{\xymatrix{
+             0 \ar@{->}[r] 
+               & Hom_A(X',M) \ar@{->}[r]^{(f\circ -)_X'} \ar@{->}[d]^{(-\circ h)_M}
+               & Hom_A(X',N) \ar@{->}[r]^{(g\circ -)_X'} \ar@{->}[d]^{(-\circ h)_N}
+               & Hom_A(X',L) \ar@{->}[r] \ar@{->}[d]^{(-\circ h)_L}
+               & \delta^*(X') \ar@{->}[r] \ar@{->}[d]^{((-\circ h)_L)_{Cok}}
+               & 0 \\
+             0 \ar@{->}[r] 
+               & Hom_A(X,M) \ar@{->}[r]^{(f\circ -)_X}
+               & Hom_A(X,N) \ar@{->}[r]^{(g\circ -)_X}
+               & Hom_A(X,L) \ar@{->}[r]
+               & \delta^*(X) \ar@{->}[r]
+               & 0 &\,&
+           }}\\\\\\
+           Spolu s tímto zobrazením je $\delta^*$ kontravariantní funktor $mod(A)\rightarrow mod(R)$.
+       \end{description}
+     \end{thm}
+     
+     \begin{proof}
+       Dokážeme pouze (a), část (b) se dokáže analogicky. Máme 
+       $Hom_A(N,X)$, $Hom_A(M,X)\in mod(R)$ a tedy i $\delta_*(X)\in mod(R)$ 
+       jakožto kojádro homomorfismu konečně generovaných $R$-modulů. 
+       
+       Hom 
+       funktory nám zobrazují $A$-homomorfismy na $R$-homomorfismy a stejně tak 
+       funktor $\delta_*$, jelikož je definovaný jako kojádro zobrazení 
+       $R$-homomorfismů. Dále je zřejmé, že $\delta_*(1_X)=1_{\delta_*(X)}$.
+     
+       Zvolme si pevně $X,X',X''\in mod(A)$, $h\in Hom_A(X,X')$ a $h'\in 
+       Hom_A(X',X'')$. Dokážeme, že $\delta_*(h'h)=\delta_*(h')\delta_*(h)$. 
+       Máme následující komutativní diagram: \\\\
+       \centerline{
+           \xymatrix{
+             Hom_A(M,X) \ar@{->}[rr]^{\pi} \ar@{.>}[d]^{(h\circ -)_M} \ar@/_5pc/[dd]_{(h'h\circ-)_M}
+               & & \delta_*(X) \ar@{.>}[d]_{\delta_*(h)} \ar@/^5pc/[dd]^{\delta_*(h'h)} \\
+             Hom_A(M,X') \ar@{->}[rr]^{\pi'} \ar@{.>}[d]^{(h'\circ -)_M}
+               & & \delta_*(X') \ar@{.>}[d]_{\delta_*(h')} \\   
+             Hom_A(M,X') \ar@{->}[rr]^{\pi''}
+               & & \delta_*(X') \\           
+           }}\\\\\\
+       Pro každé $u\in Hom_A(M,X)$ platí
+       \begin{eqnarray}
+         (h'h\circ-)_M(u)
+         &=& h'hu \nonumber \\
+         &=& (h'\circ-)_M(hu) \nonumber \\
+         &=& (h'\circ-)_M(h\circ-)_M(u), \nonumber
+       \end{eqnarray}
+       pak $(h'h\circ-)_M=(h'\circ-)_M(h\circ-)_M$. Z komutativity diagramu 
+       plyne 
+       \begin{eqnarray}
+         \delta_*(h'h)\pi
+         &=& \pi''(h'h\circ-)_M \nonumber \\
+         &=& \pi''(h'\circ-)_M(h\circ-)_M  \nonumber \\
+         &=& \delta_*(h')\pi'(h\circ-)_M \nonumber \\
+         &=& \delta_*(h')\delta_*(h)\pi,  \nonumber 
+       \end{eqnarray}
+       a protože $\pi$ je epimorfismus, tak nám tato rovnost implikuje \\\\
+       \centerline{ $\delta_*(h'h)=\delta_*(h')\delta_*(h)$.}
+     \end{proof}
+     
+     \begin{dfn}
+       Funktor \\
+       \centerline{$\delta_*:mod(A)\rightarrow mod(R)$}\\\\
+       se nazývá kovariantní defekt funktor a funktor  \\\\
+       \centerline{$\delta^*:mod(A)\rightarrow mod(R)$} \\\\ 
+       se nazývá kontravariantní defekt funktor.
+     \end{dfn}
+     
+  \subsection{Skoro štěpitelné posloupnosti}
+     
+     \begin{lem}\label{lem-almost-split-def}
+       Pro následující exaktní posloupnost\\\\
+       \centerline{\xymatrix{
+         0 \ar@{->}[r] 
+           & M \ar@{->}[r]^f 
+           & N \ar@{->}[r]^g 
+           & L \ar@{->}[r]
+           & 0
+       }}\\\\ 
+       v $mod-A$ jsou následující tvrzení ekvivalentní:
+       \begin{description}
+         \item[(a)] Existuje $f'\in Hom_A(N,M)$ takové, že $f'f=1_M$.
+         \item[(b)] Existuje $g'\in Hom_A(L,N)$ takové, že $gg'=1_L$.  
+       \end{description}        
+     \end{lem}
+     \begin{proof}
+       Dokážeme, že z (a) plyne (b). Opačná implikace je analogická. Nechť tedy $f'\in Hom_A(N,M)$ 
+       je takový, že $f'f=1_M$. Uvažujme následující komutativní diagram v 
+       $mod(A)$:\\\\
+       \centerline{\xymatrix{
+         0 \ar@{->}[r] 
+           & M \ar@{->}[r]^f \ar@{=}[d] 
+           & N \ar@{->}[r]^g \ar@{=}[d] \ar@{->}[ld]_{f'}
+           & L \ar@{->}[r]      \ar@{.>}[d]^{1_C} \ar@{.>}[ld]_{g'}
+           & 0 \\
+         0 \ar@{->}[r] 
+           & M \ar@{->}[r]^f 
+           & N \ar@{->}[r]^g 
+           & L \ar@{->}[r]
+           & 0
+       }}\\\\\\
+       Položme $h:=1_N-ff'$, pak \\\\
+       \centerline{$hf=f-(ff')f=f-f(f'f)=0$,} \\\\
+       neboli $h$ se faktorizuje skrze $Cok(f)=L$. Což znamená, že existuje homomorfismus $g'\in Hom_A(L,N)$ 
+       takový, že \\\\
+       \centerline{$g'g=h$.} \\\\
+       Pak $(gg')g=g(g'g)=gh=g1_B-g(ff')=g-(gf)f'=1_Lg$, a protože $g$ je 
+       epimorfismus, musí být \\\\
+       \centerline{$gg'=1_C$.}
+     \end{proof}
+     
+     \begin{dfn}
+       \begin{description} \item
+         \item[(a)] Nechť $M,N\in mod(A)$ a $f\in Hom_A(M,N)$ je epimorfismus. 
+         Řekneme, že $f$ je štěpitelný epimorfismus, pokud existuje $f'\in mod_A(N,M)$
+         takový, že \\\\ 
+         \centerline{$ff'=1_N$.}
+         \item[(b)] Nechť $\delta$ je následující exaktní posloupnost v $mod(A)$\\\\
+           \centerline{\xymatrix{
+             0 \ar@{->}[r] 
+               & M \ar@{->}[r]^f 
+               & N \ar@{->}[r]^g 
+               & L \ar@{->}[r]
+               & 0,
+               &
+               &
+           }}\\\\
+           pak řekneme, že $\delta$ je štěpitelná posloupnost, pokud 
+             splňuje jednu z ekvivalentních podmínek z 
+             \hyperref[lem-almost-split-def]{Lemma \ref*{lem-almost-split-def}}.      
+       \end{description}         
+     \end{dfn}
+     
+     \begin{dfn}
+         Nechť $\delta$ je následující exaktní posloupnost v $mod(A)$\\\\
+           \centerline{\xymatrix{
+             0 \ar@{->}[r] 
+               & M \ar@{->}[r]^f 
+               & N \ar@{->}[r]^g 
+               & L \ar@{->}[r]
+               & 0,
+               &
+               &
+           }}\\\\
+           pak řekneme, že $\delta$ je skoro štěpitelná posloupnost, pokud 
+         splňuje následující dvě podmínky:                
+         \begin{description}  
+           \item[($g$ je zprava minimální)] Pokud $h\in End_A(M)$ a $gh=g$, pak $g$ je izomorfismus.
+           \item[($g$ je zprava skoro štěpitelný)]  Homomorfismus $g$ není štěpitelný epimorfismus a pro 
+             každé $Y\in mod(A)$ a $h\in 
+             Hom_A(Y,L)$, které není štěpitelný epimorfismus, existuje $u\in Hom_A(Y,N)$ 
+             takové, že $h=gu$.\\\\
+             \centerline{\xymatrix{
+               & & & Y \ar@{->}[d]^h \ar@{-->}[ld]_u \\             
+               0 \ar@{->}[r] 
+                 & M \ar@{->}[r]^f 
+                 & N \ar@{->}[r]^g 
+                 & L \ar@{->}[r]
+                 & 0
+                 &
+                 &
+                 &
+             }}\\
+       \end{description}         
+     \end{dfn}     
+     
+     Poznamenejme, že \cite{2} Proposition 1.14 (Kapitola V) popisuje řadu 
+     ekvivalentních definic skoro štěpitelné posloupnosti.
+     
+     \begin{thm}
+       \begin{description} \item
+         \item[(a)] Všechny skoro štěpitelné posloupnosti v $mod(A)$ jsou tvaru 
+           \\\\
+           \centerline{\xymatrix{
+             0 \ar@{->}[r] 
+               & DTr(X) \ar@{->}[r] 
+               & E \ar@{->}[r] 
+               & X \ar@{->}[r]
+               & 0
+               &
+           }}\\\\
+           kde $E\in mod(A)$ a $X\in mod(A)$ je nerozložitelý a neprojektivní.
+         \item[(b)] Pro každý $X\in mod(A)$ nerozložitelný a neprojektivní modul
+           existuje skoro štěpitelná posloupnost 
+           \\\\
+           \centerline{\xymatrix{
+             0 \ar@{->}[r] 
+               & DTr(X) \ar@{->}[r] 
+               & E \ar@{->}[r] 
+               & X \ar@{->}[r]
+               & 0
+               & 
+           }} \\\\
+           v $mod(A)$.
+       \end{description}      
+     \end{thm}
+     \begin{proof}
+        \begin{description}
+           \item
+           \item[(a)]
+           Pokud je \\\\
+             \centerline{\xymatrix{
+               0 \ar@{->}[r] 
+                 & Y \ar@{->}[r]^f 
+                 & E \ar@{->}[r]^g
+                 & X \ar@{->}[r]
+                 & 0
+                 &
+             }}\\\\
+         skoro štěpitelná posloupnost, pak dle \cite{2} Proposition. 1.14 (Kapitola 5) 
+         je $X$ nerozložitelný a $Y\simeq DTr(X)$. Pokud by $X$ bylo projektivní, 
+         pak by existovalo $g'\in Hom_A(X,E)$ takové, že $gg'=1_E$ a posloupnost 
+         by byla štěpitelná.         
+         \item[(b)] Tvrzení plyne z \cite{2} Theorem 1.15 (Kapitola 5).
+       \end{description}      
+     \end{proof}
+     
+     \begin{dfn}
+       Nechť $U,V\in mod(A)$. Označme následující dvě množiny:
+       \begin{description}
+         \item[(a)] $\Upsilon_{U,V}:=\{$Krátké exaktní posloupnosti vedoucí z $U$ do $V\}$
+         \item[(b)] $\hat{\Upsilon}_{U,V}:=\{$Skoro štěpitelné posloupnosti vedoucí z $U$ do $V\}\subseteq \Upsilon_{U,V}$  
+       \end{description}      
+       Definujme relaci ekvivalence $\sim$ na $\Upsilon_{U,V}$ respektive na $\hat{\Upsilon}_{U,V}$ 
+       tak, že dvě posloupnosti \\
+           \centerline{\xymatrix{
+             0 \ar@{->}[r] 
+               & U \ar@{->}[r]
+               & E \ar@{->}[r]
+               & V \ar@{->}[r]  
+               & 0 \\
+             0 \ar@{->}[r] 
+               & U \ar@{->}[r]
+               & E' \ar@{->}[r]
+               & V \ar@{->}[r]
+               & 0 
+           }} \\\\\\
+       jsou ekvivalentní, pokud existuje $e\in Hom_A(E,E')$ takové, že 
+       následující diagram komutuje:  \\
+           \centerline{\xymatrix{
+             0 \ar@{->}[r] 
+               & U \ar@{->}[r] \ar@{=}[d] 
+               & E \ar@{->}[r] \ar@{->}[d]_e 
+               & V \ar@{->}[r] \ar@{=}[d] 
+               & 0 \\
+             0 \ar@{->}[r] 
+               & U \ar@{->}[r] 
+               & E' \ar@{->}[r] 
+               & V \ar@{->}[r]
+               & 0 
+           }} \\\\
+           
+          Poznamenejme, že symetrie této relace plyne z 
+          \hyperref[lemma-five]{Lemma \ref*{lemma-five}}, 
+          zatímco tranzitivita a reflexivita jsou zřejmé. Zároveň bychom 
+          měli relaci $\sym$ indexovat koncovými moduly  posloupností 
+          $U,V$, z kontextu je ale vždy zřejmé, k jakým modulům se vztahuje.
+          
+         Na třídách ekvivalence $\Upsilon_{U,V}/\sim$ nyní zavedeme sčítání 
+         (nazýváné Baerova suma), s nímž bude mít $\Upsilon_{U,V}/\sim$ strukturu  
+         abelovské grupy.
+         
+         Mějme tedy dvě krátké exaktní posloupnosti vedoucí z $U$ do $V$\\\\
+           \centerline{\xymatrix{
+             \xi_1 :0 \ar@{->}[r] 
+               & U \ar@{->}[r]^{\beta_1}
+               & E \ar@{->}[r]^{\alpha_1}
+               & V \ar@{->}[r]  
+               & 0 \\
+             \xi_2 :0 \ar@{->}[r] 
+               & U \ar@{->}[r]^{\beta_2} 
+               & E' \ar@{->}[r]^{\alpha_2} 
+               & V \ar@{->}[r]
+               & 0 
+           }} \\\\\\
+         Nechť $[\xi_1]$ resp. $[\xi_2]$ značí jejich třídy ekvivalence. Definujme 
+         $[\xi_1]+[\xi_2]\in \Upsilon_{U,V}/\sim$
+         následovně: Nechť $f:V\to V\oplus V$ je dáno předpisem $f(v)=(v,v)$ pro všechna 
+         $v\in V$ a $g:U \oplus U\to U$ je dáno předpisem $g(u_1,u_2)=u_1+u_2$ 
+         pro všechna $u_1,u_2\in U$. Nechť $\xi_1\oplus\xi_2$ je suma \\\\
+           \centerline{\xymatrix{
+             \xi_1\oplus\xi_2 :0 \ar@{->}[r] 
+               & U\oplus U \ar@{->}[r]^{(\beta_1,\beta_2)}
+               & E\oplus E \ar@{->}[r]^{(\alpha_1,\alpha_2)}
+               & V\oplus V \ar@{->}[r]  
+               & 0
+           }} \\\\
+        a položme $[\xi_1]+[\xi_2]$ rovno třídě ekvivalence exaktní posloupnosti\\\\
+           \centerline{\xymatrix{
+             0 \ar@{->}[r] 
+               & U \ar@{->}[r]
+               & \tilde E \ar@{->}[r]
+               & V \ar@{->}[r]  
+               & 0
+           },} \\\\
+           kterou spočteme následovně jedním ze dvou možných postupů: 
+           \begin{description}
+             \item[(a)]
+               Modul $E_1$ dostaneme jako pushout $g$ a $(\beta_1,\beta_2)$. 
+               Modul $\tilde E$ následně položíme rovno pullbacku $h_1$ a $f$. \\\\             
+               \centerline{\xymatrix{
+                 0 \ar@{->}[r] 
+                   & U\oplus U \ar@{->}[rr]^{(\beta_1,\beta_2)} \ar@{->}[d]_g
+                   & & E\oplus E \ar@{->}[rr]^{(\alpha_1,\alpha_2)} \ar@{->}[d]
+                   & & V\oplus V \ar@{->}[r] \ar@{=}[d]
+                   & 0 \\
+                 0 \ar@{->}[r] 
+                   & U \ar@{->}[rr] \ar@{=}[d]
+                   & &  E_1 \ar@{->}[rr]^{h_1} 
+                   & & V\oplus V \ar@{->}[r]   
+                   & 0 \\
+                 0 \ar@{->}[r] 
+                   & U \ar@{->}[rr]
+                   & & \tilde E \ar@{->}[rr] \ar@{->}[u]
+                   & & V \ar@{->}[r]  \ar@{->}[u]_f
+                   & 0 & &
+                 }}\\     
+             \item[(b)]
+               Modul $E_2$ dostaneme jako pullback $f$ a $(\alpha_1,\alpha_2)$. 
+               Modul $\tilde E$ následně položíme rovno pushoutu $h_2$ a $g$. \\\\             
+               \centerline{\xymatrix{
+                 0 \ar@{->}[r] 
+                   & U\oplus U \ar@{->}[rr]^{(\beta_1,\beta_2)} \ar@{=}[d]
+                   & & E\oplus E \ar@{->}[rr]^{(\alpha_1,\alpha_2)} 
+                   & & V\oplus V \ar@{->}[r] 
+                   & 0  \\
+                 0 \ar@{->}[r] 
+                   & U\oplus U \ar@{->}[rr]^{h_2} \ar@{->}[d]_g
+                   & &  E_2 \ar@{->}[rr] \ar@{->}[d] \ar@{->}[u]
+                   & & V \ar@{->}[r] \ar@{->}[u]_f
+                   & 0 \\
+                 0 \ar@{->}[r] 
+                   & U \ar@{->}[rr]
+                   & & \tilde E \ar@{->}[rr] 
+                   & & V \ar@{->}[r]  \ar@{=}[u]
+                   & 0 & &
+                 }}\\
+           \end{description}
+           
+           Oběma postupy dospějeme ke stejnému výsledku, jak je znázorněno na 
+           následujícím komutativním diagramu:
+           \\\\
+           \centerline{\xymatrix{
+             0 \ar@{.>}[rr] 
+               & & U\oplus U \ar@{->}[rr]^{(\beta_1,\beta_2)} \ar@{=}[dd] \ar@{->}[ld]_g
+               & & E\oplus E \ar@{->}[rr]^{(\alpha_1,\alpha_2)} \ar@{->}[ld]
+               & & V\oplus V \ar@{.>}[r]  \ar@{=}[ld]
+               & 0 \\
+             0 \ar@{.>}[r] 
+               & U \ar@{->}[rr] \ar@{=}[dd]
+               & & E_1 \ar@{->}[rr] \ar@{->}[dd]
+               & & V\oplus V \ar@{.>}[rr]  
+               & & 0 \\
+             0 \ar@{.>}[rr] 
+               & & U\oplus U \ar@{->}[rr] \ar@{->}[ld]_g
+               & & E_2 \ar@{->}[rr] \ar@{->}[uu] \ar@{->}[ld]
+               & & V \ar@{.>}[r]  \ar@{->}[uu]_f \ar@{=}[dd] \ar@{=}[ld]
+               & 0 \\
+             0 \ar@{.>}[r] 
+               & U \ar@{->}[rr]
+               & & \tilde E \ar@{->}[rr]
+               & & V \ar@{.>}[rr]  \ar@{->}[uu]_f
+               & & 0 \\
+           }} \\\\\\
+         Nulový prvek $\Upsilon_{U,V}/\sim$ bude exaktní posloupnost \\\\
+           \centerline{\xymatrix{
+             0 \ar@{->}[r] 
+               & U \ar@{->}[r]
+               & U\oplus V \ar@{->}[r]
+               & V \ar@{->}[r]  
+               & 0
+           },} \\\\
+         a inverzní prvek k posloupnosti \\\\
+           \centerline{\xymatrix{
+             0 \ar@{->}[r] 
+               & U \ar@{->}[r]^{\beta_1}
+               & E \ar@{->}[r]^{\alpha_1}
+               & V \ar@{->}[r]  
+               & 0
+           }} \\\\ je \\\\
+           \centerline{\xymatrix{
+             0 \ar@{->}[r] 
+               & U \ar@{->}[r]^{\beta_1}
+               & E \ar@{->}[r]^{-\alpha_1}
+               & V \ar@{->}[r]  
+               & 0
+           }.} \\
+                    
+         To, že oba postupy výpočtu Baerovy sumy zaručují stejný výsledek, 
+         že je Baerova suma 
+         správně definovaná a splňuje všechny axiomy, aby
+         $\Upsilon_{U,V}/\sim$ spolu s ní tvořilo abelovskou grupu, zde 
+         dokazovat nebudeme. Prodrobnou konstrukci a důkaz je možné nalézt v 
+         \cite{2} Kapitole I Sekci 5.
+     \end{dfn}
+          
+     Zvolme si nyní pevně libovolný nerozložitelný a neprojektivní $A$-modul 
+     $X$. Budeme s ním pracovat po zbytek této kapitoly.
+  
+     \begin{dfn}
+       Něchť $\Gamma:=\underline{End}_A(X)$.
+     \end{dfn}
+     
+     \begin{lem}\label{lem-D-na-jednoduchych}
+     \begin{description}
+       \item
+       \item[(a)] Artinovská $R$-algebra $\Gamma$ je lokální okruh. 
+       \item[(b)] Pokud $M\in mod(\Gamma)$ je nenulový, pak $D(M)\in mod(\Gamma^{op})$ je nenulový. 
+       \item[(c)] Pokud $M\in mod(\Gamma)$ je jednoduchý, pak $D(M)\in mod(\Gamma^{op})$ je jednoduchý. 
+      \end{description} 
+     \end{lem}
+     \begin{proof}
+       \begin{description}
+         \item
+         \item[(a)] Dle \cite{2} Theorem 2.2 (Kapitola 2) je $End_A(X)$ 
+           lokální okruh. Pak je dle \hyperref[faktor-lokalniho-lokalni]{Lemma \ref*{faktor-lokalniho-lokalni}}
+           lokálním okruhem i $\Gamma$. 
+           
+         \item[(b)] Nechť $M\in mod(\Gamma)$ a $m\in M$ je nenulový prvek. 
+           Připomeňme, že $M$ je zároveň $R$-modulem a $I$ je injektivní obal $R/\underline{m}$, 
+           kde $\underline{m}$ je maximální ideál $R$. Nechť $\hat f\in Hom_R(Rm,I)$ 
+           je daný předpisem \\\\
+           \centerline{$\hat f (rm):=r+\underline m$} \\\\
+           a $i$ je kanonická inkluze \\\\
+           \centerline{$i:Rm\rightarrow M$.} \\\\
+           Protože $I$ je injektivní, existuje $f\in Hom_R(M,I)$  takové, že 
+           \\\\
+           \centerline{$fi=\hat f$} \\\\
+           a \\\\
+           \centerline{$f(m)=fi(m)=\hat f (m)=1_R+ \underline m\neq 0$.} \\\\
+           A tedy $f\in D(M)$ je nenulový prvek.           
+         
+         \item[(c)] Nechť $M\in mod(\Gamma)$ je jednoduchý. Pokud $M=0$, pak $D(M)=0$. 
+           Nechť tedy je $M$ nenulový modul.  Předpokládejme pro spor, že $D(M)$ není jednoduchý 
+           $\Gamma^{op}$-modul. Pak $D(M)$ obsahuje netriviální podmodul $U$. 
+           To nám dává následující exaktní posloupnost $mod(\Gamma^{op})$:
+           \\\\
+           \centerline{\xymatrix{
+             0 \ar@{->}[r] 
+               & D(D(M)/U) \ar@{->}[r] 
+               & M \ar@{->}[r] 
+               & D(U) \ar@{->}[r] 
+               & 0 \\
+           }} \\\\
+           Připomeňme, že funktor $D=Hom_R(-,I):mod(\Gamma)\rightarrow mod(\Gamma^{op})$ 
+           je dualita a tedy máme $\Gamma$-modulový izomorfismus $D^2(N)\simeq N$ 
+           pro každý $N\in mod(\Gamma)$. Aplikujeme-li tedy funktor $D$ na naši exaktní posloupnost, 
+           dostaneme následující posloupnost v $mod(\Gamma)$:          
+           \\\\
+           \centerline{\xymatrix{
+             0 \ar@{->}[r] 
+               & U \ar@{->}[r] 
+               & D(M) \ar@{->}[r] 
+               & D(M)/U \ar@{->}[r] 
+               & 0 \\
+           }} \\\\
+           Protože $U\neq D(M)$, tak $D(M)/U\neq 0$. Pak jelikož je $M$  
+           jednoduchý, tak $D(D(M)/U)\simeq D^2(M)$ a z exaktnosti naší 
+           posloupnosti vidíme, že  $D(U)=0$. Pak ale i $D=0$ dle bodu (a), což 
+           je spor s naším předpokladem, že $U$ je netriviální podmodul $D(M)$.
+       \end{description}
+     \end{proof}
+     
+     \begin{dfn}
+       Nechť $S$ je artinovský okruh, $M\in mod(S)$.  Definujme
+       \begin{description}
+         \item[(a)] $Top_S(M):=M/rad(S)M$.
+         \item[(b)] $Soc_S(M):=\sum\{U|U$ je jednoduchý $S$-podmodul  $M\}$.
+       \end{description} 
+     \end{dfn}
+     
+     \begin{lem}\label{lem-soc-top}
+       Platí:
+       \begin{description}
+         \item[(a)] $Top_\Gamma(\Gamma)$ je jednoduchý $\Gamma$-modul. 
+         \item[(b)] $Soc_\Gamma(D\Gamma)\simeq DTop_{\Gamma^{op}}(\Gamma)$ jako 
+         $\Gamma$-moduly.
+         \item[(c)] $Soc_\Gamma(D\Gamma)$ je jednoduchý $\Gamma$-modul.
+       \end{description} 
+     \end{lem}
+     
+     \begin{proof}
+       \begin{description}
+         \item
+         \item[(a)] Máme izomorfismus $End_\Gamma(\Gamma)=Hom_\Gamma(\Gamma,\Gamma)\simeq 
+           \Gamma$. Dle \hyperref[lem-D-na-jednoduchych]{Lemma \ref*{lem-D-na-jednoduchych}} 
+           je $End_\Gamma(\Gamma)$ lokální okruh. Protože $\Gamma$ je artinovská 
+           $R$-algebra, je také artinovským okruhem. Navíc $\Gamma$ je 
+           projektivní $\Gamma$-modul. Z toho plyne, že $rad(\Gamma)\Gamma$ je 
+           jediný maximální podmodul $\Gamma$.
+           
+           Ukážeme nyní, že $Top_\Gamma(\Gamma)=\Gamma/rad(\Gamma)\Gamma$ je 
+           jednoduchý $\Gamma$-modul. Nechť $M$ je nenulový podmodul 
+           $\Gamma/rad(\Gamma)\Gamma$. Pak $M$ je tvaru \\\\
+           \centerline{$M=N/rad(\Gamma)\Gamma$} \\\\
+           pro nějaký $\Gamma$-modul $N$ takový, že \\\\
+           \centerline{$rad(\Gamma)\Gamma\subseteq N\subseteq \Gamma$.}\\\\
+           Protože $M$ je nenulový je $rad(\Gamma)\neq N$. Protože $rad(\Gamma)\Gamma$ 
+           je maximální podmodul $\Gamma$, musí být $N=\Gamma$ a tedy \\\\
+           \centerline{$M=\Gamma/rad(\Gamma)\Gamma$.}
+           
+         \item[(b)] Uvažujme následující exaktní posloupnost 
+           $\Gamma^{op}$-modulů: \\\\
+           \centerline{$0
+             \longrightarrow rad(\Gamma)  
+             \longrightarrow \Gamma   
+             \longrightarrow \Gamma/rad(\Gamma)  
+             \longrightarrow 0$} \\\\
+           Aplikací funktoru $D$ dostaneme exaktní posloupnost $\Gamma$-modulů:\\\\
+           \centerline{$0
+             \longrightarrow D(\Gamma/rad(\Gamma))  
+             \longrightarrow D(\Gamma)   
+             \longrightarrow D(rad(\Gamma))  
+             \longrightarrow 0$} \\\\
+           Dle \cite{2} Proposition 3.1 (Kapitola 1) je $\Gamma/rad(\Gamma)$ 
+           polojednoduchý $\Gamma^{op}$-modul. Tedy z 
+           \hyperref[lem-D-na-jednoduchych]{Lemma \ref*{lem-D-na-jednoduchych}} 
+           a z komutativity $D$ s konečnými direktními sumami (plyne z 
+           \hyperref[dir-sum-hom]{Lemma \ref*{dir-sum-hom}}) je  
+           $D(\Gamma/rad(\Gamma))$ polojednoduchý podmodul $D\Gamma$. To 
+           znamená, že \\\\
+           \centerline{$D(\Gamma/rad(\Gamma))\subseteq Soc_\Gamma(D\Gamma)$.} 
+           \\\\
+           Ze stejného důvodu je $DSoc_\Gamma(D\Gamma)$ polojednoduchý 
+           $\Gamma^{op}$-modul. Navíc \\\\
+           \centerline{$Soc_\Gamma(D\Gamma)\subseteq D\Gamma$} 
+           \\\\
+           a dosáváme následující komutativní diagram v $mod(\Gamma)$:\\\\
+           \centerline{\xymatrix{
+               & 0 \ar@{->}[d] \\
+             0 \ar@{->}[r]
+               & D(\Gamma/rad(\Gamma)) \ar@{->}[r] \ar@{->}[d]
+               & D\Gamma \ar@{=}[d] \\
+             0 \ar@{->}[r]
+               & Soc_\Gamma(D\Gamma) \ar@{->}[r]
+               & D\Gamma \ar@{->}[r]
+               & D\Gamma/Soc_\Gamma(D\Gamma) \ar@{->}[r]
+               & 0
+           }}\\\\\\
+           Aplikací $D$ dostaneme následující komutativní diagram z exaktními 
+           řádky v $mod(\Gamma^{op})$:\\\\
+           \centerline{\xymatrix{
+              0 \ar@{->}[r]
+                & D(D\Gamma/Soc_\Gamma(D\Gamma)) \ar@{->}[r]
+                & \Gamma \ar@{=}[d] \ar@{->}[rr]^b
+                & & D(Soc_\Gamma(D\Gamma))  \ar@{->}[r] \ar@/^2pc/[d]^d
+                & 0 \\
+              0 \ar@{.>}[r]
+                & rad(\Gamma) \ar@{.>}[r]^a
+                & \Gamma \ar@{->}[rr]^c
+                & & \Gamma/rad(\Gamma) \ar@{->}[r] \ar@{->}[d] \ar@/^2pc/[u]^e
+                & 0 \\
+              & & & & 0
+           }}\\\\           
+           Víme, že $rad(\Gamma)$ je jádro $c$, tedy ho doplníme do 
+           diagramu a dostaneme exaktní řádek. Protože $rad(\Gamma)$ anihiluje 
+           polojednoduché \,$\Gamma^{op}$-moduly, \,je $b1_\Gamma a=0$. Navíc
+           $\Gamma/rad(\Gamma)$ je kojádro $a$ a tedy musí existovat 
+           homomorfismus
+           $e\in Hom_{\Gamma^{op}}(\Gamma/rad(\Gamma), D(Soc_\Gamma(D\Gamma)))$ 
+           takový, že \\\\
+           \centerline{$ec=b1_\Gamma=b$.}\\\\
+           Navíc protože $b$ je epimorfismus, tak je jím také $e$. 
+           Složení homomorfismů $de\in End_{\Gamma^{op}}(\Gamma/rad(\Gamma))$ je tedy podle 
+           \cite{2} Proposition 1.4 (Kapitola 1) izomorfismus, protože $\Gamma/rad(\Gamma)$ 
+           je konečně generovaný modul. Z toho plyne že $e$ je navíc 
+           epimorfismem, neboli \\\\
+           \centerline{$D(Soc_\Gamma(D\Gamma))\simeq \Gamma/rad(\Gamma)=Top_{\Gamma^{op}}(\Gamma)$} \\\\
+           jakožto $\Gamma^{op}$-moduly. A ekvivalentně \\\\
+           \centerline{$Soc_\Gamma(D\Gamma)\simeq DTop_{\Gamma^{op}}(\Gamma)$} 
+           \\\\
+           jako $\Gamma$-moduly.     
+                    
+         \item[(c)] Plyne z (a), pokud budeme nahlížet na $\Gamma$ jako na 
+           $\Gamma^{op}$-modul. Protože $Top_{\Gamma^{op}}(\Gamma)$ je jednoduchý 
+           $\Gamma^{op}$-modul, plyne z 
+           \hyperref[lem-D-na-jednoduchych]{Lemma \ref*{lem-D-na-jednoduchych}} a ze 
+           vztahu $Soc_\Gamma(D\Gamma)\simeq DTop_{\Gamma^{op}}(\Gamma)$, že je 
+           jednoduchý $\Gamma$-modul.
+       \end{description}
+     \end{proof}
+
+     \begin{lem}\label{lem-jednoduchy-modul-gen}
+       Každý jednoduchý modul $M$ okruhu $S$ může být vygenerován jakýmkoli svým 
+       nenulovým prvkem.
+     \end{lem}
+     \begin{proof}
+       Pokud $m\in M\backslash\{0\}$, pak $m$ generuje nenulový podmodul $M$, 
+       který musí být z jednoduchosti $M$ roven celému $M$.
+     \end{proof}
+     
+     \begin{thm}\label{ekvivalence-upsilon-ext}
+       \begin{description} \item 
+         \item[(a)] Nechť $U,V \in mod(A)$. Pak $\Upsilon_{U,V}/\sim$ je 
+           abelovská grupa a máme izomorfismus abelovských grup: \\\\ 
+           \centerline{$Ext_A^1(V,U)\simeq (\Upsilon_{U,V}/\sim)$}
+         \item[(b)] Nechť $X\in mod(A)$ je nerozložitelný a neprojektivní. Potom 
+           můžeme definovat na $\Upsilon_{DTr(X),X}/\sim$ takovou strukturu, že:
+           \begin{description}
+             \item[(i)] $(\Upsilon_{DTr(X),X}/\sim)\in mod(\Gamma)$,
+             \item[(ii)] 
+             $Soc_\Gamma(\Upsilon_{DTr(X),X}/\sim)=(\hat{\Upsilon}_{DTr(X),X}/\sim)$.
+           \end{description}
+       \end{description}      
+     \end{thm}
+     \begin{proof}
+       \begin{description}
+         \item
+         
+         \item[(a)] \cite{5} Theorem. 7.21.
+           
+         \item[(b)] Nebudeme zde provádět kompletní důkaz. Všechny podrobnosti 
+         je možné nalézt v \cite{2} Kapitole 5. Dále pouze naznačíme důkaz části (i).
+         
+         \begin{description}
+         \item[(i)]
+         Základem je pozorování, že $(\Upsilon_{DTr(X),X}/\sim)\in Mod(\Gamma)$ 
+         Důkaz tohoto pozorování provedeme v části věnované konstrukci algoritmu v 
+         \hyperref[upsilon-je-modul]{Lemma \ref*{upsilon-je-modul}}. 
+         Potom izomorfismus z (a) přenáší $\Gamma$-modulovou strukturu i na
+         $Ext_A^1(X,DTr(X))$ a stává se $\Gamma$-izomorfismem.         
+         V důkazu \hyperref[thm-omega-x]{Věty \ref*{thm-omega-x}} ukážeme, že
+         $Ext_A^1(X,DTr(X))=\delta_*(DTr(X))$ pro určitou krátkou exaktní posloupnost $\delta$
+         a protože dle
+         \hyperref[thm-delta]{Věty \ref*{thm-delta}} je
+         $\delta_*(DTr(X))\in mod(R)$, pak i $Ext_A^1(X,DTr(X))\in mod(R)$.
+         A tedy dle \hyperref[lem-mod-Mod]{Lemma \ref*{lem-mod-Mod}} vidíme, že 
+         oba $Ext_A^1(X,DTr(X))$ i $(\Upsilon_{DTr(X),X}/\sim)$ jsou konečně generované jako $\Gamma$-moduly.
+         \end{description}         
+       \end{description}
+     \end{proof}
+  \clearpage

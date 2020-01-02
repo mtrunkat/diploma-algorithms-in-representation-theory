@@ -1,0 +1,923 @@
+  \section{Teorie reprezentací}\label{teorie-reprezentaci}
+  
+    \paragraph{ }Nyní se přesuneme k Algebrám cest. Namísto 
+    okruhu $R$ budeme nyní pracovat s pevně zvoleným zvoleným komutativním
+    tělesem $K$. $K$-algebra tak ke struktuře $K$-modulu dostává 
+    navíc strukturu vektorového prostoru nad  $K$.
+    
+    Tělěso $K$ má právě dva ideály $0$ a $K$, je tedy lokálním i artinovským okruhem 
+    a veškerá teorie z předchozí části je aplikovatelná i pro $R=K$.
+  
+  \subsection{Toulec a algebra cest}
+  
+    \begin{dfn}
+      Řekneme, že $K$-algebra $A$ je 
+      konečné dimenze, pokud dimenze $dim_K A$ vektorového prostoru $A$
+      nad $K$ je konečná. 
+      
+      $K$-vektorový podprostor $B$ $K$-algebry $A$ je $K$-podalgebrou $A$, pokud 
+      $1_A\in B$ a $bb'\in B$ pro každý $b,b'\in B$. 
+      
+      Pokud jsou $A$ a $B$ dvě $K$-algebry, pak okruhový
+      homomorfismus $f:A\rightarrow B$ takový, že $f$ je $K$-linerání, nazveme 
+      homomorfismem $K$-algeber.
+                      
+      Algebra $A$ je souvislá, pokud není direktním součtem dvou algeber 
+      (nebo ekvivalentně, pokud 0 a 1 jsou jediné centrální idempotenty $A$). 
+    \end{dfn}  
+    
+    \begin{dfn}
+      Buď $A$ $K$-algebra a ${e_1,e_2,\ldots,e_m}$ úplná množina primitivních 
+      ortogonálních idempotentů $A$. Pak řekneme, že $A$ je základní, pokud $A$-moduly 
+      $e_iA\not\simeq e_jA$ pro každé $i\neq j$.
+    \end{dfn}
+    
+    V této části budeme pracovat s pravými $A$-moduly. O levých modulech budeme 
+    referovat jako o $A^{op}$-modulech.
+    
+    \begin{pzn}
+      Nechť $A$ je $K$-algebra, pak $A$-modul $M$ je vektorový prostor nad $K$.      
+    \end{pzn}
+    
+    \begin{dfn}
+      $A$-modul $M$ nazveme konečně dimenzionálním, pokud je $dim_K M$ konečná.
+    \end{dfn}
+    
+    Nyní si zavedeme pojem toulce. Toulec bude obecnější forma grafu, kde 
+    připustíme smyčky (cesty nulové délky) a existenci více cest mezi stejnými 
+    body (takový graf bývá také běžně označován jako multigraf). Budeme ho značit 
+    písmenem $Q$ z anlického slova quiver (=toulec).
+  
+    \begin{dfn}
+      Toulec $Q$ je čtveřice $(Q_0,Q_1,s,t)$, kde:      
+      \begin{description}
+        \item[(a)] $Q_0$ je množina, jejíž elementy jsou nazývány body či 
+        vrcholy.
+        \item[(b)] $Q_1$ je množina, jejíž elementy jsou nazývány šipky.
+        \item[(c)] $s,t$ jsou dvě zobrazení $Q_1\rightarrow Q_0$, která každé šipce
+        $\alpha\in Q_1$ přiřadí její $s(\alpha)\in Q_0$ počáteční a
+        $t(\alpha)\in Q_0$ koncový vrchol.
+      \end{description}   
+      
+      Podtoulec toulce $Q$ je toulec $Q'=(Q_0',Q_1',s',t')$ takový, že $Q_0'\subseteq 
+      Q_0$, $Q_1'\subseteq Q_1$ a $s'=s|_{Q_1'}$, $t'=t|_{Q_1'}$. 
+      
+      Toulec $Q$ je souvislý, pokud jeho vrcholy a šipky, při neuvažování jejich orientace, 
+      tvoří souvislý graf. Toulec $Q$ je konečný, pokud $Q_0$ a $Q_1$ jsou konečné
+      množiny.
+      
+      Nechť $Q=(Q_0,Q_1,s,t)$ a $a,b\in Q_0$. Cestou délky $l$ z $a$ do $b$ nazýváme posloupnost 
+      $(a|\alpha_1,\alpha_2,\ldots,\alpha_l|b)$, kde $\alpha_k\in Q_1$ pro každé 
+      $1\leq k \leq l$, $s(\alpha_1)=a$, $t(\alpha_k)=s(\alpha_{k+1})$ pro každé 
+      $1\leq k < l$ a $t(\alpha_l)=b$. Množinu všech cest délky $l$ budeme 
+      značit $Q_l$. Dále každý bod $a\in Q_0$ ztotožněme s cestou nulové délky, 
+      tu budeme nazývat triviální a značit $\epsilon_a=(a||a)$. Cestu délky $l\geq 1$ 
+      nazveme cyklem, pokud počáteční vrchol a koncový vrchol splývají. Cyklus 
+      délky 1 nazveme smyčkou. Toulec je acyklický, pokud neobsahuje žádné 
+      cykly.  
+    \end{dfn}    
+    
+    \begin{dfn}
+      Nechť $Q$ je toulec a $K$ libovolné těleso. Algebra cest $KQ$ toulce $Q$ je $K$-algebra, jejíž báze je 
+      tvořena všemi cestami $(a|\alpha_1,\alpha_2,\ldots,\alpha_l|b)$ délky $l\geq 0 $ 
+      v $Q$ a součin bázových vektorů je definován následovně: \\\\
+      \centerline{
+      $(a|\alpha_1,\alpha_2,\ldots,\alpha_l|b)
+        (c|\beta_1,\beta_2,\ldots,\beta_k|d)        
+        =\delta_{bc}(a|\alpha_1,\alpha_2,\ldots,\alpha_l,\beta_1,\beta_2,\ldots,\beta_k|b)$,
+      }\\\\
+      kde $\delta_{bc}$ je Krocnekerova delta.
+    \end{dfn}
+    
+    \begin{pr}
+      Nechť $Q$ je toulec \\
+      \centerline{\xymatrix{
+        \circ^1 \ar@{->}[r]_\alpha \ar@/^3pc/[rr]^\gamma
+          & \circ^2 \ar@{->}[r]_\beta
+          & \circ^3
+      }}\\\\
+      Báze $KQ$ pak je množina 
+      $\{\epsilon_1,\epsilon_2,\epsilon_3,\alpha,\beta,\gamma,\alpha\beta\}$ a 
+      násobení bázových prvků je dané tabulkou: \\\\
+      \centerline{\begin{tabular}{ c | c c c c c c c  }
+        & \epsilon_1 & \epsilon_2 &\epsilon_3 & \alpha & \beta & \gamma & \alpha\beta  \\ \hline
+        \epsilon_1 & \epsilon_1 & 0 & 0 & \alpha & 0 & \gamma & $\alpha\beta$ \\
+        \epsilon_2 & 0 & \epsilon_2 & 0 & 0 & \beta & 0 & 0 \\
+        \epsilon_3 & 0 & 0 & \epsilon_3 & 0 & 0 & 0 & 0 \\
+        \alpha & 0 & \alpha & 0 & 0 & $\alpha\beta$ & 0 & 0 \\
+        \beta & 0 & 0 & \beta & 0 & 0 & 0 & 0 \\
+        \gamma & 0 & 0 & \gamma & 0 & 0 & 0 & 0 \\
+        \alpha\beta & 0 & 0 & \alpha\beta & 0 & 0 & 0 & 0 \\
+      \end{tabular}}\\\\      
+    \end{pr}
+
+    \begin{pzn}
+      Násobení bázových elementů $KQ$ je rozšířeno na všechny prvky $KQ$ s pomocí 
+      distributivity vůči sčítání. Platí: \\\\
+      \centerline{$KQ=KQ_0\oplus KQ_1\oplus\ldots\oplus KQ_l\oplus\ldots$,}\\\\
+      kde $KQ_i$ je podprostor $KQ$ generovaný množinou $Q_i$ všech cest délky 
+      $i$.
+    \end{pzn}
+    
+    \begin{lem}\label{quiver-kq-lemma}
+      Nechť $Q$ je toulec a $KQ$ jeho algebra cest. Pak platí:
+      \begin{description}
+        \item[(a)] $KQ$ je asociativní algebra. 
+        \item[(b)] $KQ$ obsahuje jednotku právě tehdy, když je $Q_0$ konečná množina.
+        \item[(c)] $KQ$ je konečně dimenzionální právě, když $Q$ je konečný a acyklický.
+      \end{description}      
+    \end{lem}
+    \begin{proof}
+      \begin{description}
+        \item 
+        \item[(a)]Součin bázových vektorů je skládání cest a to je asociativní vůči 
+      sčítání v $KQ$.
+        \item[(b)]Triviální cesta $\epsilon_a=(a||a)$ je idempotentem $KQ$ a tedy pro $Q_0$ 
+      konečnou je $\sum_{a\in Q_0}\epsilon_a$ jednotka $KQ$. Opačně nechť je $Q_0$ 
+      nekonečná a nechť \\\\
+      \centerline{$1=\sum_{i=1}^m \lambda_i \omega_i$ ($\lambda_i\in K$ a $\omega_i\in Q_1$)} 
+      \\\\
+      je jednotka $KQ$. Množina $Q_0'$ počátečních vrcholů  cest $\omega_i$ 
+      má nejvýše m prvků. Můžeme tedy zvolit $a\in Q_0\backslash
+      Q_0'\neq\emptyset$. Pak ale $\epsilon_a 1=0$, což je spor.
+
+        \item[(c)]Pokud je $Q$ nekonečný, pak je nekonečná také báze $KQ$. Pokud máme 
+      cyklus $w=\alpha_1,\alpha_2,\ldots,\alpha_l$, pak máme nekonečně mnoho bázových 
+      vektorů tvaru $w^t=(\alpha_1,\alpha_2,\ldots,\alpha_l)^t$ a $KQ$ tedy nemůže být 
+      konečně dimenzionální. Opačně, pokud $Q$ je konečně dimenzionální, pak 
+      obsahuje pouze konečně mnoho cest a tedy $KQ$ je konečně dimenzionální.
+      \end{description}
+    \end{proof}
+    
+    \begin{dsl}\label{dsl-quiver-idem}
+      Nechť $Q$ je konečný toulec. Pak prvek $1=\sum_{a\in Q_0}\epsilon_a$ je 
+      jednotka $KQ$ a množina $\{\epsilon_a=(a||a)|a\in Q_0\}$ všech triviálních cest  
+      je úplná množina primitivních ortogonálních idempotentů $KQ$.
+    \end{dsl}
+    \begin{proof}
+      Plyne z definice násobení, že $\epsilon_a$ jsou ortogonální idempotenty 
+      $KQ$. Protože množina $Q_0$ je konečná, prvek $1=\sum_{a\in Q_0}\epsilon_a$ 
+      je jednotka $KQ$. 
+      
+      Zbývá ukázat, že idempotenty $\epsilon_a$ $KQ$ jsou primitivní, neboli že 0 a $\epsilon_a$ 
+      jsou jedinými idempotenty $\epsilon_a(KQ)\epsilon_a$. Každý idempotent $\epsilon_a(KQ)\epsilon_a$ 
+      může být zapsán ve tvaru $\lambda \epsilon_a + w$, kde $\lambda\in K$ a $w$ 
+      je lineární kombinace cest skrze $a$ délky alespoň 1. Rovnost \\\\
+      \centerline{$0=\epsilon_a^2 - \epsilon_a=(\lambda^2-\lambda)\epsilon_a + (2\lambda-1)w+w^2$} 
+      \\\\
+      nám dává $w=0$ a $\lambda ^2=\lambda $ a tedy $\lambda=0$ nebo 
+      $\lambda=1$. V prvním případě je $\epsilon=0$ a druhém 
+      $\epsilon=\epsilon_a$.
+    \end{proof}   
+     
+    \begin{dfn}
+      Nechť $Q$ je konečný a souvislý toulec. Oboustranný ideál algebry cest $KQ$ 
+      generovaný šipkami $Q$ nazýváme šipkový ideál $KQ$ a značíme $R_Q$.
+    \end{dfn}
+    
+    \begin{pzn}
+      Ideál $R_Q$ můžeme rozložit na direktní součet: \\\\
+      \centerline{ $R_Q=KQ_1\oplus KQ_2 \oplus\ldots\oplus KQ_l\oplus\ldots$ } 
+      \\\\
+      Dále pro každé $l\geq1$ máme $R^l_Q=\bigoplus_{m\geq l}KQ_m$ a tedy $R_Q^l$ 
+      je ideál $KQ$ generovaný jako vektorový prostor množinou všech cest 
+      délky $\geq l$.
+    \end{pzn}
+    
+    \begin{lem}\label{lem-q-kq-souvisle}
+      Nechť $Q$ je konečný toulec. Pak algebra cest $KQ$ je souvislá, právě když 
+      $Q$ je souvislý. 
+    \end{lem}
+    \begin{proof}
+      Předpokládejme, že $Q$ není souvislý a $Q'$ buď souvislá komponenta $Q$. 
+      Nechť $Q''$ je úplný podtoulec $Q$ mající množinu vrcholů 
+      $Q_0''=Q_0\backslash Q_0'$. Dle předpokladu $Q_0'$ ani $Q_0''$ nejsou prázdné. 
+      Zvolme libovolné $a\in Q_0'$ a $b\in Q_0''$. Protože $Q$ není souvislý, 
+      musí být každá cesta $w$ v $Q$ celá obsažena v $Q_0'$ nebo $Q_0''$. V 
+      prvním případě je $w\epsilon_b=0$ a tedy $\epsilon_a w \epsilon_b=0$ a 
+      tedy $\epsilon_a (KQ) \epsilon_b=0$. V druhém případě dostaneme, že $\epsilon_b (KQ) 
+      \epsilon_a=0$. Tedy $KQ$ není ani v jednom případě souvislá.
+      
+      Předpokládejme nyní pro spor, že $Q$ je souvislý, ale $KQ$ není. Algebra $KQ$ 
+      je direktním součtem dvou algeber, existuje tedy rozklad $Q_0$ na 
+      disjunktní podmnožiny $Q_0'$ a $Q_0''$ takové, že pro všechna $a\in Q_0'$ 
+      a $b\in Q_0''$ je \\\\
+      \centerline{$\epsilon_a(KQ)\epsilon_b=\epsilon_b(KQ)\epsilon_a=0$.}\\\\  
+      Protože $Q$ je souvislý, 
+      můžeme zvolit taková $a\in Q_0'$  a $b\in Q_0''$, že budou spojena šipkou $\alpha:a\to b$. 
+      To je ale spor, protože\\\\
+      \centerline{$\alpha=\epsilon_a\alpha\epsilon_b\in 
+      \epsilon_a(KQ)\epsilon_b=0$.}
+    \end{proof}
+    
+  \subsection{Přípustný ideál}
+    
+    \begin{dfn}
+      Nechť $Q$ je konečný toulec a $R_Q$ je šipkový ideál algebry cest $KQ$. 
+      Řekneme, že oboustranný ideál $I$ algebry $KQ$ je přípustný, pokud 
+      existuje $m\geq 2$ takový, že \\\\
+      \centerline{$R_Q^m\subseteq I \subseteq R_Q^2$.}\\
+      
+      Pokud $I$ je přípustný ideál $KQ$, pak dvojici $(Q,I)$ nazveme omezeným 
+      toulcem. Algebru $KQ/I$ nazveme algebrou omezeného toulce $(Q,I)$.
+    \end{dfn}
+    
+    \begin{pzn}
+      Definice jednoduše říká, že ideál $I$ je přípustný, pokud existuje $m\geq 2$ 
+      takové, že $I$ obsahuje včechny cesty délky alespoň $m$ a neobsahuje šipky 
+      (cesty délky 1) ani triviální cesty.
+      
+      V případě acyklického toulce bude přípustný každý ideál obsažený v ideálu 
+      $R_Q^2$.
+    \end{pzn}
+    
+    \begin{pr}
+      Nechť $Q$ je toulec   \\
+      \centerline{\xymatrix{
+        \circ^1 \ar@{->}[r]_\alpha \ar@/^3pc/[rr]^\gamma
+          & \circ^2 \ar@{->}[r]_\beta
+          & \circ^3 \ar@(ur,dr)[]^{\delta}
+      }}\\\\
+      Ideál $I=\{\alpha\beta-\gamma\delta,\delta^2\}$ je přípustný, ale idál 
+      $J=\{\alpha\beta-\gamma\delta\}$ přípustný není, protože neobsahuje například 
+      cesty $\delta^k\in R_Q^k$ pro žádné $k\geq 2$.
+    \end{pr} 
+    
+    \begin{dfn}
+      Nechť $Q$ je toulec. Relace v $Q$ s koeficienty v $K$ je $K$-lineární 
+      kombinace cest délky alespoň dva se stejným počátkem a koncem.       
+      Relaci tvaru $w_1-w_2$, kde $w_1$ a $w_2$ jsou dvě cesty, nazveme relací komutativity. 
+      
+      Pokud množina relací $M$ generuje přípustný ideál, pak řekneme, že je toulec 
+      $Q$ omezený množinou relací $M$.
+    \end{dfn}
+    
+    \begin{lem}\label{lem-kq-jako-soucin}
+      Nechť $Q$ je konečný toulec a $R_Q$ šipkový ideál $KQ$ a $\epsilon_a=(a||a)$ 
+      pro každé $a\in Q_0$. Množina $\{\bar\epsilon_a=\epsilon_a+R_Q|$ $a\in Q_0\}$ 
+      je úplná množina ortogonálních idempotentů $KQ/R_Q$ a $KQ/R_Q$ je 
+      izomorfní direktnímu součtu $K\oplus K\oplus\ldots\oplus K$ 
+      kopií tělesa $K$.
+    \end{lem}
+    
+    \begin{proof}
+      Máme rozklad na direktní sumu \\\\
+      \centerline{$KQ/R_Q=\bigoplus_{a,b\in Q_0}\bar\epsilon_a(KQ/R_Q)\bar\epsilon_b$,}\\\\
+      který, protože $R_Q$ obsahuje všechny cesty délky alespoň jedna, můžeme 
+      ještě zjednodušit na tvar\\\\
+      \centerline{$KQ/R_Q=\bigoplus_{a\in Q_0}\bar\epsilon_a(KQ/R_Q)\bar\epsilon_a$.}\\\\
+      $KQ/R_Q$ je pak generováno jako $K$-vektorový prostor třídami ekvivalence 
+      cest délky 0, tedy množinou $\{\bar\epsilon_a=\epsilon_a+R_Q|$ $a\in 
+      Q_0\}$. To je množina primitivních ortogonálních idempotentů algebry 
+      $KQ/R_Q$. Navíc pro každé $a\in Q_0$ je algebra $\bar\epsilon_a(KQ/R_Q)\bar\epsilon_a$ 
+      generovaná jedním prvkem $\bar\epsilon_a$ jako $K$-vektorový prostor a 
+      tedy izomorfní jako $K$-algebra  tělěsu $K$. Tedy $KQ/R_Q$ je izomorfní 
+      součtu $K\oplus K\oplus\ldots\oplus K$.
+    \end{proof}
+            
+    \begin{lem}\label{lem-nilpotent-je-radikal}
+      Pokud je $I$ oboustranným nilpotentním ideálem algebry $A$, pak $I\subseteq rad(A)$. 
+      Pokud je navíc algebra $A/I$ izomorfní direktnímu součtu kopií tělesa $K$, pak $I=rad(A)$. 
+    \end{lem} 
+    
+    \begin{proof}
+      \cite{1} Corollary I.1.4.
+    \end{proof}
+    
+    \begin{thm}\label{mega-veta-toulec}
+      Nechť $Q$ je konečný toulec, $I$ přípustný ideál $KQ$ a $R_Q$ je šipkový ideál $KQ$. Pak platí:
+      \begin{description}
+        \item[(a)] Množina $\{e_a=\epsilon_a+I|a\in Q_0\}$ je úplná množina 
+        primitivních ortogonálních idempotentů algebry $KQ/I$.
+        \item[(b)] Algebra $KQ/I$ je souvislá, právě když Q je souvislý toulec.
+        \item[(c)] Algebra $KQ/I$ je konečně dimenzionální. 
+        \item[(d)] $I$ je konečně generovaný. 
+        \item[(e)] Existuje konečná množina relací $\{\rho_1,\ldots,\rho_m\}$ 
+        taková, že $I=<\rho_1,\ldots,\rho_m>$.
+        \item[(f)] $rad(KQ/I)=R_Q/I$.
+      \end{description}
+    \end{thm}
+    \begin{proof}
+      \begin{description}
+        \item 
+        \item[(a)]
+          Protože $e_a$ je obraz $\epsilon_a$ kanonickým homomorfismem $KQ\to 
+          KQ/I$, plyne z \hyperref[dsl-quiver-idem]{Důsledku 
+          \ref*{dsl-quiver-idem}}, že daná množina je úplnou množinou 
+          ortogonálních idempotentů. Musíme ještě ověřit, že každé $e_a$ je 
+          primitivní, neboli že jedinými idempotenty $e_a(KQ/I)e_a$ jsou 0 a 
+          $e_a$. Každý idempotent $e\in e_a(KQ/I)e_a$ může být zapsán jako $e=\lambda 
+          e_a+w+I$, kde $\lambda\in K$ a $w$ je lineární kombinace cyklů skrze $a$ 
+          délky alespoň 1. Rovnost $e^2=e$ nám dává \\\\
+          \centerline{$(\lambda^2-\lambda)e_a+(2\lambda-1)w+w^2\in I$.} \\\\
+          Protože $I\subseteq R^2_Q$, musí být 
+          $\lambda^2-\lambda=0$ a tedy $\lambda=0$ nebo $\lambda=1$. 
+          Nechť $\lambda=0$, pak $e=w+I$, kde $w$ je idempotent modulo $I$. 
+          Na druhou stranu protože $R^m_Q\subseteq I$ pro nějaké $m\geq 2$, musí 
+          být $w^m\in I$ a $w$ je tedy také nilpotent modulo $I$. Pak $w\in I$ a $e=0$.
+          Nechť tedy $\lambda=1$, pak $e_a-e=-w+I$ je také idempotent v $e_a(KQ/I)e_a$ 
+          a $w$ je opět idempotent modulo $I$. Protože je opět nilpotentem 
+          modulo $I$, musí náležet do $I$. Pak $e_a=e$.
+          
+        \item[(b)] Dokážeme jednu implikaci po druhé:
+          \begin{description}
+            \item[\Rightarrow] Nechť $KQ/I$ je souvislá. 
+              Pokud $Q$ není souvislý toulec, pak $KQ$ není 
+              souvislá algebra dle \hyperref[lem-q-kq-souvisle]{Lemma 
+              \ref*{lem-q-kq-souvisle}}. Tedy $KQ$ obsahuje centrální idempotent 
+              $\gamma$ různý od $0$ a $1$, ten můžeme dle důkazu \cite{1} Lemma II.1.6 zvolit jako 
+              sumu cest nulové délky, tedy vrcholů. Pak ale $c=\gamma+I\neq I$. 
+              Na druhou stranu $c=1+I$ implikuje $1-\gamma\in I$, což je také 
+              nemožné, protože $I\subseteq R^2_Q$. Prvek $c$ je tedy centrálním 
+              idempotentem $KQ/I$ a ta není souvislá.
+            
+            \item[\Leftarrow] Předpokládejme nyní pro spor, že $Q$ je souvislý, ale $KQ/I$ není. 
+              Pak je algebra $KQ/I$ 
+               direktním součtem dvou algeber, existuje tedy rozklad $Q_0$ na 
+              disjunktní podmnožiny $Q_0'$ a $Q_0''$ takové, že pro všechna $a\in Q_0'$ 
+              a $b\in Q_0''$ je \\\\
+              \centerline{$\epsilon_a(KQ/I)\epsilon_b=\epsilon_b(KQ/I)\epsilon_a=0$.}\\\\  
+              Protože $Q$ je souvislý, 
+              můžeme zvolit taková $a\in Q_0'$  a $b\in Q_0''$, že budou spojena 
+              šipkou $\alpha:a\to b$. 
+              To je ale spor, protože $\alpha=\epsilon_a\alpha\epsilon_b$ a tedy pro $\bar\alpha=\alpha+I$ platí \\\\
+              \centerline{$\bar\alpha=\epsilon_a\bar\alpha\epsilon_b\in 
+              \epsilon_a(KQ/I)\epsilon_b=0$.}
+          \end{description}
+        
+        \item[(c)] Protože $I$ je přípustný ideál, existuje $m\geq 2$ takové, že 
+          $R_Q^m\subseteq I$, pak existuje surjektivní homomorfismus $K$-algeber 
+          $KQ/R_Q^m\to KQ/I$. Tedy stačí dokázat, že $KQ/R_Q^m$ je konečně 
+          dimenzionální. Pak třídy ekvivalence cest délky menší než $m$ tvoří 
+          bázi $KQ/R_Q^m$ jako $K$-vektorového prostoru. Těch je ale konečně 
+          mnoho, protože $Q$ je konečný.
+          
+        \item[(d)] Nechť $m\geq 2$ takové, že $R_Q^m\subseteq I$. Máme 
+          následující krátkou exaktní posloupnost $KQ$-modulů: \\\\
+          \centerline{$0\longrightarrow R_Q^m_Q \longrightarrow I \longrightarrow I/R_Q \longrightarrow 
+          0$}\\\\
+          Stačí tedy dokázat, že $R_Q^m$ a $I/R_Q^m$ jsou konečně generované jako 
+          $KQ$-moduly. Z definice je $R_Q^m$ generovaný cestami délky $m$ a těch 
+          je konečně mnoho. Na druhou stranu $I/R_Q^m$ je dle bodu (c) ideál konečně 
+          dimenzionální algebry $KQ/R_Q^m$.  Tedy $I/R_Q^m$ je konečně dimenzionální 
+          $K$-vektorový prostor a tedy konečně generovaný $KQ$-modul.
+        
+        \item[(e)] Dle\,\, bodu\,\, (d)\, je\, ideál\, $I$\, algebry\, $KQ$\, generován\, konečnou\, 
+          množinou $\{\sigma_1,\sigma_2,\ldots,\sigma_t\}$. Prvky $\sigma_i$ nejsou obecně 
+          relace, protože cesty obsažené v $\sigma_i$ nemusí mít stejný počátek 
+          a konec. Na druhou stranu pro všechny $a,b\in Q_0$ je $\epsilon_a \sigma_i \epsilon_b$ 
+          relace a $\sigma_i=\sum_{a,b\in Q_0}  \epsilon_a \sigma_i \epsilon_b$. 
+          Pak $\{ \epsilon_a \sigma_i \epsilon_b|$ $a,b\in Q_0,$ $i=1,2,\ldots t\}$ 
+          generuje $I$.
+                  
+        \item[(f)] Protože $I$ je přípustný ideál $KQ$ existuje $m\geq 2$ takové, že $R_Q^m\subseteq 
+          I$. Tedy $(R_Q/I)^m=0$ a $R_Q/I$ je nilpotentní ideál $KQ/R_Q$. Na 
+          druhou stranu dle \hyperref[lem-kq-jako-soucin]{Lemma 
+          \ref*{lem-kq-jako-soucin}} je algebra \\\\
+          \centerline{$(KQ/I)/(R_Q/I)\simeq KQ/R_Q$} \\\\
+          izomorfní direktnímu součinu kopií tělesa $K$.
+          Pak z  \hyperref[lem-nilpotent-je-radikal]{Lemma 
+          \ref*{lem-nilpotent-je-radikal}} plyne, že $R_Q/I=rad(KQ/R_Q)$.
+          
+        
+      \end{description}
+    \end{proof}
+    
+    \begin{dsl}\label{mega-veta-toulec-dsl}
+      Buď $Q$ konečný toulec, $R_Q$ šipkový ideál $KQ$ a $I$ přípustný ideál $KQ$. 
+      Pak platí:
+      \begin{description}
+         \item[(a)]Pro každé $l\geq1$ je $rad^l(KQ/I)=(R_Q/I)^l$ a tedy platí, že  \\\\
+           \centerline{$rad(KQ/I)/rad^2(KQ/I)=(R_Q/I)/(R_Q/I)^l\simeq R_Q/R_Q^2$.\\}
+         
+         \item[(b)]        
+          Algebra omezeného quiveru $KQ/I$ je potom souvislá, konečně 
+          dimenzionální s jednotkou, mající $R_Q/I$ jako radikál a $\{e_a:=\epsilon_a+I|$ $a\in Q_0\}$ 
+          úplnou množinu primitivních ortogonálních idempotentů.
+      \end{description}
+    \end{dsl} 
+    
+    \begin{proof}
+      Přímý důsledek \hyperref[mega-veta-toulec]{Věty \ref*{mega-veta-toulec}}, konkrétně bodů (a), (b) a (c).
+    \end{proof}
+    
+    \begin{dfn}
+      Nechť $A$ je základní, souvislá a konečně dimenzionální K-algebra a $\{e_1,e_2,\ldots,e_n\}$ 
+      úplná množina primitivních ortogonálních idempotentů $A$. Definujme vlastní 
+      toulec $Q_A$ algebry A následovně:
+      \begin{description}
+        \item[(a)] Body $Q_A$ budou čísla $1,2,\ldots,n$ která jsou v 
+        bijektivní korespondenci s idempotenty $e_1,e_2,\ldots,e_n$.
+        \item[(b)] Pro každé dva body $a,b\in (Q_A)_0$ budou šipky $\alpha:a\rightarrow b$ 
+        v bijektivní korespondenci s vektory v bázi K-vektorového prostoru $e_a(radA/rad^2A)e_b$.
+      \end{description}
+    \end{dfn}
+    
+    \begin{pzn}      
+      Protože $A$ je konečně dimenzionální, jsou konečně dimenzionální i 
+      K-vektorové prostory $e_a(radA/rad^2A)e_b$ pro každé $a,b\in(Q_A)_0$ 
+      a toulec $Q_A$ je tedy konečný.    
+     \end{pzn}    
+     
+    \begin{dfn}
+      Řekneme, že $K$-algebra $A$ je elementární, pokud je 
+      $K$-algebra $A/rad(A)$ izomorfní direktnímu součtu $K\oplus K\oplus\ldots\oplus K$ 
+      kopií tělesa $K$.
+    \end{dfn}
+    
+    \begin{pzn}
+      Poznamenejme, že v případě algebraicky uzavřeného tělesa je $K$-algebra 
+      elementární, právě když je základní.
+    \end{pzn}
+      
+    \begin{lem}\label{lem-velke-algebra-repre}
+      Nechť $A$ je konečně dimenzionální, elementární, základní a souvislá $K$-algebra. Pak platí 
+      následující:
+      \begin{description}
+        \item[(a)] Toulec $Q_A$ algebry A nezávisí na volbě úplné množiny
+          ortogonálních idempotentů $A$.
+        \item[(b)] Pro každý pár $e_a,e_b$ primitivních ortogonálních 
+          idempotentů $A$ je K-lineární zobrazení 
+          \begin{eqnarray}
+            \xi: e_a(radA)e_b/e_a(rad^2A)e_b &\to& e_a(radA/rad^2A)e_b \nonumber \\
+            e_axe_b+e_a(rad^2A)e_b &\mapsto& e_a(x+rad^2A)e_b \nonumber
+          \end{eqnarray}
+          izomorfismus.
+        \item[(c)] Pro každou šipku $\alpha:i\rightarrow j$ v $(Q_A)_1$ buďte $x_\alpha\in e_i(radA)e_j$
+         takové, že $\{x_\alpha+rad^2 A|\alpha:i\rightarrow j\}$ je báze $e_i(radA/rad^2A)e_j$ 
+         (viz. bod (a)). Pak           
+          \begin{description}
+            \item[(i)] pro každé dva body $a,b\in(Q_A)_0$ můžeme každý prvek $x\in e_a(radA)e_b$ 
+            napsat ve tvaru \\
+            \centerline{$x=\sum x_{\alpha_1}x_{\alpha_2}\ldots 
+            x_{\alpha_l}\lambda_{\alpha_1\alpha_2\ldots\alpha_l}$,}\\\\
+            kde $\lambda_{\alpha_1\alpha_2\ldots\alpha_l}\in K$ a suma je 
+            počítána přes všechny cesty $\alpha_1\alpha_2\ldots\alpha_l$ v $Q_A$ 
+            z $a$ do $b$.
+            \item[(ii)] pro každou šipku $\alpha:i\rightarrow j$ prvek $x_\alpha$ 
+            určuje jednoznačně nenulový homomorfismus (který není izomorfismem) 
+            $\tilde{x_\alpha}\in Hom_A(e_jA,e_iA)$ takový, že 
+            $\tilde{x_\alpha}(e_j)=x_\alpha$, $Im\tilde{x_\alpha}\subseteq e_i(radA)$ 
+            a $Im\tilde{x_\alpha}\not\subseteq e_i(rad^2A)$. 
+          \end{description}
+        \item[(d)] Toulec $Q_A$ algebry $A$ je souvislý. 
+      \end{description}
+    \end{lem}
+    
+    \begin{proof}
+      \begin{description}
+        \item
+        
+        \item[(a)] Počet vrcholů $Q_A$ je určen jednoznačně, protože je roven 
+          počtu nerozložitelných direktních sčítanců $A_A$ a to je dáno jednoznačně dle \cite{1} I.4.10.
+          Dle stejné věty jsou tyto direktní sčítance určeny jednoznačně až na 
+          izomorfismus a jejich pořadí. Mějme tedy dva libovolné rozklady $A_A$ 
+          \begin{eqnarray}
+            A_A &=& \bigoplus_{a=1}^n e_aA = \bigoplus_{b=1}^n e'_bA \nonumber
+          \end{eqnarray}
+          kde $e_aA \simeq e'_aA$. Musíme ukázat, že pro každou dvojici $a,b$ 
+          je \\\\
+          \centerline{$dim_K e_a(rad(A)/rad^2(A))e_b=dim_K e'_a(rad(A)/rad^2(A))e'_b$.} 
+          \\\\
+          $K$-lineární zobrazení 
+          \begin{eqnarray}
+            e_a (rad(A)) &\to& e_a (rad(A)/rad^2(A)) \nonumber \\
+            e_ax &\mapsto& e_a(x+rad^2A)  \nonumber
+          \end{eqnarray}
+          má jádro $e_a (rad^2(A))$. Pak \\\\
+          \centerline{$e_a (rad(A)/rad^2(A)) \simeq e_a (rad(A))/e_a(rad^2(A)) \simeq (e_a rad(A))/(e_a rad^2(A))$\\\\\\}\\\\
+          Máme tedy izomorfismus vektorových prostorů
+          \begin{eqnarray}
+            e_a (rad(A)/ rad^2(A)) e_b
+            &=& [ rad(e_aA)/ rad^2(e_aA)]e_b \nonumber \\
+            &=& Hom_A(e_bA,rad(e_aA)/rad^2(e_aA))  \nonumber \\
+            &=& Hom_A(e'_bA,rad(e'_aA)/rad^2(e'_aA))  \nonumber \\
+            &=& [ rad(e'_aA)/ rad^2(e'_aA)]e'_b  \nonumber \\
+            &=& e'_a (rad(A)/ rad^2(A)) e'_b  \nonumber 
+          \end{eqnarray}
+        
+        \item[(b)] Je zřejmé, že $K$-lineární zobrazení 
+          \begin{eqnarray}
+            e_a (rad(A)) e_b &\to&   e_a (rad(A)/rad^2(A)) e_b \nonumber \\
+            e_axe_b &\mapsto&   e_a(x+rad^2A)e_b \nonumber
+          \end{eqnarray}
+          má jádro $e_a (rad^2(A)) e_b$. A tedy náš homomorfismus $\psi$ je 
+          izmorfismem.
+        
+        \item[(c-i)] Protože jako $K$-vektorový prostor je \\\\
+          \centerline{$rad(A)\simeq rad(A)/rad^2(A)\oplus rad^2(A)$,} \\\\
+          máme i izomorfismus  \\\\
+          \centerline{$e_a(rad(A))e_b\simeq e_a(rad(A)/rad^2(A))e_b\oplus e_a(rad^2(A))e_b$.} \\\\
+          A tedy $x$ může být zapsáno jako\\\\
+          \centerline{$
+            x = \sum_{\alpha:a\to b}x_\alpha \lambda_\alpha $ modulo $  e_a(rad^2(A))e_b
+          $,}\\\\  
+          kde $\lambda_a\in K$ pro $a\in Q_1$. Nebo více formálně jako \\\\
+          \centerline{$x'=x-\sum_{\alpha:a\to b}x_\alpha \lambda_\alpha\in e_a(rad^2(A))e_b$.} \\\\      
+          Rozklad $rad(A)=\bigoplus_{i,j}e_i(rad(A))e_j$ nám implikuje, že \\\\
+          \centerline{$e_a(rad^2(A))e_b=\sum_{c\in(Q_A)_0}[e_a(rad(A))e_c][e_c(rad(A))e_b]$.} 
+          \\\\
+          Tedy $x'=\sum_{c\in(Q_A)_0}x'_cy'_c$, kde $x'_c\in e_a(rad(A))e_c$ a $y'_c\in 
+          e_c(rad(A))e_b$. Z předchozí diskuze vyplývá, že 
+          $x'_c=\sum_{\beta:a\to c}x_\beta\lambda_\beta$ a
+          $y'_c=\sum_{\gamma:c\to b}x_\gamma\lambda_\gamma$
+          modulo $rad^2(A)$, kde $\lambda_\beta,\lambda_\gamma\in K$. Tedy \\\\
+          \centerline{$
+            \sum_{\alpha:a\to b}x_\alpha \lambda_\alpha + 
+            \sum_{\beta:a\to c}
+            \sum_{\gamma:c\to b}
+            x_\beta x_\gamma \lambda_\beta \lambda_\gamma
+            $ modulo $  e_a(rad^3(A))e_b 
+          $.}\\\\
+          Dále pokračujeme indukcí do $n$ takového, že  $rad^n(A)=0$. To 
+          existuje z nilpotentnosti $rad(A)$.
+                    
+        \item[(c-ii)] Dle předpokladu je prvek $x_\alpha\in e_i(rad(A))e_j$ 
+          nenulový a zobrazuje se na nenulový prvek $\tilde x_\alpha$ 
+          $K$-lineárním izomorfismem \\\\
+          \centerline{$e_i(rad(A))e_j\simeq Hom_A(e_j A,e_i(rad(A)))$.} \\\\
+          Z toho plyne, že $\tilde x_\alpha(e_j)=x_\alpha$, $Im \tilde x_\alpha\subseteq e_i(rad(A))$ 
+          a $Im \tilde x_\alpha\not\subseteq e_i(rad^2(A))$.
+        
+        \item[(d)] Nechť $Q_A$ není souvislý. Pak lze množinu $(Q_A)_0$ rozdělit na 
+          dvě disjunktní neprázdné množiny $Q_0'$ a $Q_0''$ takové, že mezi nimi 
+          nejsou žádné šipky. Pokud $i\in Q_0'$ a $j\in Q_0''$, pak 
+          $e_iAe_j=e_jAe_i=0$, pak dle \cite{1} Lemma II.1.6 $A$ 
+          není souvislá, což je spor.
+        
+      \end{description}
+    \end{proof}
+    
+    \begin{lem}
+      Nechť $Q$ je konečný a souvislý toulec, $I$ přípustný ideál $KQ$ a $A=KQ/I$. 
+      Pak $Q_A=Q$.
+    \end{lem}
+    
+    \begin{proof}
+      Dle \hyperref[mega-veta-toulec]{Věty \ref*{mega-veta-toulec}} (a) 
+      je $\{e_a=\epsilon_a|$ $a\in Q_0\}$ úplná množina ortogonálních 
+      idempotentů $A=KQ/I$. Tedy vrcholy v $Q_A$ jsou v bijektivní korespondenci 
+      s vrcholy v $Q$. 
+      A dle \hyperref[mega-veta-toulec-dsl]{Důsledku \ref*{mega-veta-toulec-dsl}} 
+      jsou šipky z $a$ do $b$ v $Q$ v bijektivní korespondenci s vektory v bázi 
+      $K$-vektorového prostoru $e_a(rad(A)/rad^2(A))e_b$  a tedy s šipkami z $a$ do $b$ v $Q_A$.
+    \end{proof}
+    
+    \begin{thm}
+      Nechť $A$ je základní, souvislá, elementární a konečně dimenzionální K-algebra. Pak 
+      existuje přípustný ideál $I$ algebry $KQ_A$ takový, že $A\simeq KQ_A/I$.
+    \end{thm}
+    \begin{proof}
+      Pro každou šipku $\alpha: i\to j$ v $(Q_A)_1$ buď $x_\alpha\in rad (A)$ takové, že 
+      $\{x_\alpha+rad^2(A)|\alpha:i\to j\}$ tvoří bázi $e_i(rad(A)/rad^2(A))e_j$. 
+      Definujme dvě zobrazení:
+      \begin{eqnarray}
+         \varphi_0:(Q_A)_0 &\to& A \nonumber \\
+         a &\mapsto& e_a \nonumber \\ \nonumber \\
+         \varphi_1:(Q_A)_1 &\to& A \nonumber \\
+         \alpha &\mapsto& x_\alpha \nonumber
+      \end{eqnarray}
+      Pak prvky $\varphi_0(a)$ tvoří úplnou množinu primitivních ortogonálních 
+      idempotentů $A$ a pokud $\alpha:a\to b$, pak máme 
+      \\\\\centerline{$
+        \varphi_0(a)\varphi_1(\alpha)\varphi_0(b)=e_ax_\alpha e_b=x_\alpha=\varphi_1(\alpha)
+      $.}\\
+      
+      Dle \cite{1} Proposition II.1.8 lze $\varphi_0$ a $\varphi_1$ jednoznačně rozšířit na 
+      homomorfismus  $K$-algeber 
+      \\\\\centerline{$\varphi: KQ_A\to A$.}\\\\ 
+      Tato vlastnost se nazývá 
+      univerzální vlastnost $K$-algeber. 
+      
+      Ukážeme, že $\varphi$ je epimorfismus. Jeho obraz je generovaný prvky $e_a$ 
+      $(a\in (Q_A)_0)$ a $x_\alpha$ $(\alpha\in (Q_A)_1)$ a tedy stačí ukázat, 
+      že tyto prvky generují celé $A$. Protože $K$ je algebraicky uzavřené, plyne 
+      z Wedderburn-Malcevovi věty (\cite{1} I.1.6), že je kanonický homomorfismus 
+      $A \to A/rad (A)$  štěpitelný a $A$ je štěpitelné rozšíření polojednoduché 
+      algebry $A/rad( A)$ podle $rad (A)$. Protože $A/rad( A)$ je generované 
+      prvky $e_a$, zbývá dokázat, že každý prvek $rad(A)$ může být zapsán jako 
+      polynom v $x_\alpha$. A to plyne z 
+      \hyperref[lem-velke-algebra-repre]{Lemma \ref*{lem-velke-algebra-repre} (c)}.
+      
+      Zbývá ukázat, že $I=Ker\varphi$ je přípustný. Nechť $R$ značí šipkový 
+      ideál algebry $KQ_A$. Z definice $\varphi$ máme $\varphi(R)\subseteq 
+      rad(A)$ a tedy $\varphi(R^l)\subseteq rad^l(A)$ pro $l\geq 1$. Protože $rad(A)$ 
+      je nilpotentní, existuje $m\geq 1$ takový, že $rad^m(A)=0$ a tedy $R^m\subseteq 
+      Ker\varphi=I$. Nyní dokážeme, že $I\subseteq R^2$. Buď $x\in I$, pak 
+     můžeme $x$ zapsat jako
+     \\\\\centerline{$
+       x
+       =\sum_{a\in (Q_A)_0}\epsilon_a\lambda_a
+       +\sum_{\alpha\in (Q_A)_1}\alpha\mu_\alpha+y
+     $,}\\\\
+     kde $\lambda_a,\mu_\alpha\in K$ a $y\in R^2$. Pokud $\vaprhi(x)=0$, pak 
+     \\\\\centerline{$
+       0
+       =\sum_{a\in (Q_A)_0}e_a\lambda_a
+       +\sum_{\alpha\in (Q_A)_1}x_\alpha\mu_\alpha+\varphi(y)
+     $.}\\\\
+     Pak ale máme
+     \\\\\centerline{$
+       \sum_{a\in (Q_A)_0}e_a\lambda_a
+       =-\sum_{\alpha\in (Q_A)_1}x_\alpha\mu_\alpha-\varphi(y)
+       \in rad(A)
+     $.}\\\\
+     Protože $Rad(A)$ je nilpotentní a $e_a$ jsou ortogonální idempotenty, musí být $\lambda_a=0$ 
+     pro každé $a\in (Q_A)_0$. Podobně máme 
+     \\\\\centerline{$
+       \sum_{\alpha\in (Q_A)_1}x_\alpha\mu_\alpha
+       =-\varphi(y)
+       \in rad^2(A)
+     $}\\\\
+     a tedy $\sum_{\alpha\in (Q_A)_1}(x_\alpha+rad^2(A))\mu_\alpha=0$ platí v 
+     $rad(A)/rad^2(A)$. Ale množina $\{x_\alpha+rad^2(A)|\alpha\in (Q_A)_1\}$ je 
+     z  báze $rad(A)/rad^2(A)$ a tedy $\mu_\alpha=0$ pro každé 
+     $\alpha\in (Q_A)_1$ a tím pádem $x=y\in R^2$.
+    \end{proof}
+
+  \subsection{Reprezentace a moduly}
+  
+    \begin{dfn}
+      Nechť $Q$ je toulec. K-lineární reprezentaci M toulce Q definujeme 
+      následovně:
+      \begin{description}
+        \item[(a)] Každému bodu $a\in Q_0$ přiřadíme K-vektorový prostor $M_a$. 
+        \item[(b)] Každé šipce $\alpha: a \rightarrow b \in Q_1$ přiřadíme 
+        K-lineární zobrazení $\varphi_\alpha:M_a\rightarrow M_b$. 
+      \end{description}
+      Takovou reprezentaci budeme značit $M=(M_a,\varphi_\alpha)_{a\in Q_0,\alpha\in 
+      Q_1}$, nebo jednoduše $M=(M_a,\varphi_\alpha)$. Nazveme ji konečnou, pokud 
+      každý vektorový prostor $M_a$  je konečně dimenzionální.
+      
+      Nechť $M=(M_a,\varphi_\alpha)$ a $M'=(M_a',\varphi'_\alpha)$ jsou dvě 
+      reprezentace toulce Q. Morfismus reprezentací $f:M\rightarrow M'$ je 
+      množina $f=(f_a)_{a\in Q_0}$ K-lineárních zobrazení $f_a:M_a\rightarrow M_a'$ 
+      takových, že jsou kompatibilními se zobrazeními $\varphi_a$ a 
+      $\varphi'_a$, neboli pro každou šipku $\alpha: a\rightarrow b$ máme 
+      $\varphi'_\alpha f_a=f_b\varphi_\beta$ a tedy následující diagram komutuje: \\\\
+      \centerline{\xymatrix{
+        M_a  
+            \ar@{->}[r]^{\varphi_a}  
+            \ar@{->}[d]^{f_a}
+          & M_b 
+             \ar@{->}[d]^{f_b} \\
+        M'_a \ar@{->}[r]^{\varphi'_a} 
+          & M'_b
+      }}\\\\
+      
+      Nechť jsou $f:M\rightarrow M'$ a  $g:M'\rightarrow M''$ dva morfismy 
+      reprezentací Q, kde $f=(f_a)_{a\in Q_0}$ a $g=(g_a)_{a\in Q_1}$. Jejich 
+      složení definujme jako množinu $gf=(g_af_a)_{a\in Q_1}$. Složením dvou morfismů 
+      reprezentací vznikne opět morfismus reprezentací. 
+      
+      K-lineární reprezentace toulce Q nám tedy spolu s jejich morfismy a skládáním morfismů 
+      tvoří kategorii $Re_K(Q)$. Jako $rep_k(Q)$ označíme její úplnou podkategorii 
+      sestávající z konečně dimenzionálních reprezentací.
+    \end{dfn}
+    
+    \begin{lem}
+      Nechť $Q$ je konečný toulec, pak jsou $Rep_K(Q)$ a $rep_K(Q)$ abelovské 
+      K-kategorie.
+    \end{lem}
+    \begin{proof}
+      \cite{1} Lemma III.1.3.
+    \end{proof}
+    
+    \begin{dfn}
+      Nechť Q je konečný toulec a $M=(M_a,\varphi_\alpha)$ reprezentace $Q$.  Pro 
+      každou netriviální cestu $\omega=\alpha_1\alpha_2\ldots\alpha_l$ z $a$ do $b$ 
+      definujme vyhodnocení M na cestě $\omega$ jako K-lineární zobrazení z $M_a$ 
+      do $M_b$ definované: \\\\
+      \centerline{$\varphi_\omega:\varphi_{\alpha_l}\varphi_{\alpha_l-1}\ldots\varphi_{\alpha_1}$.} 
+      \\\\
+      Definici vyhodnocení dále rozšíříme na K-lineární kombinace cest se 
+      stejným počátkem a koncem. Nechť \\
+      \centerline{$\rho=\sum_{i=1}^m\lambda_i\omega_i$} 
+      \\\\
+      je taková kombinace, kde pro každé $i$ je $\lambda_i\in K$ a $\omega_i$ je cesta v 
+      Q, pak \\\\
+      \centerline{$\varphi_\rho=\sum_{i=1}^m\lambda_i\rho_{\omega_i}$.}\\
+    \end{dfn}
+    
+    \begin{dfn}
+      Nechť  $Q$ je konečný toulec a $I$ přípustný ideál $KQ$. Řekneme, že reprezentace 
+      $M=(M_a,\varphi_\alpha)$ toulce Q je omezená ideálem $I$, nebo že splňuje všechny relace 
+      z $I$, pokud \\
+      \centerline{$\varphi_\rho=0$, pro každou relaci $\rho\in I$}\\\\ 
+      Úplnou podkategorii $Rep_K(Q)$ (resp. $rep_K(Q)$) sestávající z 
+      reprezentací Q omezených ideálem I budeme značit $Rep_K(Q,I)$ (resp. 
+      $rep_K(Q,I)$).    
+    \end{dfn}
+    
+    \begin{pr}
+      Nechť Q je toulec \\
+      \centerline{\xymatrix{
+        & & \circ^3 \ar@{->}[ld]_\beta \\
+        \circ^1 
+          & \circ^2 \ar@{->}[l]_\lambda
+          & 
+          & \circ^5 \ar@{->}[lu]_\alpha \ar@{->}[ld]^\gamma \\
+        & & \circ^4 \ar@{->}[lu]^\delta
+      }}\\\\\\ omezený relací komutativity $\alpha\beta=\gamma\delta$. Pak obě 
+      následující reprezentace jsou touto relací také omezeny: \\\\
+      \centerline{\xymatrix{
+        & & K \ar@{->}[ld]_{[^1_0]} \\
+        K
+          & K^2 \ar@{->}[l]_{[1,1]}
+          & 
+          & 0 \ar@{->}[lu] \ar@{->}[ld] \\
+        & & K \ar@{->}[lu]^{[^0_1]}
+        } 
+        \rightaligned{
+        \space\space\space\space\space\space\space\space\space\space
+        \xymatrix{
+        & & K \ar@{->}[ld]_1 \\
+        K
+          & K \ar@{->}[l]_1
+          & 
+          & K \ar@{->}[lu]_1 \ar@{->}[ld]^1 \\
+        & & K \ar@{->}[lu]^1
+      }}}\\\\
+      Naopak následující reprezentace touto relací omezená není: \\\\
+      \centerline{\xymatrix{
+        & & 0 \ar@{->}[ld] \\
+        K
+          & K \ar@{->}[l]_1
+          & 
+          & K \ar@{->}[lu] \ar@{->}[ld]^1 \\
+        & & K \ar@{->}[lu]^1
+      }}
+      
+    \end{pr}
+    
+    \begin{thm}\label{ekvivalence-rep-a-mod}
+      Nechť $A=KQ/I$, kde $Q$ je konečný souvislý toulec a I přípustný ideál KQ. 
+      Pak existuje K-lineární ekvivalence kategorií \\\\
+      \centerline{\xymatrix{
+        F:ModA 
+          \ar@{->}[r]^{\simeq} 
+        & Rep_K(Q,I)
+      }}\\\\
+      a její restrikce na konečné moduly a reprezentace \\\\
+      \centerline{\xymatrix{
+        F:modA 
+          \ar@{->}[r]^{\simeq} 
+        & rep_K(Q,I)
+      }.}
+    \end{thm}
+    
+    \begin{proof}
+      \begin{description}
+        \item 
+        
+        \item[(1)] Nejprve zkonstruujeme funktor $F:mod(A)\to rep_K(Q,I)$. Nechť 
+          $M_A$ je $A$-modul. Definujme $K$-lineární reprezentaci
+           $F(M)=(M_a, \varphi_\alpha)_{a\in Q_0, \alpha\in Q_1}$
+            toulce $Q$ 
+          následujícím způsobem: 
+          
+            \begin{description}
+              \item[(i)] Pro $a\in Q_0$ buď $M_a:=Me_a$, kde $e_a=\epsilon_a+I$ 
+              je idempotent $A=KQ/I$.
+              
+              \item[(ii)] Pro $\varphi:a\to b$ v $Q_1$ definujme 
+                \begin{eqnarray}
+                  \varphi_\alpha: M_a &\to& M_b \nonumber \\
+                  x &\mapsto& x\overline \alpha(=xe_a\overline\alpha e_b), \nonumber
+                \end{eqnarray}
+              kde $\overline\alpha=\alpha+I$ je třída reprezentantů $\alpha$ 
+              modulo $I$.
+            \end{description}
+            Protože $M$ je $A$-modul, tak $\varphi_\alpha$ je $K$-lineární 
+            zobrazení. Pak $F(M)$ je omezené ideálem $I$, protože pro relaci 
+            $\rho=\sum_{i=1}^m \lambda_iw_i$ z $a$ do $b$ v $I$, kde 
+            $w_i=\alpha_{i,1}\alpha_{i,2}\ldots\alpha_{i,l_i}$, máme 
+            \begin{eqnarray}
+              \varphi_\rho(x) &=& \sum_{i=1}^m \lambda_i \varphi_{w_i}(x) \nonumber \\
+              &=& \sum_{i=1}^m \lambda_i \varphi_{\alpha_{i,l_i}}\ldots \varphi_{\alpha_{i,1}}(x)  \nonumber \\
+              &=& \sum_{i=1}^m \lambda_i(x \overline \alpha_{i,1} \ldots \overline \alpha_{i,l_i}) \nonumber \\
+              &=&  x\cdot \sum_{i=1}^m \lambda_i(\overline \alpha_{i,1} \ldots \overline \alpha_{i,l_i}) \nonumber \\
+              &=& x\cdot \overline \rho = x0 = 0. \nonumber
+            \end{eqnarray}
+            Tím je definován náš funktor na objektech. Nechť $f:M_A\to M'_A$ je 
+            homomorfismus $A$-modulů. Chceme definovat morfismus $F(f):F(M_A)\to 
+            F(M'_A)$ v $Rep_K(Q,I)$. Pro $a\in Q_0$ a $x=xe_a\in Me_a=M_a$ máme 
+            \\\\\centerline{$f(xe_a)=f(xe_a^2)=f(xe_a)e_a\in M'e_a=M'_a$.}\\\\
+            Tedy restrikce $f_a$ homomorfismu $f$ na $M_a$ je $K$-lineární zobrazení $f_a:M_a\to 
+            M'_a$.  Položme $F(f):(f_a)_{a\in Q_0}$. Zbývá ověřit, že pro každou šipku $\alpha:a\to b$ 
+            máme $\varphi'_\alpha f_a=f_b\varphi_\alpha$, z čehož plyne, že $F(f)$ 
+            je morfismem reprezentací. Nechť $x\in M_a$, pak
+            \\\\\centerline{$f_b\varphi_\alpha(x)=f_b(x\overline \alpha)=f(x)\overline\alpha=f_a(x)\overline\alpha=\varphi'_\alpha f_a(x)$.}\\\\
+            Ověření toho, že $F$ je $K$-lineární funktor $Mod(A)\to Rep_K(Q,I)$ a
+            že se restriktuje na $K$-lineární funktor $mod(A)\to rep_K(Q,I)$ je již
+             přímořaré a přenecháme ho 
+            čtenáři.
+            
+        \item[(2)]
+        Nyní zkonstruujeme $K$-lineární funktor  $G:rep_K(Q,I)\to mod(A)$. Nechť 
+        $(M_a,\varphi_\alpha)$ je objekt $Rep_K(Q,I)$. Položme 
+        \\\\\centerline{$G(M):=\bigoplus_{a\in Q_0}M_a$}\\\\
+        a definujme strukturu $K$-vektorového prostoru následujícím způsobem. 
+        Protože $A=KQ/I$, můžeme nejprve na $G(M)$ definovat $KQ$-modulovou 
+        strukturu a poté ukázat, že je anihilovaný ideálem $I$. Nechť tedy $(x_a)_{a\in Q_0}$ 
+        je z $G(M)$. Stačí nám definovat součin tvaru $xw$, kde $w$ je libovolná 
+        cesta v $Q$. Pro $w=\epsilon_a$ stacionární cestu v $a$ položíme 
+        \\\\\centerline{$xw=x\epsilon_a=x_a$.}\\\\
+        Nechť $w=\alpha_1\alpha_2\ldots\alpha_l$ je netriviální cesta z $a$ do $b$ 
+        a uvažujme $K$-lineární zobrazení $\varphi_w=\varphi_{\alpha_l}\ldots\varphi_{\alpha_1}:M_a\to 
+        M_b$. Položme
+        \\\\\centerline{$(xw)_c=\delta_{bc}\varphi_w(x_a)$,}\\\\
+        kde $\delta$ značí Kroneckerovu deltu. Jednoduše řečeno, $xw$ je prvkem $G(M)=\bigoplus_{a\in 
+        Q_0}M_a$, jehož jedinou nenulovou složkou je $(xw)_b=\varphi_w(x_a)\in M_b$. Tím jsme ukázali, 
+        že $G(M)$ je $KQ$-modul. Navíc plyne z definice $G(M)$, že pro každou $\rho\in I$ 
+        a $x\in G(M)$ je $x\rho=0$. Tedy $G(M)$ je i $KQ/I$-modulem při 
+        ztotožnění 
+        \\\\\centerline{$x(v+I)=xv$,}\\\\
+        pro $x\in G(M)$ a $v\in KQ$. Tím je dán náš 
+        funktor na objektech. Nechť $(f_a)_{a\in Q_0}$ je morfismus z $M=(M_a,\varphi_\alpha)$ 
+        do $M'=(M'_a,\varphi'_\alpha)$ v $Rep_K(Q,I)$. Chceme zkonstruovat 
+        morfismus $A$-modulů $f:G(M)\to G'(M)$. Protože $G(M)=\bigoplus_{a\in 
+        Q_0}M_a$ a $G(M)=\bigoplus_{a\in  Q_0}M'_a$ jako $K$-vektorové prostory, 
+        existuje $K$-lineární zobrazení
+        \\\\\centerline{$f=\bigoplus_{a\in 
+        Q_0}f_a:G(M)\to G(M')$.}\\\\
+        Ukážeme, že $f$ je homomorfismus $A$-modulů, neboli, že pro každé $x\in G(M) $ 
+        $w\in KQ/I$ platí $f(xw)=f(x)w$. Postačí nám to dokázat pro $x=x_a\in M_a$ 
+        a $w=w+I$, kde $w$ je cesta z $a$ do $b$ v $Q$. Pak
+        \begin{eqnarray}
+            f(xw) &=& f(x_aw) \nonumber \\
+            &=& f_b\varphi_w(x_a) \nonumber \\
+            &=& \varphi'_wf_a(x_a) \nonumber \\
+            &=& f_a(x_a)w \nonumber \\
+            &=& f(x)w.\nonumber 
+        \end{eqnarray}
+        Nyní je již přímočaré dokázat, že $G$ je $K$-lineární funktor, který se 
+        restriktuje na $K$-lineární funktor $mod A\to rep_K(Q,I)$. A je 
+        jednoduché ověřit, že $FG\simeq 1_{Rep_K(Q,I)}$ a $GF\simeq 1_{Mod(A)}$.
+
+        \item[(3)]        
+        Druhá část tvrzení plyne z toho, že protože $Q$ je konečný, tak pro 
+        $K$-lineární reprezentaci $M=(M_a, \varphi_\alpha)$ omezeného toulce 
+        $(Q,I)$, je
+        \\\\\centerline{$dim_K(\bigoplus_{a\in Q_0}M_a)<\infty$}\\\\
+        právě tehdy, když $dim_KM_a<\infty$ pro každé $a\in Q_0$.
+        
+      \end{description}
+    \end{proof}
+    
+    \begin{dsl}
+      Nechť $Q$ je konečný, souvislý a acyklický toulec. Pak existuje ekvivalence 
+      kategorií $ModKQ\simeq Rep_K(Q)$ a její restrikce $modKQ\simeq rep_K(Q)$. 
+    \end{dsl}
+    \begin{proof}
+      Jelikož je $Q$ konečný, tak algebra $KQ$ je konečně dimenzionální dle 
+      \hyperref[quiver-kq-lemma]{Lemma \ref*{quiver-kq-lemma}}. 
+      Tvrzení plyne z \hyperref[ekvivalence-rep-a-mod]{Věty \ref*{ekvivalence-rep-a-mod}}, 
+      položíme-li $I=0$.
+    \end{proof}
+    
+    \begin{pzn}
+      Soubor $\{e_a|a\in Q_0\}$ je úplná množina primitivních ortogonálních 
+      idempotentů algebry $A$. Rozklad $A_A=\bigoplus_{a\in Q_0}e_a A$ je 
+      rozkladem $A_A$ na direktní součet po dvou neizomorfních nerozložitelných 
+      projektivních $A-$modulů. 
+      
+      V následující větě popíšeme projektivní moduly $P(a)=e_a A$ jako reprezentace 
+      toulce Q.
+    \end{pzn}
+    
+    \begin{thm}\label{lem-proj-prezentace}
+      Nechť $(Q,I)$ je omezený toulec, $A=KQ/I$ a $P(a)=\epsilon_a A$, kde $a\in 
+      Q_0$. Pokud $P(a)=(P(a)_b,\varphi_\beta)$ jako reprezentace $Q$, pak $P(a)_b$ je K-vektorový 
+        prostor s množinou generátorů \{$\bar{\omega}=\omega+I|$ $\omega$ je 
+        cesta z $a$ do $b$\} a pro šipku $\beta:b\rightarrow c$ je K-lineární 
+        zobrazení $\varphi_\beta:P(a)_b\rightarrow P(a)_c$ definované jako 
+        násobení zprava $\bar{\beta}=\beta+I$.
+    \end{thm}
+    
+    \begin{proof}
+      Z definice funktoru ekvivalence ve
+      \hyperref[ekvivalence-rep-a-mod]{Větě \ref*{ekvivalence-rep-a-mod}} plyne, 
+      že pro korespondující reprezentaci A-modulu $P(a)_A=e_aA$ máme pro každé $b\in 
+      Q_0$:\\\\
+      \centerline{$
+        P(a)_b=P(a)e_b=e_aAe_b=e_a(KQ/I)e_b=(\epsilon_a(KQ)\epsilon_b)/(\epsilon_a I \epsilon_b)
+      $.}\\\\
+      Navíc je-li $(\beta:b\rightarrow c)\in Q_1$, pak $\varphi_\beta:e_aAe_b\rightarrow e_aAe_c$ 
+      je dáno násobením zprava $\bar{\beta}=\beta+I$, neboli máme-li $\bar{\omega}=\omega+I$ 
+      třídu cest z a do b, pak 
+      $\varphi_\beta(\bar{\omega})=\bar{\omega}\bar{\beta}$.
+    \end{proof}
+    
+    \begin{dfn}
+      Definujme pro každé $a\in Q_0$ reprezentaci $S(a)$ toulce $Q$ následovně:
+      \begin{description}
+        \item[(a)] Položme vektorový prostor $S(a)_a=K$ a všechny ostatní vektorové 
+        prostory $S(a)_b$, kde $b\neq a$, položme rovné nule.
+        \item[(b)] Všem šipkám z $Q_1$ přiřaďme nulová zobrazení.
+      \end{description} 
+    \end{dfn}
+    
+    \begin{pzn}
+      Poznamenejme, že pro každé $a\in Q_0$ je $S(a)$ jednoduchý modul.
+    \end{pzn}

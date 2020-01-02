@@ -1,0 +1,1350 @@
+\chapter{Algoritmus}\label{kapitola-algoritmus}
+
+  \praragraph{}\paragraph{ }V této kapitole popíšeme algoritmus pro nalezení generátoru skoro štěpitelných 
+   posloupností končících v nerozložitelném a neprojektivním modulu $X$. Konstrukce algoritmu je 
+   vychází z diplomové práce \cite{3} Tea Sormbroen Lian: Computing almost split sequences. 
+   Co se týče teorie, tak navážeme na \hyperref[algebry-moduly]{části \ref*{algebry-moduly}}  a $A$-modulem budeme rozumět levý modul.
+    
+   V první části zkonstruujeme čtyři potřebné izomorfismy pro obecný komutativní,
+   artinovský, lokální okruh $R$.    
+   V druhé části konečně popíšeme algoritmus pro jednodušší případ, kdy $R=K$ bude těleso.
+    \clearpage
+      
+  \section{Konstrukce potřebných izomorfismů$}
+    \praragraph{ }\paragraph{ } V celé této části budeme pracovat nad pevně zvoleným komutativním, artinovským, 
+    lokálním okruhem 
+    $R$ a artinovskou $R$-algebrou $A$. 
+    Dále nechť $X$ je pevně zvolený, neprojektivní, nerozložitelný $A$-modul
+    a zvolme pevně jeho projektivní prezentaci\\
+      \centerline{\xymatrix{
+        P_1 \ar@{->}[r]^s 
+          & P_0 \ar@{->}[r]^t 
+          & X \ar@{->}[r] 
+          & 0
+      }}\\\\
+      a jako $\delta$ označme libovolnou krátkou exaktní posloupnost A-modulů \\\\
+      \centerline{\xymatrix{
+        0 \ar@{->}[r] 
+          & M \ar@{->}[r]^f
+          & N \ar@{->}[r]^g 
+          & L \ar@{->}[r] 
+          & 0
+      }.}\\\\
+  
+    \subsection{Izomorfismus $\varphi_{P,Y}$}
+      Naším cílem je zkonstruovat $R$-izomorfismus \\\\ 
+      \centerline{$\varphi_{P,Y}:Hom_A(P,Y)\rightarrow Hom_A(P,A)\otimes_A Y$,} 
+      \\\\
+      kde $P,Y\in mod(A)$ a $P$ je projektivní.
+            
+      \begin{lem}\label{lemma-alpha-P-Y}
+        Nechť $Y\in mod(A)$ a $P\in P(A)$. Definujme zobrazení\\\\
+        \centerline{$\alpha_{P,Y}:Hom_A(P,A)\otimes_A Y\rightarrow Hom_A(P,Y)$} 
+        \\\\
+        předpisem \\
+        \centerline{$\alpha_{P,Y}(f\otimes y):=[p\mapsto f(p)y]$.}\\\\
+        Zobrazení $\alpha_{P,Y}$ je homomorfismem R-modulů přirozeným ve 
+        složkách $P$ i $Y$.
+      \end{lem}
+      \begin{proof}
+        Vidíme, že $[p\mapsto f(p)y]\in Hom_A(P,Y)$ pro libovolný $f\in Hom_A(P,Y)$ 
+        a $y\in Y$, protože \\\\
+        \centerline{$f(p+\lambda p')y=f(p)y+\labda f(p')y$} \\\\
+        pro každé $p,p'\in P$ a $\lambda\in A$. Nechť navíc $r\in R$, $f\in Hom_A(P,A)$ 
+        a $y\in Y$. Pak
+        \begin{eqnarray}
+          r\cdot \alpha_{P,Y}(f\otimes y)
+           &=& r[p\mapsto f(p)y]  \nonumber \\
+           &=& [p\mapsto r(f(p)y)]  \nonumber \\
+           &=& [p\mapsto (rf(p))y]  \nonumber \\
+           &=& [p\mapsto (rf)(p)y]  \nonumber \\
+           &=& \alpha_{P,Y}(rf\otimes y)  \nonumber \\
+           &=& \alpha_{P,Y}(r\cdot f\otimes y)  \nonumber 
+        \end{eqnarray}
+        a $\alpha_{P,Y}$ je homomorfismem $R$-modulů.
+        
+        Dokážeme nyní, že $\alpha_{P,Y}$ je přirozené v $P$. Mějme libovolné $P,P'\in P(A)$ 
+        a $h\in Hom_A(P,P')$. Musíme dokázat, že následující diagram komutuje:\\\\      
+         \centerline{\xymatrix{            
+           Hom_A(P', A)\otimes_A Y \ar[rr]^{\alpha_{P',Y}} \ar[d]_{(-\circ h)_A\otimes 1_Y}
+           & & Hom_A(P', Y) \ar[d]^{(-\circ h)_Y} \\
+           Hom_A(P, A)\otimes_A Y \ar[rr]^{\alpha_{P,Y}}
+           & & Hom_A(P, Y)
+         }}\\\\\\
+        Nechť $f \otimes y \in Hom_A(P', A)\otimes_A Y$, pak \\\\
+        \centerline{$
+          (-\circ h)_A\otimes \alpha_{P',Y}(f\otimes y)
+          = (-\circ h)_A\otimes ([p' \mapsto f(p')y])
+          = [p\mapsto f(h(p))y]
+        $}\\
+        a\\
+        \centerline{$
+          \alpha_{P,Y}\circ[(-\circ h)_A\otimes 1_Y](f\otimes y)
+          = \alpha_{P,Y}(fh\otimes y)
+          = [p\mapsto f(h(p))y]
+        $.}\\\\
+        Diagram tedy komutuje. 
+        
+        Dále dokážeme přirozenost $\alpha_{P,Y}$ v $Y$. Nechť tedy $Y,Y'\in 
+        mod(A)$ a $g\in Hom_A(Y,Y')$. Musíme dokázat, že následující diagram komutuje:\\\\      
+         \centerline{\xymatrix{            
+           Hom_A(P, A)\otimes_A Y \ar[rr]^{\alpha_{P,Y}} \ar[d]_{1_{Hom_A(P,A)}\otimes g}
+           & & Hom_A(P, Y) \ar[d]^{(g\circ -)_P} \\
+           Hom_A(P, A)\otimes_A Y' \ar[rr]^{\alpha_{P,Y'}}
+           & & Hom_A(P, Y')
+         }}\\\\\\
+         Nechť $f\otimes y \in Hom_A(P, A)\otimes_A Y$. Pak \\\\
+         \centerline{$
+           (g\circ-)_P\circ\alpha_{P,Y}(f\otimes y)
+           = (g\circ-)_P([p\mapsto f(p)\cdot y])
+           =[p\mapsto g(f(p)\cdot y)]
+         $} \\
+         a \\
+         \centerline{$
+           \alpha_{P,Y'}\circ[1_{Hom_A(P,A)}\otimes g](f\otimes y)
+           = \alpha_{P,Y'}(f\otimes g(y))
+           = [p\mapsto f(p)\cdot g(y)]
+         $.}\\\\
+         Protože $f(p)\in A$ a pro každé $p\in P$ je $g$ $A$-modulovým 
+         homomorfismem, tak máme rovnost \\\\
+         \centerline{$g(f(p)\cdot y)=f(p)\cdot g(y)$.}\\\\         
+         Diagram tedy komutuje i tímto směrem a náš homomorfismus je přirozený v obou proměných $P$ 
+         i $Y$.         
+      \end{proof}
+      
+      \begin{lem}\label{lem-varphi-a-y-izo}
+        Nechť $Y\in mod(A)$. Definujme zobrazení\\\\
+        \centerline{$\varphi_{A,Y}: Hom_A(A,Y) \rightarrow Hom_A(A,A)\otimes_A Y$} 
+        \\\\
+        předpisem \\
+        \centerline{$\varphi_{A,Y}(g):=1_A\otimes g(1_A)$.}\\\\
+        Zobrazení $\varphi_{A,Y}$ je homomorfismem R-modulů a je inverzní k $\alpha_{A,Y}$.
+      \end{lem}
+      \begin{proof}
+        Jasně $1_A\otimes g(1_A)\in Hom_A(A,A)\otimes_A Y$. Nejprve ukážeme, že $\varphi_{A,Y}$ 
+        je homomorfismus $R$-modulů. Nechť $r\in R$ a $g\in Hom_A(A,Y)$. Pak
+        \begin{eqnarray}
+          \varphi_{A,Y}(rg)
+            &=& 1_A\otimes (rg)(1_A) \nonumber \\
+            &=& 1_A\otimes (r1_A)(g(1_A)) \nonumber \\
+            &=& r1_A\otimes (g(1_A)) \nonumber \\
+            &=& r\cdot 1_A\otimes (g(1_A)) \nonumber \\
+            &=& r\varphi_{A,Y}(g). \nonumber
+        \end{eqnarray}
+        Dále ukážeme, že platí následující dvě rovnosti:
+        \begin{eqnarray}
+          \varphi_{A,Y} \alpha_{A,Y} &=& 1_{Hom_A(A,A)\otimes_A Y} \nonumber \\
+          \alpha_{A,Y} \varphi_{A,Y} &=& 1_{Hom_A(A,Y)} \nonumber 
+        \end{eqnarray}
+        Nechť $f\in Hom_A(A,A)$,  $g\in Hom_A(A,Y)$ a $y\in Y$, pak 
+        \begin{eqnarray}
+          \varphi_{A,Y} \alpha_{A,Y}(f\otimes g)
+          &=& \varphi_{A,Y}([\lambda\mapsto f(\lambda)y]) \nonumber \\
+          &=& 1_A \otimes f(1_A)y5 \nonumber \\
+          &=& 1_Af(1_A)\otimes Y \nonumber \\
+          &=& f\otimes y \nonumber 
+        \end{eqnarray}
+        a 
+        \begin{eqnarray}
+          \alpha_{A,Y} \varphi_{A,Y}(g)
+          &=& \alpha_{A,Y} (1_A \otimes g(1_A))  \nonumber \\
+          &=& [\lambda\mapsto 1_A(\lambda)g(1_A)]  \nonumber \\
+          &=& [\lambda\mapsto \lambda g (1_A)=g(\lambda)]=g.  \nonumber 
+        \end{eqnarray}
+        Pak $\varphi_{A,Y} $ a $\alpha_{A,Y}$ jsou vzájemně inverzní homomorfismy.
+      \end{proof}
+      
+      \begin{lem}
+        Nechť $P,Y\in mod(A)$, pak platí:
+        \begin{description}
+          \item[(a)] $P^*=Hom_A(P,A)\in mod(A^{op})$ 
+          \item[(b)] $P^*\otimes Y =Hom_A(P,A)\otimes_A Y \in mod(R)$, kde násobení prvky $R$ definujeme následovně: 
+          \\
+            \centerline{$r\cdot f\otimes y:=(rf)\otimes y$}  
+          \item[(c)] $Hom_A(P,Y)\in mod(R)$, kde násobení prvky $R$ definujeme následovně: 
+          \\\\
+            \centerline{$(rf)(p):=r(f(p))$}  
+        \end{description}
+      \end{lem}
+      
+      \begin{proof}
+        To že je modulová struktura u (b) a (c) dobře definovaná je zřejmé. Ověříme 
+        pouze u všech tří případů, že se jedná o konečně generované moduly.
+        
+        \begin{description}          
+          \item[(a)] Funktor $()^*$ je funktorem $P(A)\to P(A^{op})$ a tedy $P^*$ 
+            je projektivní modul, který je dle \hyperref[rozklad-proj]{Věty \ref*{rozklad-proj}} 
+            direktním součtem konečného počtu $A$-modulů generovaných jedním prvkem. 
+            Je tedy sám konečně generovaný.
+            
+          \item[(b)] Tenzorový součin $P^*\otimes Y$ je faktor $R$-modulu kartézského součinu 
+             dvou konečně generovaných $R$-modulů a je tedy sám konečně 
+             generovaný.
+           
+          \item[(c)] Plyne z (b) a z izomorfismu z \hyperref[lem-varphi-a-y-izo]{Lemma 
+            \ref*{lem-varphi-a-y-izo}}.          
+        \end{description}
+      \end{proof}      
+      
+        Homomorfismy $\varphi_{A,Y}$ a $\alpha_{A,Y}$ jsou vzájemně inverzní, 
+        jde tedy o izomorfismy. Označme $\varphi_{A,Y}^n$ diagonální $n\times n$ matici, jejíž všechny 
+        nenulové prvky jsou rovny $\varphi_{A,Y}$.  Ta definuje zobrazení \\\\
+        \centerline{$\varphi_{A,Y}^n:Hom_A(A,Y)^n\rightarrow(Hom_A(A,A)\otimes_A Y)^n$} 
+        \\\\
+        předpisem \\
+        \centerline{$\{f_i\}_{i=1}^n\mapsto \{\varphi_{A,Y}(f_i)\}_{i=1}^n$.}\\\\
+        Víme, že $\varphi_{A,Y}$ je izomorfismus, pak je jím také 
+        $\varphi^n_{A,Y}$.
+        
+        Nyní se již pustíme do konstrukce cílového homomorfismu $\varphi_{P,Y}$.
+        Následující diagram ilustruje postup, kterým ve třech krocích nalezneme hledaný izomorfismus 
+        $\varphi_{P,Y}:Hom_A(P,Y)\rightarrow Hom_A(P,A)\otimes_A Y$: \\\\      
+         \centerline{\xymatrix{            
+            (Hom_A(A,Y))^n  
+              \ar[r]^{ \varphi_{A, Y}^n}
+            & (Hom_A(A,A)\otimes_A Y)^n
+              \ar[d]\\
+           Hom_A(A^n,Y)
+              \ar[u]
+              \ar@{.>}[r]_{ \varphi_{A^n, Y}}
+            & Hom_A(A^n,A)\otimes_A Y
+              \ar[d] \\             
+            Hom_A(P\oplus P', Y)
+              \ar[u]
+              \ar@{.>}[r]_{ \varphi_{P\oplus P', Y}}
+            & Hom_A(P\oplus P', A)\otimes_A Y
+              \ar[d]\\
+            Hom_A(P, Y)
+              \ar[u]
+              \ar@{.>}[r]_{ \varphi_{P, Y}}
+            & Hom_A(P, A)\otimes_A Y 
+         }}\\\\
+        Budeme tímto diagramem postupovat odshora, od nám již známého 
+        izomorfismu $\varphi^n_{A,Y}$ k hledanému izomorfismu 
+        $\varphi_{P,Y}$.
+        
+       \paragraph{Krok 1:} 
+       
+       Buď $\{\nu_i:A\rightarrow A^n\}_{i=1}^n$ množina kanonických inkluzí 
+       a $\{\rho_i:A^n\rightarrow A\}_{i=1}^n$ množina kanonických projekcí. 
+       Definujme homomorfismus $A^{op}$-modulů \\\\
+       \centerline{$\xi_1:Hom_A(A^n,Y)\rightarrow (Hom_A(A,Y))^n$} \\\\
+       předpisem $f\mapsto\{f\nu_i\}_{i=1}^n$
+       a homomorfismus $R$-modulů \\\\
+       \centerline{$\xi_2:(Hom_A(A,A)\otimes_A Y)^n\rightarrow Hom_A(A^n,A)\otimes_A 
+       Y$}\\\\
+       předpisem $\{g_i\otimes y_i\}_{i=1}^n\mapsto \sum_{i=1}^n g_i\rho_i\otimes y_i$. Složíme-li nyní 
+       $\xi_1$ a $\xi_2$ s izomorfismem $\varphi_{A,Y}^n$ na 
+       $\varphi_{A^n,Y}:=\xi_2\circ \varphi_{A,Y}^n\circ \xi_1$, dostaneme diagram:\\\\   
+         \centerline{\xymatrix{            
+            (Hom_A(A,Y))^n  
+              \ar[r]^{ \varphi_{A, Y}^n}
+            & (Hom_A(A,A)\otimes_A Y)^n
+              \ar[d]^{\xi_2:\{g_i\otimes \omega_i\}_{i=1}^n\mapsto\sum_{i=1}^ng_i\rho_i\otimes \omega_i} \\
+           Hom_A(A^n,Y)
+              \ar[u]_{\xi_1:f\mapsto \{f\nu_i\}_{i=1}^n}
+              \ar@{.>}[r]_{ \varphi_{A^n, Y}}
+            & Hom_A(A^n,A)\otimes_A Y              
+         }}\\\\
+       Pro $h\in Hom_A(A^n,Y)$ platí:        
+       \begin{eqnarray}
+         \varphi_{A^n, Y}(h) &=& \xi_2\circ \varphi_{A,Y}^n\circ \xi_1(h)  \nonumber \\
+         &=& \xi_2\circ \varphi_{A,Y}^n(\{h\nu_i\}_{i=1}^n) \nonumber \\
+         &=& \xi_2(\{\varphi_{A,Y}(h\nu_i)\}_{i=1}^n) \nonumber \\
+         &=& \xi_2(\{1_A\otimes h\nu_i(1_A)\}_{i=1}^n)  \nonumber \\
+         &=& \sum_{i=1}^n \rho_i\otimes h\nu_i(1_A) \nonumber
+       \end{eqnarray}
+       
+       \paragraph{Krok 2:} 
+       
+       Nyní přejdeme k dalšímu kroku. 
+       Dle \hyperref[rozklad-A-na-P]{Věty \ref*{rozklad-A-na-P}} 
+       existuje $n\in \mathbb N$ a projektivní $A$-modul $P'_0$ takové, že
+       $P_0\oplus P'_0\simeq A^n$. Označme tento $A$-modulový izomorfismus 
+       $\psi: P_0\oplus P_0'\simeq A^n$. Izomorfismus $\psi$ nám definuje 
+       další dva $R$-modulové homomorfismy:  
+       \begin{eqnarray}         
+          (-\circ \psi^{-1})_Y&:&
+          Hom_A(P\oplus P',Y
+          )\rightarrow Hom_A(A^n,Y) \nonumber \\
+         (-\circ\psi)_A\otimes 1_Y&:&
+         Hom_A(A^n,A)\otimes_A Y
+         \rightarrow 
+         Hom_A(P\oplus P',A)\otimes_A Y \nonumber 
+       \end{eqnarray}
+       Položme nyní $
+         \varphi_{P\oplus P',Y}:=
+         [(-\circ\psi)_A\otimes 1_Y] \circ
+         \varphi_{A^n,Y} \circ
+         [(-\circ \psi^{-1})_Y]
+       $. Celý krok ilustruje následující diagram:\\\\   
+         \centerline{\xymatrix{            
+           Hom_A(A^n,Y)
+              \ar@{.>}[r]_{ \varphi_{A^n, Y}}
+            & Hom_A(A^n,A)\otimes_A Y
+              \ar[d]^{(-\circ\psi)_A\otimes1_Y} \\             
+            Hom_A(P\oplus P', Y)
+              \ar[u]_{(-\circ\psi^{-1})_Y}
+              \ar@{.>}[r]_{ \varphi_{P\oplus P', Y}}
+            & Hom_A(P\oplus P', A)\otimes_A Y
+         }}\\\\\\
+       Pak pro $h\in Hom_A(P\oplus_A P',Y)$ platí: 
+       \begin{eqnarray}
+          \varphi_{P\oplus P',Y}(h)&=&[(-\circ\psi)_A\otimes 1_Y]\circ\varphi_{A^n,Y}\circ[(-\circ\psi^{-1})_Y](h) \nonumber \\
+          &=& [(-\circ\psi)_A\otimes 1_Y]\circ\varphi_{A^n,Y}(h\psi^{-1})  \nonumber \\
+          &=& [(-\circ\psi)_A\otimes 1_Y](\sum_{i=1}^n\rho_i\otimes h\psi^{-1}\nu_i(1_A))  \nonumber \\
+          &=& \sum_{i=1}^n\rho_i\psi\otimes h\psi^{-1}\nu_i(1_A)  \nonumber
+       \end{eqnarray}
+       
+       \paragraph{Krok 3:}
+       
+       Postupme nyní k poslednímu třetímu kroku konstrukce. Uvažujme kanonickou 
+       projekci \\\\
+       \centerline{$\pi : P\oplus P'\rightarrow P$} \\\\
+       modulu $P\oplus P'$ na $P$ a kanonickou inkluzi \\\\
+       \centerline{$\mu : P\rightarrow P\oplus P'$} \\\\
+       modulu $P$ do $P\oplus P'$. Ty nám definují dva $R$-modulové 
+       homomorfismy: 
+       \begin{eqnarray}
+         (-\circ\pi)_Y &:& Hom_A(P,Y)\rightarrow Hom_A(P\oplus P', Y) \nonumber \\
+         (-\circ\mu)\otimes 1_Y &:& Hom_A(P\oplus P', A)\otimes_A Y \to Hom_A(P, A)\otimes_A Y \nonumber
+       \end{eqnarray}
+       Definujme homomorfismus $\varphi_{P,Y}:Hom_A(P,Y)\rightarrow Hom_A(P,A)\otimes_A Y$ vztahem: \\\\
+       \centerline{$\varphi_{P,Y}:= [(-\circ\mu)\otimes 1_Y] \circ \varphi_{P\otimes P',Y} \circ (-\circ\pi)_Y$}      
+       \\\\  
+         \centerline{\xymatrix{           
+            Hom_A(P\oplus P', Y)
+              \ar@{.>}[r]_{ \varphi_{P\oplus P', Y}}
+            & Hom_A(P\oplus P', A)\otimes_A Y
+              \ar[d]^{((-\circ\mu)_A\otimes1_Y} \\
+            Hom_A(P, Y)
+              \ar[u]_{(-\circ\pi)_Y}
+              \ar@{.>}[r]_{ \varphi_{P, Y}}
+            & Hom_A(P, A)\otimes_A Y 
+         }}\\\\\\
+       Pro $h\in Hom_A(P,Y)$ pak platí:
+       \begin{eqnarray}
+         \varphi_{P,Y}(h) &=& [(-\circ\mu)\otimes 1_Y] \circ \varphi_{P\otimes P',Y} \circ (-\circ\pi)_Y (h)  \nonumber \\
+         &=& [(-\circ\mu)\otimes 1_Y]\circ\varphi_{P\otimes P',Y} (h\pi)  \nonumber \\
+         &=& [(-\circ\mu)\otimes 1_Y][\sum_{i=1}^n\rho_i\psi\otimes h\pi\psi^{-1}\nu_i(1_A)]  \nonumber \\
+         &=& \sum_{i=1}^n\rho_i\psi\mu\otimes h\pi\psi^{-1}\nu_i(1_A) \nonumber
+       \end{eqnarray}
+
+       \begin{thm}\label{varphi-izomorfismus}
+         Zobrazení $\varphi_{P,Y}:Hom_A(P,Y)\rightarrow Hom_A(P,A)\otimes_A Y$, 
+         definované \\\\
+         \centerline{$\varphi_{P,Y}(h):=\sum_{i=1}^n\rho_i\psi\mu\otimes h\pi\psi^{-1}\nu_i(1_A)$} 
+         \\\\
+         pro $h\in Hom_A(P,Y)$, je izomorfismem $R$-modulů, který je přirozený v 
+         $P$ a $Y$.
+       \end{thm}
+       \begin{proof}
+         Zobrazení $\varphi_{P,Y}$ je konstruováno pouhým skládáním homomorfismů 
+         $R$-modulů, je tedy také $R$-modulovým homomorfismem.
+         
+         Abychom dokázali, že se jedná o izomorfismus, dokážeme, že je inverzní k 
+         homomorfismu $\alpha_{P,Y}$ definovanému v \hyperref[lemma-alpha-P-Y]{Lemma 
+         \ref*{lemma-alpha-P-Y}}. Nechť tedy $h\in Hom_A(P,Y)$, pak
+         
+         \begin{eqnarray}
+           \alpha_{P,Y} \varphi_{P,Y}(h) &=& \alpha_{P,Y} \left(  \sum_{i=1}^n\rho_i\psi\mu\otimes h\pi\psi^{-1}\nu_i(1_A) \right) \nonumber \\
+           &=& 
+             \left[ 
+               p \mapsto \left( 
+                 \sum_{i=1}^n
+                 \underbrace{ \rho_i\psi\mu(p) }_{\in A} 
+                 \cdot 
+                 \underbrace{ h\pi\psi^{-1}\nu_i }_{A-hom.}
+                 (1_A) 
+               \right) \right] \nonumber \\
+           &=& \left[ p \mapsto \left( \sum_{i=1}^n h\pi\psi^{-1}\nu_i\rho_i\psi\mu(p) \right) \right] \nonumber \\
+           &=& 
+             \left[ 
+               p \mapsto h\pi\psi^{-1} 
+               \underbrace{ \left( \sum_{i=1}^n \nu_i\rho_i \right) }_{=1_{A^n}}
+               \psi\mu(p) 
+             \right]\nonumber \\
+           &=& [p\mapsto h(p)] \nonumber \\
+           &=& h. \nonumber
+         \end{eqnarray}         
+         Opačně nechť $f\otimes y\in Hom_A(P,A)\otimes_A Y$, pak
+         
+         \begin{eqnarray}
+           \varphi_{P,Y} \alpha_{P,Y} (f\otimes y) &=& \varphi_{P,Y}([p\mapsto f(p)\cdot y]) \nonumber \\
+           &=& \sum_{i=1}^n \rho_i\psi\mu \otimes [p\mapsto f(p)\cdot y](\pi\psi^{-1}\nu_i(1_A)) \nonumber \\
+           &=& \sum_{i=1}^n \rho_i\psi\mu \otimes \underbrace{f\pi\psi^{-1}\nu_i(1_A)}_{\in A} \cdot y  \nonumber \\
+           &=& \sum_{i=1}^n \rho_i\psi\mu \cdot \underbrace{f\pi\psi^{-1}\nu_i(1_A)}_{\in A} \otimes y \nonumber \\
+           &=& \left[  
+             p \mapsto \sum_{i=1}^n 
+               \underbrace{\rho_i\psi\mu(p)}_{\in A}
+               \cdot 
+               \underbrace{f\pi\psi^{-1}\nu_i}_{A-hom.}
+               (1_A)
+           \right] \otimes y \nonumber \\
+           &=& \left[  
+             p \mapsto \sum_{i=1}^n 
+               f\pi\psi^{-1}\nu_i
+               ( \rho_i\psi\mu(p) )
+           \right] \otimes y \nonumber \\
+           &=& 
+             f\pi\psi^{-1} 
+             \left( 
+               \underbrace{\sum_{i=1}^n\nu_i\rho_i}_{=1_{A^n}}
+             \right)
+             \psi\mu \otimes y
+             \nonumber \\
+           &=& f\otimes y.  \nonumber
+         \end{eqnarray}
+        Homomorfismus $\varphi_{P,Y}$ je tedy inverzní k $\alpha_{P,Y}$ a tedy 
+        izomorfimus. Přirozenost v $P$ a $Y$ plyne z přirozenosti $\alpha_{P,Y}$ v $P$ a $Y$ 
+        dokázané v \hyperref[lemma-alpha-P-Y]{Lemma \ref*{lemma-alpha-P-Y}}. 
+       \end{proof}
+
+
+   \subsection{Izomorfismus $\sigma_{\delta,X}$}\label{alg-sigma}
+   
+      Naším cílem je zkonstruovat $\underline{End}_A(X)^{op}$-izomorfismus \\\\
+      \centerline{$\sigma_{\delta,X}:\delta^*(X)\rightarrow Ker(1_{Tr(X)}\otimes f)$.} \\\\
+      Aplikujme funktor $()^*$ na minimální projektivní prezentaci modulu $X$.  
+      Dostaneme následující krátkou exaktní posloupnost v $mod(A^{op})$, kde $\hat{t}$ 
+      značí kanonickou projekci $Hom_A(P_1,Y)\rightarrow Tr(X)=Cok((-\circ 
+      s)_A)$:\\\\
+      \centerline{\xymatrix{
+        Hom_A(P_0,A) \ar@{->}[r]^{(-\circ s)_A}
+          & Hom_A(P_1,A) \ar@{->}[r]^{\hat{t}}
+          & Tr(X) \ar@{->}[r] 
+          & 0
+      }}*\\\\
+      Dále připomeňme následující funktory, kde $Y\in mod(A):$\\\\
+      \centerline{$Hom_A(-,Y):mod(A)\rightarrow mod(R)$}\\\\
+      \centerline{$-\otimes_A Y: Mod(A^{op})\rightarrow Mod(R)$}\\\\
+      Aplikujeme-li funktor $Hom_A(-,Y)$ na minimální projektivní prezentaci 
+      modulu $X$ a funktor $-\otimes_A Y$ na posloupnost *, dostaneme 
+      následující komutativní diagram s exaktními řádky v $mod(R)$ (moduly ve spodním 
+      řádku jsou konečně generované jakožto izomorfní obrazy konečně 
+      generovaných modulů v horním řádku):\\\\
+      \centerline{\xymatrix{
+        0 \ar[r]
+          & Hom_A(X,Y) \ar@{->}[r]^{(-\circ t)_Y}
+          & Hom_A(P_0,Y) \ar@{->}[r]^{(-\circ s)_Y} \ar@{->}[d]^{\varphi_{P_0,Y}}
+          & Hom_A(P_1,Y) \ar@{->}[d]^{\varphi_{P_1,Y}} \\
+        & & Hom_A(P_0,A)\otimes_A Y \ar@{->}[r]^{(-\circ s)_A\otimes 1_Y}
+          & Hom_A(P_1,A)\otimes_A Y \ar@{->}[r]^{\hat{t}\otimes 1_Y}
+          & Tr(X)\otimes_A Y \ar@{->}[r] 
+          & 0
+      }}\\\\
+      
+      \begin{dfn}\label{def-phi} 
+        Nechť $Y\in mod(A)$. Definujme homomorfismus $R$-modulů \\\\
+        \centerline{$\phi_Y:Hom_A(P_1,Y)\rightarrow Tr(X)\otimes_A Y$} \\\\
+        vztahem \\\\
+        \centerline{$\phi_Y:=[\hat{t}\otimes 1_Y]\circ\varphi_{P_1,Y}$.}\\
+      \end{dfn}
+      
+      \begin{pzn}
+        Pro $h\in Hom_A(P_1,Y)$ máme        
+        \begin{eqnarray}
+          \phi_Y(h) &=& [\hat{t}\otimes 1_Y]\circ\varphi_{P_1,Y}(h) \nonumber \\
+          &=& 
+            [\hat{t}\otimes 1_Y] \left(  
+              \sum_{i=1}^n\rho_i\psi\mu \otimes h\pi\psi^{-1}\nu_i(1_A)
+            \right) \nonumber \\
+          &=& \sum_{i=1}^n\hat{t}(\rho_i\psi\mu) \otimes h\pi\psi^{-1}\nu_i(1_A) \nonumber
+        \end{eqnarray}
+      \end{pzn}
+      
+      \begin{lem}\label{lem-exakt-radek-phi-Y}
+        Homomorfismus $R$-modulů $\phi_Y$ je přirozený v $Y$ a následující 
+        posloupnost $R$-modulů je exaktní: \\\\
+      \centerline{\xymatrix{
+        0 \ar@{->}[r]
+          & Hom_A(X,Y) \ar@{->}[r]^{(-\circ t)_Y}
+          & Hom_A(P_0,Y) \ar@{->}[r]^{(-\circ s)_Y} 
+          & Hom_A(P_1,Y) \ar@{->}[r]^{\phi_Y}
+          & Tr(X)\otimes_A Y \ar@{->}[r] 
+          & 0
+      }}\\
+      \end{lem}
+      \begin{proof}
+        Diagram komutuje díky přirozenosti $\varphi_{P,Y}$.
+        Exaktnost posloupnosti plyne z definice $\phi_Y$ a \hyperref[lem-komut-schod]{Lemma 
+        \ref*{lem-komut-schod}}.
+        
+        Ukážeme nyní, že $\phi_Y$ je přirozené v $Y$. Nejprve ukážeme, že 
+        homomorfismus $\hat t\otimes 1_Y$ 
+        je v $Y$ přirozený. Nechť $Y,Y'\in mod(A)$ a nechť $h\in Hom_A(Y,Y')$. 
+        Pak \\\\
+        \centerline{\xymatrix{
+          Hom_A(P_1,Y)\otimes_A Y \ar@{->}[rr]^{\hat t\otimes 1_Y} \ar@[->][d]_{1_{Hom_A(P_1,Y)}\otimes h}
+            & & Tr(X)\otimes_A Y  \ar@[->][d]^{1_{Tr(X)}\otimes h} \\
+          Hom_A(P_1,Y)\otimes_A Y' \ar@{->}[rr]^{\hat t\otimes 1_Y'} 
+            & & Tr(X)\otimes_A Y' 
+        }}\\\\\\
+        zřejmě komutuje, protože \\\\
+        \centerline{$
+          [1_{Tr(X)}\otimes h]\circ [\hat t \otimes 1_Y]
+          = \hat t \otimes h
+          = [\hat t\otimes 1'_Y] \circ [1_{Hom_A(P_1,A)}\otimes h]
+        $.} \\\\
+        Navíc protože dle \hyperref[varphi-izomorfismus]{Věty \ref*{varphi-izomorfismus}} 
+        je $\varphi_{P_1, Y}$ přirozený v $Y$, je jejich složení $\phi_Y$ také 
+        přirozené v $Y$.        
+      \end{proof}
+      
+      Připomeňme, že jsme si jako na začátku této kapitoly zvolili pevně exaktní 
+      posloupnost $A$-modulů $\delta$\\\\
+      \centerline{\xymatrix{
+        0 \ar@{->}[r] 
+          & M \ar@{->}[r]^f
+          & N \ar@{->}[r]^g 
+          & L \ar@{->}[r] 
+          & 0
+      }.}\\
+      
+      \begin{thm}\label{mega-diagram}
+        Následující diagram je komutativní a jeho řádky i sloupce jsou exaktní 
+        posloupnosti $R$-modulů:\\\\
+      \centerline{\xymatrix{
+        & 
+          & 
+          & 
+          & 0 \ar@{->}[d] 
+          & \\
+        & 0 \ar@{->}[d]
+          & 0 \ar@{->}[d] 
+          & 0 \ar@{->}[d] 
+          & Ker(1_{Tr(X)}\otimes f) \ar@{_{(}->}[d]
+          & \\
+        0 \ar@{->}[r]
+          & Hom_A(X,M) \ar@{->}[r]^{(-\circ t)_M} \ar@{->}[d]_{(f\circ-)_X} 
+          & Hom_A(P_0,M) \ar@{->}[r]^{(-\circ s)_M} \ar@{->}[d]_{(f\circ-)_P_0} 
+          & Hom_A(P_1,M) \ar@{->}[r]^{\phi_M} \ar@{->}[d]_{(f\circ-)_P_1} 
+          & Tr(X)\otimes_A M \ar@{->}[r] \ar@{->}[d]_{1_{Tr(X)}\otimes f} 
+          & 0 \\
+        0 \ar@{->}[r]
+          & Hom_A(X,N) \ar@{->}[r]^{(-\circ t)_N} \ar@{->}[d]_{(g\circ-)_X} 
+          & Hom_A(P_0,N) \ar@{->}[r]^{(-\circ s)_N} \ar@{->}[d]_{(g\circ-)_P_0} 
+          & Hom_A(P_1,N) \ar@{->}[r]^{\phi_N} \ar@{->}[d]_{(g\circ-)_P_1} 
+          & Tr(X)\otimes_A N \ar@{->}[r] \ar@{->}[d]_{1_{Tr(X)}\otimes g} 
+          & 0 \\
+        0 \ar@{->}[r]
+          & Hom_A(X,L) \ar@{->}[r]^{(-\circ t)_L} \ar@{->}[d] 
+          & Hom_A(P_0,L) \ar@{->}[r]^{(-\circ s)_L} \ar@{->}[d] 
+          & Hom_A(P_1,L) \ar@{->}[r]^{\phi_L} \ar@{->}[d] 
+          & Tr(X)\otimes_A L \ar@{->}[r] \ar@{->}[d] 
+          & 0 \\
+        & \delta^*(X) \ar@{->}[d] 
+          & 0
+          & 0
+          & 0
+          & \\
+        & 0
+      }}\\
+      \end{thm}
+      \begin{proof}
+        Exaktnost řádků a komutativita pravých čtverců plyne z 
+        \hyperref[lem-exakt-radek-phi-Y]{Lemma \ref*{lem-exakt-radek-phi-Y}}. 
+        Zbytek diagramu komutuje z asociativity skládání homomorfismů 
+        $R$-modulů.
+        Exaktnost levého sloupce plyne z exaktnosti zleva funktoru $Hom_A(X,-)$ a 
+        definice $\delta^*(X)$. Prostřední dva sloupce jsou exaktní z 
+        projektivity $A$-modulů $P_0$ a $P_1$. A konečně pravý sloupec je 
+        exaktní, protože $Tr(X)\otimes_A-$ je zprava exaktní funktor.      
+      \end{proof}
+      
+      \begin{dfn}
+        Definujme zobrazení $\sigma_{\delta,X}:\delta^*(X)\rightarrow Ker(1_{Tr(X)}\otimes f)$ 
+        následujícím algoritmem:     
+        
+        \begin{description}
+          \item[\space\space\space Vstup:] $\bar{h}\in \delta^*(X)$
+          
+          \item[\space\space\space Výstup:] $\sigma_{\delta,X}(\bar{h})$
+          
+         \item[\space\space\space Průběh:] 
+            \begin{description} 
+               \item[]
+               \item[(a)] Nejprve zvolme vzor $h\in Hom_A(X,L)$ prvku $\bar{h}$.
+               \item[(b)] Zvolme libovolné $u\in Hom_A(P_0,N)$ takové, že $gu=ht$.
+               \item[(c)] Nalezněme $v\in Hom_A(P_1,M)$ takové, že $fv=us$.
+               \item[(d)] Položme $\sigma_{\delta,X}(\bar{h}):=\phi_M(v)$.
+            \end{description}     
+        \end{description}\,\,     
+      \end{dfn}
+      
+      \begin{thm}\label{thm-sigma-delta-x}
+        Zobrazení $\sigma_{\delta,X}$ je 
+        izomorfismus $\underline{End}_A(X)^{op}$-modulů \\\\
+        \centerline{$\sigma_{\delta,X}:\delta^*(X)\rightarrow Ker(1_{Tr(X)}\otimes f)$,} \\\\
+        který je přirozený v $\delta$ a $X$.
+      \end{thm}
+      \begin{proof}
+        Nebudeme zde podrobně dokazovat, že $\sigma_{\delta,X}$ je dobře 
+        definovaný (nezávislý na volbě $h$, $u$ a $v$),
+         zobrazuje do $Ker(1_{Tr(X)}\otimes f)$ a že je přirozený v $\delta$ i $X$. 
+         Podrobný důkaz je možné nalézt v \cite{3} Proposition 76.
+        
+        Naznačíme zde alespoň jakým způsobem jsou obě strany 
+        $\underline{End}_A(X)^{op}$-moduly, čímž lépe porozumíme jejich 
+        struktuře pro naši další práci. Struktura $\underline{End}_A(X)^{op}$-modulu na $\delta^*(X)$ 
+         je dána následujícím způsobem
+         \begin{eqnarray}
+           \delta^*(X)\times \underline{End}_A(X) &\to& \delta^*(X) \nonumber \\
+           (\bar h,\bar e) &\mapsto& \overline{h\circ e}, \nonumber
+         \end{eqnarray}
+         kde $h\in Hom_A(X,L)$  a $e\in End_A(X)$ jsou libovolní reprezentanti 
+         prvků $\bar h$ a $\bar e$.
+         A v druhém případě je
+         $\underline{End}_A(X)^{op}$-modulová struktura na $Ker(1_{Tr(X)}\otimes f)$ 
+         dána zobrazením
+         \begin{eqnarray}
+           Ker(1_{Tr(X)}\otimes f) \times \underline{End}_A(X)^{op} &\to& Ker(1_{Tr(X)}\otimes f) 
+           \nonumber \\
+           (q\otimes a, \bar e) &\mapsto& 
+           (Tr(e)\otimes 1_M)_{Ker}\underbrace{(q\otimes a)}_{\in Ker(1_{Tr(X)}\otimes 
+           f)}= \nonumber \\
+            && =(Tr(e)\otimes 1_M)\underbrace{(q\otimes a)}_{\in Tr(X)\otimes_A M}
+           \nonumber
+         \end{eqnarray}
+         jak je ilustrováno na následujícím diagramu: \\\\
+         \centerline{\xymatrix{
+           0 \ar[r] 
+             & Ker(1_{Tr(X)}\otimes f) \ar[r] \ar[d]^{(Tr(e)\otimes 1_M)_{Ker}}
+             & Tr(X)\otimes_A M \ar[r] \ar[d]^{Tr(e)\otimes 1_M}
+             & Tr(X)\otimes_A N \ar[r] \ar[d]^{Tr(e)\otimes 1_N}
+             & Tr(X)\otimes_A L \ar[r] \ar[d]^{Tr(e)\otimes 1_L}
+             & 0 \\
+           0 \ar[r] 
+             & Ker(1_{Tr(X)}\otimes f) \ar[r]
+             & Tr(X)\otimes_A M \ar[r]
+             & Tr(X)\otimes_A N \ar[r]
+             & Tr(X)\otimes_A L \ar[r]
+             & 0
+         }.}\\\\\\
+        Zbytek důkazu  tedy vynecháme.        
+      \end{proof}
+      
+    \subsection{Izomorfismus $\gamma_{\delta,X}$}
+        
+        Nejprve připomeňme izomorfismus abelovských group z \hyperref[thm-adjunkce]{Věty \ref*{thm-adjunkce}} 
+        \\\\
+        \centerline{$\theta_{M,N,L}:Hom_R(M\otimes_A N,L)\rightarrow Hom_A(N,Hom_R(M,L))$,} 
+        \\\\
+        kde $M\in Mod(A^{op})$, $N\in Mod(A)$ a $L\in Mod(R)$, přirozený ve všech složkách. Ten využijeme ke 
+        konstrukci izomorfismu 
+        \\\\
+        \centerline{$\gamma_{\delta, X}:D(Ker(1_{Tr(X)}\otimes f)) \rightarrow \delta_*(DTr(X))$,}
+        \\\\
+        kterému poté dodefinujeme strukturu $\underline{End}_A(X)$-modulového 
+        homomorfismu.
+        
+        Budeme opět pracovat s diagramem z \hyperref[mega-diagram]{Věty 
+        \ref*{mega-diagram}} a naší posloupností $\delta$. 
+        Připomeňme si funktor duálu $D=Hom_R(-,I)$ 
+        a uvažujme endomorfismus $h\in End_A(X)$. Potom je $Tr(h)\in End_R(Tr(X))$. 
+        Máme následující komutativní diagram:\\
+        \centerline{\xymatrix{
+          Ker(1_{Tr(X)}\otimes f) \ar@{->}[r] \ar@{->}[d]_{(Tr(h)\otimes 1_M)_{ker}} 
+            & Tr(X) \otimes_A M  \ar@{->}[rr]^{1_{Tr(X)}\otimes f} \ar@{->}[d]_{Tr(h)\otimes 1_M}
+            & & Tr(X) \otimes_A N \ar@{->}[d]_{Tr(h)\otimes 1_N} \\
+          Ker(1_{Tr(X)}\otimes f) \ar@{->}[r]   
+            & Tr(X) \otimes_A M  \ar@{->}[rr]^{1_{Tr(X)}\otimes f}
+            & & Tr(X) \otimes_A N
+        }}\\\\\\
+        Aplikujeme-li na jeho levý čverec funktor $D$, dostaneme následující komutativní 
+        diagram:\\\\
+        \centerline{\xymatrix{
+          DKer(1_{Tr(X)}\otimes f) = Hom_R(Ker(1_{Tr(X)}\otimes f),I)
+              \ar@{->}[r] 
+              \ar@{->}[d]_{(-\circ (Tr(h)\otimes 1_M)_{ker})_I} 
+            & Hom_R(Tr(X) \otimes_A M,I)  \ar@{->}[d]_{(-\circ Tr(h)\otimes 1_M)_I} \\
+          DKer(1_{Tr(X)}\otimes f) = Hom_R(Ker(1_{Tr(X)}\otimes f),I)
+            \ar@{->}[r]   
+            & Hom_R(Tr(X) \otimes_A M,I)  
+        }}\\\\\\
+        Na základě tohoto diagramu zformulujeme následující lemma.
+                 
+        \begin{lem}
+          $R$-modul $DKer(1_{Tr(X)}\otimes f)$ je spolu s násobením \\\\
+          \centerline{$\underline{End}_A(X)\times DKer(1_{Tr(X)}\otimes f) \rightarrow DKer(1_{Tr(X)}\otimes f)$} 
+          \\\\
+          definovaným  \\\\
+          \centerline{$\bar{h}\cdot\bar{z}:=(-\circ(Tr(h)\otimes1_M)_{Ker})_I(\bar{z})=\bar{z}\circ(Tr(h)\otimes1_M)_{Ker}$} 
+          \\\\
+          $\underline{End}_A(X)$-modulem.
+        \end{lem}
+        \begin{proof}
+           Nejprve ukážeme, že \\\\           
+           \centerline{$\bar{h}\cdot\bar{z}:=\bar{z}\circ(Tr(h)\otimes1_M)_{Ker}=0$}\\\\
+           pro všechny $h\in P_A(X,X)$ a $z\in DKer(1_{Tr(X)}\otimes f)$. V  
+           důkazu \hyperref[thm-sigma-delta-x]{Věty \ref*{thm-sigma-delta-x}} 
+           jsme viděli, že $(Tr(h)\otimes 1_M)_{Ker}=0$ pro všechny $h\in P_A(X,X)$. 
+           Tím jsme hotovi.
+           
+           Dále, protože $I$ je injektivní modul, pro každé $\bar z\in DKer(1_{Tr(X)}\otimes f)$ 
+           existuje $z\in D(Tr(X)\otimes_A M)$ takové, že \\
+           \centerline{$\bar z = zi$.}\\\\
+           Uvažujme následující diagram v $mod(R)$: \\\\
+        \centerline{\xymatrix{
+          Ker(1_{Tr(X)}\otimes f) \ar@{->}[r]^i \ar@{->}[d]_{(Tr(h)\otimes 1_M)_{Ker}}
+            & Tr(X) \otimes_A M \ar@{->}[d]^{Tr(h)\otimes 1_M}  \ar@{->}[rr]^{1_{Tr(X)\otimes f}}
+            & & Tr(X) \otimes_A N \\
+          Ker(1_{Tr(X)}\otimes f) \ar@{->}[r]^i \ar@{->}[d]_{\bar z}
+            & Tr(X) \otimes_A M \ar@{.>}[ld]_z \ar@{->}[rr]^{1_{Tr(X)\otimes f}}
+            & & Tr(X) \otimes_A N \\
+          I
+         }}\\\\\\
+         Vidíme, že \\\\
+         \centerline{$\bar h \bar z=\bar z \circ(Tr(h)\otimes 1_M)=z\circ (Tr(h)\otimes 1_M)\circ 
+         i$}*\\\\\
+         pro každé $z$ splňující $\bar z = zi$.
+         
+           Pro $q\otimes a \in Ker(1_{Tr(X)}\otimes f)$ platí
+            \begin{eqnarray}
+            (\bar h\bar z)(q\otimes a)
+             &=& \bar z((Tr(h)\otimes 1_M)_{Ker})(q\otimes a)  \nonumber \\
+             &=& z(Tr(h)\otimes 1_M)i(q\otimes a)   \nonumber \\
+             &=& z(Tr(h)(q)\otimes a).  \nonumber
+          \end{eqnarray}
+        
+          Nyní ověříme, že násobení splňuje axiom asociativity. Nechť $\bar z\in DKer(1_{Tr(X)}\otimes 
+          f)$, $\bar h_1,\bar h_\in\bar{End}_A(X)$, předpokládejme, že $z\in D(Tr(X)\otimes_A M)$ 
+          splňuje podmínku $\bar z = zi$ a $Tr(h_1)$ a $Tr(h_2)$ jsou 
+          reprezentanti $Tr(\bar h_1)$ a  $Tr(\bar h_2)$. Pak
+          \begin{eqnarray}
+            \bar h_1(\bar h_2 \bar z)
+              &\overset{*}{=}& \bar h_1 (\underbrace{z\circ (Tr(h_2)\otimes 1_M)\circ i}_{\in DKer(1_{Tr(X)}\otimes f)})  \nonumber \\
+              &\overset{*}{=}& z \circ (Tr(h_2)\otimes 1_M) \circ (Tr(h_1)\otimes 1_M) \circ i   \nonumber \\
+              &=& z (Tr(h_2)Tr(h_1)\otimes 1_M) \circ i \nonumber \\
+              &=& z (Tr(h_2h_1)\otimes 1_M) \circ i \nonumber \\
+              &\overset{*}{=}& (\bar h_1 \bar h_2)\bar z.  \nonumber
+          \end{eqnarray}
+        
+          Zbytek axiomů ověřovat nebudeme, jejich ověření je přímočaré a ponecháme ho čtenáři.
+        \end{proof}       
+          
+        \begin{lem}\label{upsilon-je-modul}
+          Definujme na množině $\Upsilon_{DTr(X),L}/\sim$ tříd ekvivalence krátkých exaktních posloupností 
+          vedoucích z $DTr(X)$ do $L$ násobení \\\\
+          \centerline{$\underline{End}_A(X)\times (\Upsilon_{DTr(X),L}/\sim) \rightarrow (\Upsilon_{DTr(X),L}/\sim)$} 
+          \\\\
+          předpisem  \\\\
+          \centerline{$
+            \bar{h} 
+            \cdot 
+            (0\rightarrow DTr(X)\rightarrow E\rightarrow L\rightarrow 0)
+            \mapsto
+            (0\rightarrow DTr(X)\rightarrow E'\rightarrow L\rightarrow 0)
+          $,} 
+          \\\\
+          kde modul $E'$ je pushout diagramu: \\\\
+          \centerline{\xymatrix{
+          DTr(X) \ar@{->}[r] \ar@{->}[d]^{DTr(h)}        
+            &E 
+            \\
+          DTr(X)  
+          }}\\\\\\
+          Pak je $\Upsilon_{DTr(X),L}/\sim$ spolu s výše definovaným násobením  
+          $\underline{End}_A(X)$-modulem.
+        \end{lem}
+        \begin{proof}
+           Nejprve nechť $h_1,h_2\in \underline{End}_A(X)$. Pak \\\\
+           \centerline{$\bar h_1(\bar h_2(0\to DTr(X)\to E\to L\to 0))$} \\\\
+           nám dává následující diagram:  \\\\
+          \centerline{\xymatrix{
+          0 \ar@{->}[r]        
+            & DTr(X) \ar@{->}[r]  \ar@{->}[d]^{DTr(h_2)}
+            & E \ar@{->}[r] \ar@{->}[d]
+            & L \ar@{->}[r] \ar@{=}[d]        
+            & 0  \\
+          0 \ar@{->}[r]  
+            & DTr(X) \ar@{->}[r]  \ar@{->}[d]^{DTr(h_1)}
+            & E' \ar@{->}[r] \ar@{->}[d]
+            & L \ar@{->}[r]  \ar@{=}[d]     
+            & 0\\
+          0 \ar@{->}[r]  
+            & DTr(X) \ar@{->}[r] 
+            & E'' \ar@{->}[r] 
+            & L \ar@{->}[r]       
+            & 0
+          }}\\\\\\
+          Potřebujeme dokázat, že spodní řádek diagramu obdržíme i jako:\\\\
+           \centerline{$(\bar h_1\bar h_2)(0\to DTr(X)\to E\to L\to 0)=(\overline{h_1 h_2})(0\to DTr(X)\to E\to L\to 0)$} \\\\
+           Neboli, že $E''$ je zároveň pushoutem diagramu i následujícího diagramu: \\\\
+          \centerline{\xymatrix{
+            DTr(X) \ar@{->}[r]  \ar@{->}[d]^{DTr(h_1h_2)}
+              & E  \\
+            DTr(X)
+          }}\\\\\\
+          Protože jsou $D$ i $Tr$ kontravariantní funktory, pak \\\\
+          \centerline{$DTr(h_1h_2)=DTr(h_1)DTr(h_2)$.}\\\\
+          Z vlastností pushoutu je zřejmé, že $E''$ společně s korespondujícím 
+          homomorfismem z $Hom_A(DTr(X),E'')$ a složením pushoutových morfismů z 
+          $Hom_A(E,E')$ a $Hom_A(E,E'')$ z původního diagramu splní první 
+          vlastnost pushoutu, neboli udělá následující diagram komutativní:\\\\
+          \centerline{\xymatrix{
+            DTr(X) \ar@{->}[r]  \ar@{->}[d]^{DTr(h_1h_2)} 
+              & E \ar@{->}[d] \\
+            DTr(X) \ar@{->}[r]
+              & E''
+          }}\\\\\\
+          Ještě je třeba dokázat univerzální vlastnost pushoutu. Využijeme toho, 
+          že $E'$  a $E''$ jsou pushouty následujících diagramů:\\\\
+          \centerline{\xymatrix{
+            DTr(X) \ar@{->}[r]  \ar@{->}[d]^{DTr(h_2)}
+              & E  \\
+            DTr(X)
+          }\\\\\xymatrix{
+            DTr(X) \ar@{->}[r]  \ar@{->}[d]^{DTr(h_1)}
+              & E'  \\
+            DTr(X)
+          }}\\\\\\
+          Mějme nějaké $E'''\in mod(A)$ spolu s morfismy z $Hom_A(E,E'')$ a $Hom_A(DTr(X),E''')$ 
+          takovými, že následující diagram komutuje\\\\
+          \centerline{\xymatrix{
+            DTr(X) \ar@{->}[r]  \ar@{->}[d]^{DTr(h_1h_2)} 
+              & E \ar@{->}[d] \\
+            DTr(X) \ar@{->}[r]
+              & E'''
+          }}\\\\\\
+          Protože $DTr(h_1h_2)=DTr(h_1)DTr(h_2)$, 
+          existuje z univerzální vlastnosti pushoutu 
+          $E'$ jednoznačný homorfismus z $Hom_A(E',E''')$ s odpovídajícími 
+          vlastnostmi. A z univerzální vlastnosti $E''$ dostaneme stejným způsobem homomorfismus
+          $Hom_A(E'',E''')$. Je zřejmé, že následující diagram komutuje \\\\
+          \centerline{\xymatrix{
+          DTr(X) \ar@{->}[r]  \ar@{->}[d]^{DTr(h_2)} \ar@/_3pc/[dd]_{DTr(h_1h_2)}
+            & E  \ar@{->}[d]  \\
+          DTr(X) \ar@{->}[r]  \ar@{->}[d]^{DTr(h_1)}
+            & E' \ar@{->}[d] \ar@{.>}[ddr] \\
+          DTr(X) \ar@{->}[r] \ar@{->}[drr]
+            & E'' \ar@{.>}[dr] \\
+          & & E'''
+          }}\\\\\\
+          a $E''$ je tedy pushoutem diagramu\\\\
+          \centerline{\xymatrix{
+            DTr(X) \ar@{->}[r]  \ar@{->}[d]^{DTr(h_1h_2)}
+              & E  \\
+            DTr(X)
+          }}\\\\\\
+          a asociativita našeho násobení je dokázána.
+        \end{proof}
+        
+        \begin{lem}\label{lem-ext-delta-jsou-moduly}
+          R-moduly $Ext^1(L,DTr(X))$ a $\delta_*(DTr(X))$ jsou zároveň $\underline{End}_A(X)$-moduly. 
+        \end{lem}
+        \begin{proof}
+          Dle \hyperref[ekvivalence-upsilon-ext]{Věty \ref*{ekvivalence-upsilon-ext}} máme izomorfismus 
+          abelovských grup \\\\ 
+          \centerline{$Ext^1(L,DTr(X))\simeq \Upsilon_{DTr(X),L}/\sim $,} \\\\
+           který přenáší strukturu 
+          $\underline{End}_A(X)$-modulu i na $Ext^1(L,DTr(X))$.          
+          Dále je \\\\
+          \centerline{$\delta_*(DTr(X)) \subseteq Ext^1(L,DTr(X))$}\\\\
+           jakožto $R$-modul. Potřebujeme dokázat, že 
+          $\delta_*(DTr(X))$ je $\underline{End}_A(X)$-podmodul 
+          $Ext^1(L,DTr(X))$. Postupovat budeme tak, že identifikujeme každý 
+          prvek modulu $\delta_*(DTr(X))$ s prvkem $\Upsilon_{DTr(X),L}/\sim$ a poté 
+          dokážeme, že násobením výsledného prvku prvkem $\bar{h}\in\underline{End}_A(X)$ 
+          dostaneme opět prvek $\Upsilon_{DTr(X),L}/\sim$ korespondující s nějakým prvkem 
+          $\delta_*(DTr(X))$. Tím bude dána struktura $\underline{End}_A(X)$-modulu 
+          i na $\delta_*(DTr(X))$.
+            
+          Mějme tedy libovolný prvek $\bar{y}\in\delta_*(DTr(X))$. Protože z definice 
+          máme \\\\
+          \centerline{$\delta_*(DTr(X))=Hom_A(M,DTr(X))/Im((-\circ f )_I)$,} \\\\
+          můžeme zvolit $y\in Hom_A(M,DTr(X))$ takové, že \\\\
+          \centerline{$\bar{y}=y+Im((-\circ f )_I)$.} \\\\
+          Dle \cite{5} Proposition 5.13 pushout v kategorii modulů vždy existuje. 
+          Pak nám pushout $E$ homomorfismů $f$ a $y$ dává následující komutativní diagram v 
+          $mod(A)$:  \\\\
+          \centerline{\xymatrix{
+          & 0 \ar@{->}[r]        
+            & M \ar@{->}[r]^f \ar@{->}[d]^y
+            & N \ar@{->}[r]^g \ar@{->}[d]
+            & L \ar@{->}[r] \ar@{=}[d]        
+            & 0  \\
+          & 0 \ar@{->}[r]  
+            & DTr(X) \ar@{->}[r] 
+            & E \ar@{->}[r] 
+            & L \ar@{->}[r]       
+            & 0
+          }}\\\\
+          Spodní řádek diagramu je krátká exaktní posloupnost, kterou 
+          identifikujeme s prvkem $\bar{y}\in\delta_*(DTr(X))$. Je možné dokázat, 
+          že je určena jednoznačně až na ekvivalenci $\sim$ (viz. [5, Ch.7]).
+         
+         Vynásobíme-li tuto posloupnost prvkem $\bar{h}\in \underline{End}_A(X)$, dostaneme exaktní 
+         posloupnost   \\\\
+          \centerline{\xymatrix{
+          0 \ar@{->}[r]  
+            & DTr(X) \ar@{->}[r] 
+            & E' \ar@{->}[r] 
+            & L \ar@{->}[r]       
+            & 0
+          },}\\\\
+          která při našem ztotožnění odpovídá prvku $DTr(h)y\in Hom_A(M,DTr(X))$, který je reprezentant 
+          třídy $\bar{DTr(h)y}\in\delta_*(DTr(X))$. Vše ilustruje následující 
+          diagram:  \\
+          \centerline{\xymatrix{
+          & 0 \ar@{->}[r]        
+            & M \ar@{->}[r]^f \ar@{->}[d]^y
+            & N \ar@{->}[r]^g \ar@{->}[d]
+            & L \ar@{->}[r] \ar@{=}[d]        
+            & 0  \\
+          & 0 \ar@{->}[r]  
+            & DTr(X) \ar@{->}[r] \ar@{->}[d]^{DTr(h)}
+            & E \ar@{->}[r] \ar@{->}[d]
+            & L \ar@{->}[r] \ar@{->}[d]      
+            & 0  \\
+          & 0 \ar@{->}[r]  
+            & DTr(X) \ar@{->}[r] 
+            & E' \ar@{->}[r] 
+            & L \ar@{->}[r] 
+            & 0
+          }}\\\\\\
+          A tedy $\delta_*(DTr(X))$ je $\underline{End}_A(X)$-podmodul 
+          $Ext^1(L,DTr(X))\simeq \Upsilon_{DTr(X),L}/\sim$.
+        \end{proof}
+        
+        \begin{thm}\label{izo-gamma-existuje}
+           Nechť $(-\circ \iota )_I$ je kanonická projekce \\\\
+           \centerline{$D(Tr(X)\otimes_A M)\rightarrow DKer(1_{Tr(X)}\otimes  f)$.} \\\\
+           Izomorfismus $\gamma_{\delta, X}:D(Ker(1_{Tr(X)}\otimes f)) \rightarrow \delta_*(DTr(X))$ 
+           existuje a je dán předpisem 
+           \begin{eqnarray}
+             \gamma_{\delta, X}(\bar{z}) &=& \theta_{Tr(X),M,I}(z)+Im((-\circ f)_{DTr(X)}) \nonumber \\
+             &=& [m\mapsto z(-\otimes m)]+Im((-\circ f)_{DTr(X)}), \nonumber
+           \end{eqnarray}
+           kde $z\in D(Tr(X)\otimes_A M)$ je takové, že $\bar{z}=(-\circ \iota)_I(z)=zi$.
+        \end{thm}
+        \begin{proof} 
+          Nejprve dokážeme existenci tohoto izomorfismu.
+          Aplikujeme-li funktor $D$ na exaktní posloupnost z \hyperref[mega-diagram]{Věty \ref*{mega-diagram}} \\\\
+          \resizebox{14cm}{!}{\xymatrix{
+          0 \ar@{->}[r] 
+            & Ker(1_{Tr(X)}\otimes f) \ar@{->}[r]           
+            & Tr(X)\otimes_A M \ar@{->}[r]
+            & Tr(X)\otimes_A N \ar@{->}[r]          
+            & Tr(X)\otimes_A L \ar@{->}[r] 
+            & 0      
+          }}\\\\
+          a $Hom_A(-,DTr(X))$ na posloupnost $\delta$, dostaneme následující diagram \\\\
+          \resizebox{14cm}{!}{\xymatrix{
+          0 \ar@{->}[r]        
+            & D(Tr(X)\otimes_A L) \ar@{->}[r] \ar@{->}[d]_{\simeq}^{\theta_{Tr(X),L,I}} 
+            & D(Tr(X)\otimes_A N) \ar@{->}[r] \ar@{->}[d]_{\simeq}^{\theta_{Tr(X),N,I}} 
+            & D(Tr(X)\otimes_A M) \ar@{->}[r] \ar@{->}[d]_{\simeq}^{\theta_{Tr(X),M,I}}   
+            & D(Ker(1_{Tr(X)}\otimes f)) \ar@{->}[r] \ar@{-->}[d]_{\simeq}^{\gamma_{\delta, X}}            
+            & 0  \\
+          0 \ar@{->}[r]  
+            & Hom_A(L, DTr(X)) \ar@{->}[r]   
+            & Hom_A(N, DTr(X)) \ar@{->}[r]   
+            & Hom_A(M, DTr(X)) \ar@{->}[r]   
+            & \delta_*(DTr(X)) \ar@{->}[r]            
+            & 0
+          }}\\\\\\
+          Pak protože $\theta_{Tr(X),M,I}$, $\theta_{Tr(X),N,I}$ i $\theta_{Tr(X),L,I}$ 
+          jsou izomorfismy abelovských grup, existuje dle \hyperref[lemma-five]{Lemma \ref*{lemma-five}} 
+          takový   izomorfismus abelovských grup \\\\
+          \centerline{$\gamma_{\delta, X}:D(Ker(1_{Tr(X)}\otimes f)) \rightarrow \delta_*(DTr(X))$,} 
+          \\\\
+          že diagram komutuje.
+          
+          
+          Pro $\bar h \in \underline{End}_A(X)$ máme
+          \begin{eqnarray}
+            \gamma_{\delta, X}(\bar h \bar z)&=& \gamma_{\delta, X}(z\circ (Tr(h)\otimes 1_M)\circ i) \nonumber \\
+            &=& [a\mapsto z(Tr(h)(-)\otimes a)]+Im((-\circ f)_{DTr(X)}) \nonumber
+          \end{eqnarray}      
+         Ukážeme, že stejný prvek $\Upsilon_{DTr(X),L}/\sim$ obdržíme
+         \begin{description}
+           \item[(1)] identifikováním $[a\mapsto z(Tr(h)(-)\otimes a)]+Im((-\circ f)_{DTr(X)}) 
+           $
+           s třídou ekvivalence v $\Upsilon_{DTr(X),L}/\sim$.
+           \item[(2)] identifikováním $[a\mapsto z(-\otimes a)]+Im((-\circ f)_{DTr(X)})$ 
+            s třídou ekvivalence v $\Upsilon_{DTr(X),L}/\sim$ a poté 
+            vynásobením $\bar h$, jako v  \hyperref[lem-ext-delta-jsou-moduly]{Lemma \ref*{lem-ext-delta-jsou-moduly}}.
+         \end{description}
+         
+         Poznamenejme, že první případ vede ke krátké exaktní posloupnosti 
+         vzniklé jako pushout $f$ a $[a\mapsto z(Tr(h)(-)\otimes a)]$, zatímco 
+         druhý případ k pushoutu $f$ a složeného zobrazení \\\\
+         \centerline{$DTr(h)\circ[a\mapsto z(-\otimes a)]=[a\mapsto DTr(h)(z(-\otimes a))]$.}\\\\
+         Protože
+         \begin{eqnarray}
+           DTr(h)(z(-\otimes a)) &=& (-\circ Tr(h))_I(z(-\otimes a)) \nonumber 
+           \\
+           &=& z(-\otimes a)\circ Tr(h) \nonumber \\
+           &=& z(Tr(h)(-)\otimes a), \nonumber 
+         \end{eqnarray}
+         vidíme, že \\\\
+         \centerline{$
+         DTr(h)\circ [a\mapsto z(-\otimes a)]=[a\mapsto z(Tr(h)(-)\otimes a)].
+         $}\\\\
+         Právě jsme ukázali, že $\gamma_{\delta, X}(\bar h\bar z)=\bar h \gamma_{\delta, X}(\bar z)$ 
+         pro všechny $\bar z\in D(Ker(1_{Tr(X)}\otimes f))$ a $\bar h\in 
+         \underline{End}_A(X)$. Tedy, že jde o izomorfismus 
+         $\underline{End}_A(X)$-modulů.
+         
+         
+          Přirozenost našeho izomorfismu dokazovat nebudeme. Důkaz je možné 
+          nalézt v \cite{3} na stranách 109-113.
+        \end{proof}
+        
+    \subsection{Izomorfismus $\omega_{\delta,X}$} 
+    
+      \begin{thm}\label{thm-omega}
+        Položme \\\\
+        \centerline{$\omega_{\delta,X}:=\gamma_{\delta,X}D\sigma^{-1}_{\delta,X}$.}  \\\\        
+        Pak $\omega_{\delta,X}$ je izomorfismem $\underline{End}_A(X)$-modulů  \\\\
+        \centerline{$\omega_{\delta,X}:D\delta^*(X)\rightarrow \delta_*(DTr(X))$,} \\\\
+        který je přirozený v $\delta$ a $X$.        
+      \end{thm}
+      \begin{proof}
+        Protože \\\\
+        \centerline{$\sigma^{-1}_{\delta,X}:Ker(1_{Tr(X)}\otimes f)\rightarrow \delta^*(X)$} 
+        \\\\
+        je izomorfismem $\underline{End}_A(X)$-modulů, je \\\\
+        \centerline{$D\sigma^{-1}_{\delta,X}:D\delta^*(X) \rightarrow DKer(1_{Tr(X)}\otimes f)$} 
+        \\\\ 
+        také izomorfismem $\underline{End}_A(X)$-modulů. Pak je 
+        $\gamma_{\delta,X}D\sigma^{-1}_{\delta,X}$ jakožto homomorfismus vzniklý 
+        složením dvou izomorfismů $\underline{End}_A(X)$-modulů také
+        izomorfismem $\underline{End}_A(X)$-modulů. 
+        
+        Protože $D$ je funktor, plyne přirozenost $D\sigma^{-1}_{\delta,X}$ v $\delta$ a $X$ z 
+        přirozenosti $\sigma^{-1}_{\delta,X}$ ve stejných proměnných.
+        
+        Navíc protože je složení dvou přirozených 
+        transformací opět přirozená transformace, je i 
+        $\omega_{\delta,X}:=\gamma_{\delta,X}D\sigma^{-1}_{\delta,X}$
+        přirozená v proměnných  v $\delta$ a $X$.
+      \end{proof}
+      \clearpage
+      
+  \section{Algoritmus pro nalezení skoro štěpitelné posloupnosti} 
+  
+    \paragraph{ } Nyní popíšeme samotný algoritmus a dokážeme jeho správnost.
+    Nadále budeme namísto  okruhu R pracovat s libovolným komutativním tělesem K. 
+    Funktor $D$ tedy bude dle \hyperref[lem-dual-teleso]{Lemma \ref*{lem-dual-teleso}} 
+    tvaru $D=Hom_K(-,K):mod(K)\rightarrow mod(K)$.      
+    Navíc budeme pracovat s jednou pevně zvolenout exaktní 
+    poslupností $\delta$ \\\\
+      \centerline{\xymatrix{
+        0 \ar@{->}[r] 
+          & \Omega \ar@{->}[r]^i 
+          & P_0 \ar@{->}[r]^t 
+          & X \ar@{->}[r] 
+          & 0
+      },}\\\\
+    kde $(P_0, t)$ je projektivní pokrytí modulu $X$, $\Omega:=Ker(t)$ a $i$ kanonické vnoření. Nechť navíc $(P_1, \omega)$ 
+    je projektivní pokrytí $\Omega$ a $s:=i\omega$.  Pak máme projektivní 
+    prezentaci modulu $X$:\\\\
+      \centerline{\xymatrix{
+           & P_1 \ar@{->}[r]^s
+          & P_0 \ar@{->}[r]^t 
+          & X \ar@{->}[r] 
+          & 0
+      },}\\\\
+    Pevná volba posloupnosti $\delta$ je možná, protože moduly $P_0$, $P_1$ a $\Omega$ 
+    jsou určeny modulem $X\in mod(A)$ jednoznačně až na izomorfismus.
+    
+    Navíc si vzledem k pevné volbě $\delta$ jednodušeji označme 
+    homomorfismy z předchozí kapitoly. Položme:
+    \begin{description}
+      \item[(a)] $\sigma_X:=\sigma_{\delta,X}:\delta^*(X)\rightarrow Ker(1_{Tr(X)}\otimes i)$ 
+      \item[(b)] $\gamma_X:=\gamma_{\delta,X}: DKer(1_{Tr(X)\otimes i})\rightarrow \delta_*(DTr(X))$ 
+      \item[(c)]  $\omega_X:=\omega_{\delta,X}: D\delta^*(X) \rightarrow \delta_*(DTr(X))$ 
+    \end{description}
+    
+    V následujících několika tvrzeních zjednodušíme výsledky z předchozích 
+    částí, poté již zformulujeme algoritmus.
+  
+      \begin{lem}\label{lem-delta-as-hom}
+        Nechť $Y\in mod(A)$, pak $\delta^*(Y)=\underline{Hom}_A(Y,X)$.
+      \end{lem}
+      \begin{proof}
+        Připomeňme, že pro $Y\in mod(A)$ je $\delta^*(Y)$ definováno exaktností 
+        následující posloupnosti: \\
+        \centerline{\xymatrix{
+          0 \ar@{->}[r] 
+            & Hom_A(Y,\Omega) \ar@{->}[r]^{(i\circ-)_Y} 
+            & Hom_A(Y,P_0) \ar@{->}[r]^{(t\circ-)_Y}
+            & Hom_A(Y,X) \ar@{->}[r] 
+            & \delta^*(Y) \ar@{->}[r] 
+            & 0
+        }}\\\\      
+        Tedy $\delta^*(Y)$ je kojádro $(t\circ-)_Y$, neboli \\\\
+        \centerline{$\delta^*(Y)=Hom_A(Y,X)/Im((t\circ-)_Y)$}* \\\\
+        Zbývá dokázat, že $Im(t\circ-)_Y=P(Y,X)$.
+        
+        Pokud $u\in Im(t\circ-)_Y$, tak se $u$ faktorizuje skrze projektivní 
+        A-modul $P_0$. Opačně, pokud se $u$ faktorizuje skrze nějaký projektivní 
+        A-modul $P$, tak dle \hyperref[lem-faktorizuje-skrze-proj]{Lemma \ref*{lem-faktorizuje-skrze-proj}}
+        se $u$ také faktorizuje skrze
+        $P(X)$. Pak dle (*) dostáváme \\\\
+        \centerline{$\delta^*(Y)=Hom_A(Y,X)/P(Y,X)=\underline{Hom}_A(Y,X)$.}
+      \end{proof}
+      
+      \begin{thm}\label{thm-omega-x}
+        $\omega_X$ je izomorfismem $\underline{End}_A(X)$-modulů: \\\\
+        \centerline{$\omega_X: D\underline{End}_A(X) \rightarrow Ext_A^1(X,DTr(X))$}
+      \end{thm}
+      \begin{proof}
+        Připomeňme z \hyperref[thm-omega]{Věty \ref*{thm-omega}}, že \\\\
+        \centerline{$\omega_X: D\delta^*(X) \rightarrow\delta_*(DTr(X))$} \\\\
+        \hyperref[lem-delta-as-hom]{Lemma \ref*{lem-delta-as-hom}} 
+        imlikuje, že $\delta^*(X)=\underline{End}_A(X)$ a tedy \\\\
+        \centerline{$D\delta^*(X)=D\underline{End}_A(X)$}. \\
+        
+        Navíc protože $X\in mod(A)$, máme $Tr(X)\in mod(A^{op})$ a $DTr(X)\in 
+        mod(A)$.
+        Aplikováním kontravariatního funktoru $Hom_A(-,DTr(X))$ na $\delta$ 
+        dostaneme dle \cite{5} Theorem 7.3 následující exaktní 
+        posloupnost: \\\\
+        \centerline{$
+          0\rightarrow 
+          Hom_A(X,DTr(X))\rightarrow 
+          Hom_A(P_0,DTr(X))\rightarrow
+          Hom_A(\Omega(X),DTr(X))\rightarrow\ldots 
+        $}
+        \centerline{$
+          \ldots\rightarrow 
+          Ext^1_A(X,DTr(X))\rightarrow 
+          Ext^1_A(P_0,DTr(X))
+        $}\\
+        
+        Protože je $P_0$ projektivní, je $Ext_A^1(P_0,DTr(X))=0$ a my dostáváme 
+        posloupnosti z \hyperref[def-delta-*]{Definice \ref*{def-delta-*}}, kde je $X$ 
+        nahrazeno $DTr(X)$. A tedy: 
+        \\\\
+        \centerline{$\delta_*(DTr(X))=Ext^1_A(X,DTr(X))$.}
+      \end{proof} 
+    
+      \paragraph{ }\label{phi-omega-nenul}
+      Připomeňme \hyperref[lem-ext-delta-jsou-moduly]{Lemma \ref*{lem-ext-delta-jsou-moduly}}, 
+      že $Ext^1_A(X,DTr(X)$ má strukturu konečně generovaného $\underline{End}_A(X)$-modulu 
+      (tu jsme přenesli ztotožněním jeho prvků s třídami ekvivalence krátkých exaktních posloupností).
+      Dále dle věty \hyperref[ekvivalence-upsilon-ext]{Věty \ref*{ekvivalence-upsilon-ext}} 
+      máme izomorfismy:
+      \begin{eqnarray}
+         Soc_\Gamma(\Upsilon_{DTr(X),X}/\sim)&\simeq&(\hat{\Upsilon}_{DTr(X),X}/\sim) \nonumber \\
+         Ext_A^1(V,U)&\simeq& (\Upsilon_{U,V}/\sim) \nonumber 
+      \end{eqnarray}      
+      Tedy $Soc_\Gamma(Ext^1_A(X,DTr(X))$ koresponduje s množinou $\tilde{\Upsilon}_{DTr(X),X}/\sim$ tříd 
+      ekvivalence skoro štěpitelných posloupností $mod(A)$ končících v $X$.
+      
+      Navíc $Soc_\Gamma(Ext^1_A(X,DTr(X))$ je jako $\underline{End}_A(X)$-modul 
+      jednoduchý a tedy dle \hyperref[lem-jednoduchy-modul-gen]{Lemma \ref*{lem-jednoduchy-modul-gen}}
+      může být vygenerován každým svým prvkem. Díky izomorfismu $\omega_X$ ve tvaru z
+      \hyperref[thm-omega-x]{Věty \ref*{thm-omega-x}} \\\\
+        \centerline{$\omega_X: D\underline{End}_A(X) \rightarrow Ext_A^1(X,DTr(X))$,} 
+        \\\\
+      vidíme, že každý nenulový prvek $e\in Soc_\Gamma(D\underline{End}_A(X))$ 
+      může být použit k vygenerování celého $\tilde{\Upsilon}_{DTr(X),X}/\sim$, jelikož
+      \\\\
+      \centerline{$\omega_X(e)\in Soc_\Gamma(Ext^1_A(X,DTr(X))\simeq (\tilde{\Upsilon}_{DTr(X),X}/\sim)$} \\\\
+      bude nenulový.     
+    
+      \begin{lem}\label{lem-B-ker}
+        Uvažujme identitu $\bar{1_X}\in\underline{End}_A(X)$. Nechť \\\\
+        \centerline{$B_{Ker(1_{Tr(X)}\otimes i)}:=\{\sigma_X(\bar{1_X}),\omega_2\,\ldots,\omega_l\}$} \\\\
+        je K-báze $Ker(1_{Tr(X)}\otimes i)$. Pak \\\\
+        \centerline{$\gamma_X(d_{B_{Ker(1_{Tr(X)}\otimes i)}}(\sigma_X(\bar{1_X})))
+        \in Soc_\Gamma(Ext^1_A(X,DTr(X)))$} \\\\
+        je generátor.
+      \end{lem}
+      
+      \begin{proof}
+        Nechť \\\\
+        \centerline{$\sigma^{-1}_X(B_{Ker(1_{Tr(X)}\otimes i)}):=\{\bar 1_X,\sigma^{-1}_X(\omega_2),\ldots,\sigma^{-1}_X(\omega_l)\}$} 
+        \\\\
+         je $K$-báze $\underline{End}_A(X)$ korespondující s $B_{Ker(1_{Tr(X)}\otimes 
+         i)}$. Víme, že \\\\
+         \centerline{$\bar 1_X\in Top_{\Gamma^{op}}(\underline{End}_A(X))$}\\\\
+         je nenulový prvek, pak dle \hyperref[lem-soc-top]{Věty \ref*{lem-soc-top}}  je\\\\
+         \centerline{$(d_{\sigma_X^{-1}(B_{Ker(1_{Tr(X)}\otimes i)})})(\bar 1_X)\in Soc_\Gamma(D\underline{End}_A(X))$}\\\\
+         nenulový prvek a tedy protože $\omega_X$ je izomorfismem $\underline{End}_A(X)$-modulů, je 
+         \begin{eqnarray}
+           \omega_X ((d_{\sigma_X^{-1}(B_{Ker(1_{Tr(X)}\otimes i)})})(\bar 1_X)) 
+           &=& 
+           \underbrace{
+             \gamma_X(D\sigma_X^{-1}) ((d_{\sigma_X^{-1}(B_{Ker(1_{Tr(X)}\otimes i)})})(\bar 1_X))
+           }_{\in Soc_\Gamma(Ext_A^1(X,DTr(X)))}   
+           \nonumber
+         \end{eqnarray}
+         nenulový prvek. Navíc dle \hyperref[lem-baze-dual-xi]{Lemma \ref*{lem-baze-dual-xi}} 
+         víme, že \\\\
+         \centerline{$
+           (D\sigma_X^{-1}) (d_{\sigma_X^{-1}(B_{Ker(1_{Tr(X)}\otimes i)})}(\bar 1_X))
+           = 
+           d_{B_{Ker(1_{Tr(X)}\otimes i)}}(\sigma_X(\bar 1_X)) 
+         $}\\\\
+         a tedy \\\\
+         \centerline{$
+           \omega_X ((d_{\sigma_X^{-1}(B_{Ker(1_{Tr(X)}\otimes i)})})(\bar 1_X)) 
+           = 
+           \gamma_X( d_{B_{Ker(1_{Tr(X)}\otimes i)}}(\sigma_X(\bar 1_X))  )
+         $.}\\\\
+         Potom dle \hyperref[lem-jednoduchy-modul-gen]{Lemma \ref*{lem-jednoduchy-modul-gen}} 
+         je tento nenulový prvek generátorem $Soc_\Gamma(Ext_A^1(X,DTr(X)))$.
+      \end{proof}
+      
+      \begin{lem}\label{alg-vraci}
+        Algoritmus výpočtu $\sigma_{\delta,X}$ nám při našem pevně zvoleném $\delta$ a 
+        vstupu $\bar{1}_X$ vrátí \\
+        \centerline{ $\sigma_{X}(\bar{1}_X)=\phi_\Omega(\omega)$,}\\\\
+        kde $\omega$ je projektivní pokrytí $\Omega$. ($\phi_\Omega$
+        jsme zavedli v \hyperref[def-phi]{Definici \ref*{def-phi}}) 
+      \end{lem}
+      \begin{proof}
+        Podívejme se znovu na diagram z \hyperref[mega-diagram]{Věty \ref*{mega-diagram}} a 
+        upravme ho dle naší posloupnosti $\delta$: \\\\
+      \centerline{\xymatrix{
+        & 
+          & 
+          & 
+          & 0 \ar@{->}[d] 
+          & \\
+        & 0 \ar@{->}[d]
+          & 0 \ar@{->}[d] 
+          & 0 \ar@{->}[d] 
+          & Ker(1_{Tr(X)}\otimes i) \ar@{_{(}->}[d]
+          & \\
+        0 \ar@{->}[r]
+          & Hom_A(X,\Omega) \ar@{->}[r]^{(-\circ t)_\Omega} \ar@{->}[d]_{(i\circ-)_X} 
+          & Hom_A(P_0,\Omega) \ar@{->}[r]^{(-\circ s)_\Omega} \ar@{->}[d]_{(i\circ-)_P_0} 
+          & Hom_A(P_1,\Omega) \ar@{->}[r]^{\phi_\Omega} \ar@{->}[d]_{(i\circ-)_P_1} 
+          & Tr(X)\otimes_A \Omega \ar@{->}[r] \ar@{->}[d]_{1_{Tr(X)}\otimes i} 
+          & 0 \\
+        0 \ar@{->}[r]
+          & Hom_A(X,P_0) \ar@{->}[r]^{(-\circ t)_{P_0}} \ar@{->}[d]_{(t\circ-)_X} 
+          & End_A(P_0) \ar@{->}[r]^{(-\circ s)_{P_0}} \ar@{->}[d]_{(t\circ-)_P_0} 
+          & Hom_A(P_1,P_0) \ar@{->}[r]^{\phi_{P_0}} \ar@{->}[d]_{(t\circ-)_P_1} 
+          & Tr(X)\otimes_A {P_0} \ar@{->}[r] \ar@{->}[d]_{1_{Tr(X)}\otimes t} 
+          & 0 \\
+        0 \ar@{->}[r]
+          & End_A(X) \ar@{->}[r]^{(-\circ t)_X} \ar@{->}[d] 
+          & Hom_A(P_0,X) \ar@{->}[r]^{(-\circ s)_X} \ar@{->}[d] 
+          & Hom_A(P_1,X) \ar@{->}[r]^{\phi_X} \ar@{->}[d] 
+          & Tr(X)\otimes_A X \ar@{->}[r] \ar@{->}[d] 
+          & 0 \\
+        & \underline{End}_A(X) \ar@{->}[d] 
+          & 0
+          & 0
+          & 0
+          & \\
+        & 0
+      }}\\\\
+      Provedeme $\sigma_X$-algoritmus pro prvek $\bar 1_X\in \underline{End}_A(X)$. 
+      Jeho vzorem je prvek $1_X\in {End}_A(X)$. Jako $u\in {End}_A(P_0)$ takový, 
+      že $tu=t$, zvolíme jednoduše $1_{P_0}$. Dále hledáme prvek $v\in Hom_A(P_1,\Omega)$ 
+      takový, že $iv=s$, což z definice splňuje projektivní pokrytí $\omega$ 
+      modulu $\Omega$. To pak zobrazíme na $\phi_\Omega(\omega)$.
+      \end{proof}
+      
+      \paragraph{Algoritmus pro výpočet generátoru $\tilde{\Upsilon}_{DTr(X),X}/\sim$}     
+        \begin{description}
+          \item[\space\space\space Vstup:] $X\in mod(A)$ nerozložitelný a 
+          neprojektivní.
+          \item[\space\space\space Výstup:] Generátor $0 \rightarrow DTr(X) \rightarrow E \rightarrow X \rightarrow 0$} 
+            množiny $\tilde{\Upsilon}_{DTr(X),X}/\sim$.
+         \item[\space\space\space Průběh:] 
+            \begin{description} 
+               \item[]
+               \item[(a)] Spočtěme projektivní pokrytí ($P_0$, $t$) modulu $X$  \\\\
+                   \centerline{\xymatrix{
+                      Ker(t) \ar@{^{(}->}[r]^i & P_0 \ar@{->}[r]^t & X  
+                    },}\\\\  a položme $\Omega:=Ker(t)$.
+               \item[(b)] Vezměme $\phi_\Omega(\omega)\in Ker(1_{Tr(X)}\otimes i)$, kde $(P_1,\omega)$ 
+                    je projektivní pokrytí $\Omega$ a rozšiřme ho na K-bázi: \\\\
+                    \centerline{$B_{Ker(1_{Tr(X)}\otimes i)}:=
+                    \{\phi_\Omega(\omega),\omega_2,\ldots,\omega_l\}$.}  \\\\
+                   \centerline{\xymatrix{
+                      P_1 \ar@{->}[r]^\omega & \Omega \ar@{^{(}->}[r]^i & P_0 \ar@{->}[r]^t & X  
+                    },}\\
+               \item[(c)] Rozšiřme $B_{Ker(1_{Tr(X)}\otimes i)}$ na K-bázi \\\\
+                    \centerline{$B_{Tr(X)\otimes\Omega}:=
+                    \{\phi_\Omega(\omega),\omega_2,\ldots,\omega_l,\omega_{l+1},\ldots,\omega_{l+m}\}$.} 
+                    \\
+               \item[(d)] Definujme homomorfismus A-modulů $\xi:\Omega\rightarrow DTr(X)$  
+                    následovně. Pro $a\in \Omega$ definujme $\xi(a):Tr(X)\rightarrow K$ 
+                    předpisem \\\\
+                    \centerline{$q\mapsto$[první K-koeficient $q\otimes a$ vzhledem k bázi 
+                    $B_{Tr(X)\otimes_A\Omega}]$.}\\
+               \item[(e)] Položme $E$ rovno pushoutu $i$ a $\xi$. 
+            \end{description}     
+        \end{description}          
+        \centerline{ \xymatrix{
+        \Omega \ar[r]^\xi \ar[d]_i & DTr(X) \ar@{..}[d] \\ 
+        P_0 \ar@{..}[r] & E
+      } }\,
+      
+      \begin{thm}
+        Algoritmus vrací generátor \\\\
+        \centerline{$0 \rightarrow DTr(X) \rightarrow E \rightarrow X \rightarrow 0$} 
+        \\\\
+        všech skoro štěpitelných posloupností v $mod(A)$ končících v $X$.
+      \end{thm}
+      \begin{proof}
+        Dle \hyperref[alg-vraci]{Lemma \ref*{alg-vraci}} máme
+        \\\\\centerline{$\sigma_X(\bar 1_X)=\phi_\Omega(w)$}\\\\
+        a $B_{Ker(1_{Tr(X)}\otimes i)}$ je jako v  
+        \hyperref[lem-B-ker]{Lemma \ref*{lem-B-ker}} a tedy 
+        \\\\\centerline{$\gamma_X \underbrace{( d_{B_{Ker(1_{Tr(X)}\otimes i)}}( \phi_\Omega(w) ) )}_{a}=: \bar y$}\\\\
+        generuje $Soc_\Gamma(Ext_A^1(X,DTr(X)))$.
+        
+        Stejně jako v důkazu \hyperref[lem-ext-delta-jsou-moduly]{Lemma \ref*{lem-ext-delta-jsou-moduly}} 
+        je prvek $\hat\Upsilon/\sim$ obdržen jako pushout $E$ morfismů $i$ a 
+        libovolného reprezentantu $y\in Hom_A(\Omega, DTr(X))$ prvku $\bar y$.
+        Protože $\gamma_X$ je kojádro zobrazení $\theta_{Tr(X),\Omega,K}$, tak 
+        pokud je 
+        \\\\\centerline{$y:=\theta_{Tr(X),\Omega,K}(z)$,}\\\\
+        pro libovolný reprezentant $z\in (Tr(X)\otimes_A\Omega)$ prvku $\bar z$, 
+        pak je $y$ reprezentant prvku $\gamma_X(\bar z)=\bar y$. Nechť $\mu$ 
+        značí inkluzi 
+        \\\\\centerline{$\mu:Ker(1_{Tr(X)}\otimes i)\to Tr(X)\otimes_A\Omega$.}\\\\
+        Pak 
+        \\\\\centerline{$D\mu=(-\circ\mu)_K:D(Tr(X)\otimes_A\Omega)\to DKer(1_{Tr(X)}\otimes i)$}\\\\
+        je kanonická projekce a pro každé $z\in D(Tr(X)\otimes_A\Omega)$ takové, že
+        \\\\\centerline{$z\mu=\bar z$,}\\\\
+        je reprezentantem $\bar z$. Ukážeme, že volba
+        \\\\\centerline{$z:=d_{B_{Ker(1_{Tr(X)}\otimes i)}}( \phi_\Omega(w) )$}\\\\
+        tuto podmínku splňuje.
+        
+        Nechť $q\otimes a\in Ker(1_{Tr(X)}\otimes i)$. Aplikace našeho zvoleného $z$ 
+        na $q\otimes a$ koresponduje s vyjádřením $q\otimes a$ vzhledem k bázi  
+        $B_{Ker(1_{Tr(X)}\otimes i)}$
+        a extrakcí prvního $K$-koeficientu. Protože $B_{Tr(X)\otimes_A\Omega}$ je 
+        pouze rozšířením $B_{Ker(1_{Tr(X)}\otimes i)}$, tak se výsledek nezmění, 
+        pokud $q\otimes a$ vnoříme do $Tr(X)\otimes_A \Omega$ a vyjádříme ho 
+        vzhledem k bázi $B_{Tr(X)\otimes_A\Omega}$ před extrakcí prvního 
+        $K$-koeficientu, což odpovídá aplikaci $d_{B_{Tr(X)\otimes_A \Omega)}}( \phi_\Omega(w) ) \mu$ 
+        na $q\otimes a$.
+        
+        Pak musíme spočíst pushout $i$ a 
+        $\theta_{Tr(X),\Omega,K}(d_{B_{Tr(X)\otimes_A \Omega)}}( \phi_\Omega(w) 
+        ))$, abychom obdrželi hledanou skoro štěpitelnou posloupnost. Připomeňme 
+        \hyperref[thm-adjunkce]{Větu \ref*{thm-adjunkce}}, že
+        \begin{eqnarray}
+          \theta_{Tr(X),\Omega,K}(d_{B_{Tr(X)\otimes_A \Omega)}}( \phi_\Omega(w) ))(a)
+            &=& [q\mapsto d_{B_{Tr(X)\otimes_A \Omega)}}( \phi_\Omega(w) )(q\otimes a)]\nonumber \\
+            &=& [q\mapsto 1.\, koef.\, q\otimes a\,vzhledem\,k\,B_{Tr(X)\otimes_A \Omega)}]\nonumber \\
+            &=& \xi(a) \nonumber 
+        \end{eqnarray}
+        pro každé $a\in\Omega$. A tedy 
+        \\\\\centerline{$\theta_{Tr(X),\Omega,K}(d_{B_{Tr(X)\otimes_A \Omega)}}( \phi_\Omega(w) ))=\xi$,}\\\\
+        tím je důkaz hotov a my se můžeme pustit do jeho implementace.
+      \end{proof}
+
+
+
+
+
+
+
+
+
+
+

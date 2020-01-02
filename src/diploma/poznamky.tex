@@ -1,0 +1,681 @@
+\documentclass[7pt]{article}
+
+\usepackage{czech}
+\usepackage[utf8]{inputenc}   % pro unicode UTF-8
+\usepackage{amsmath}
+\usepackage{xypic}
+
+\addtolength{\topmargin}{-1in}
+\addtolength{\textheight}{1.75in}
+
+\begin{document}
+
+  \section{Poznámky}
+  
+    \subsection{Vstup algoritmu}
+      \paragraph{}$\Lambda$ artinovská algebra nad komutativním tělesem $\mathbb{K}$
+      \paragraph{}X $\in$ mod($\Lambda$) nerozložitelný, konečně generovaný
+      \paragraph{} V našem případě jde o K-Algebru cest KQ nad konečným quieverem Q. 
+      Quiver je konečný, jde tedy o algebru s jednotkou. 
+      \paragraph{} Pokud je Q bez cyklů, pak budeme pracovat s algebrou $\Lambda=KQ$.
+       \paragraph{} Pokud ale cykly obsahuje, pak využijeme algebru $\Lambda=KQ/I$, 
+       kde I je nějaký přípustný (admissible) ideál KQ. Tím zajistíme, že $Q_\Lambda=Q$ 
+       stejně jako v případě quiveru bez cyklů.
+       \paragraph{} V obou případech je $\Lambda$ je konečně dimensionální 
+       a "hereditary" (podmodul projektivního modulu je projektivní) algebra nad $\mathbb{K}$. 
+      \paragraph{QPA příklad 1}
+\begin{verbatim}
+Q := Quiver(2, [[1, 2, "a"], [2, 1, "b"],[1, 1, "c"]]); 
+KQ := PathAlgebra(Rationals,Q);    
+matrices := [ 
+    ["a", [[1,0,0],[0,1,0]]], 
+    ["b", [[0,1],[1,0],[0,1]]], 
+    ["c", [[0,0],[1,0]]] 
+  ]; 
+mX := RightModuleOverPathAlgebra(KQ,matrices);
+ \end{verbatim}
+     \paragraph{QPA příklad 2}
+\begin{verbatim}
+Q:= Quiver(3, [[1,2,"a"], [1,2,"b"], [2,2,"c"], [2,3,"d"], [3,1,"e"]]);
+KQ:= PathAlgebra(Rationals, Q);
+gen:= GeneratorsOfAlgebra(KQ);
+a:= gen[4];
+b:= gen[5];
+c:= gen[6];
+d:= gen[7];
+e:= gen[8];
+rels:= [d*e, c^2,a *c*d-b*d, e*a];
+I:= Ideal(KQ,rels);
+A:= KQ/I;
+matrices := [ 
+    ["a", [[1,0,0],[0,1,0]]], 
+    ["b", [[0,1,1],[1,0,1]]], 
+    ["c", [[1,1,1],[0,0,0],[1,1,0]]], 
+    ["d", [[3],[2],[1]]], 
+    ["e", [[3,2]]] 
+  ];
+mX := RightModuleOverPathAlgebra(KQ,matrices);
+ \end{verbatim}
+
+    \subsection{Výstup algoritmu}
+      \paragraph{Generátor} $0\rightarrow DTr(X) \rightarrow E \rightarrow X \rightarrow 0$ 
+      množiny $\hat{\Upsilon}_{DTr(X),X}$ všech téměř štěpitelných posloupností končících v X.
+    
+    
+    \subsection{Značení v kódu QPA} 
+      \paragraph{} Moduly budu značit velkým písmenem. Dále jim budu přidávat prefix "m", jelikož například "X" je 
+      rezervovaný znak a také budu ihned jasné, že jde o modul (například snadno rozeznáme $\Lambda$ jako algebru a modul).
+      \paragraph{} Morfismy budou malými písmeny.
+      \paragraph{} Naši algebru $\Lambda$ budu značit jednoduše "A".
+      \paragraph{} Řecká písmena budu psát jejich opisem latinkou (používaným v 
+      TEXu). Např. rho, pi, omega,  mu, nu  ... .
+ 
+   
+    \subsection{Výpočet $\Omega$}
+      \paragraph{Teorie} 
+        Spočteme projektivní pokrytí $P_0$ modulu X \\* 
+        \centerline{$Ker(t)\xrightarrow{i} P_{0}\xrightarrow{t}X$}
+        a položíme $\Omega:=Ker(t)$. Máme krátkou exaktní 
+        posloupnost \\*
+        \centerline{$0\rightarrow\Omega\xrightarrow{i} P_{0}\xrightarrow{t}X\rightarrow0$}
+        dále označme $P_1$ projektivní pokrytí $\Omega$. Dostaneme minimální 
+        projektivní prezentaci modulu X \\*
+        \centerline{ \xymatrix{
+          P_1 \ar@{->}[rd]_w \ar@{->}[r]^{s=iw} &P_0 \ar@{->}[r]^t &X  \ar@{->}[r] &0 \\
+          &\Omega \ar@{->}[u]_i
+        } }
+
+      \paragraph{QPA}
+\begin{verbatim}
+t      := ProjectiveCover(mX);
+mP0    := Source(t);
+mOmega := Kernel(t);
+omega  := ProjectiveCover(mOmega);
+i      := KernelInclusion(t);
+s      := omega * i;
+mP1    := Source(omega);
+\end{verbatim}
+
+    \subsection{Modul $Tr(X)$}
+      \paragraph{Teorie} 
+      \subparagraph{} $mod(\Lambda) \subset Mod(\Lambda)$ podkategorie konečně 
+      generovaných modulů
+      \subparagraph{} $P_\Lambda(M,N):=\{f\in Hom(M,N)|$ f se faktorizuje skrze 
+      projektvní modul \}
+      \subparagraph{} $\underline{Hom}_\Lambda(M,N) = Hom_\Lambda(M,N) / 
+      P_\Lambda(M,N)$
+      \subparagraph{} $\underline{mod}(\Lambda)$ kategorie definovaná: \\*
+        \centerline{$Ob(\underline{mod}(\Lambda))=Ob(mod(\Lambda))$} \\*
+        \centerline{$Hom_{\underline{mod}(\Lambda)}(A,B)=\underline{Hom}_\Lambda(A,B)$}
+      \subparagraph{} $()^*:= Hom(-,\Lambda)$ kontravariantní funktor $mod(\Lambda)\rightarrow mod(\Lambda^{op})$      
+      \subparagraph{} Použijeme functor $()^*$ na projektivní pokrytí modulu X  \\*
+        \centerline{ \xymatrix{ P_1 \ar@{->}[r]^{s}  &P_0 \ar@{->}[r]^t &X  \ar@{->}[r] &0 } }
+        a dostaneme exaktní posloupnost \\*
+        \centerline{ \xymatrix{ X^* \ar@{->}[r]^{t^*} &P_0^* \ar@{->}[r]^{s^*} &P_1^* \ar@{->}[r] &Cok(s^*)  \ar@{->}[r] &0 } }      
+      \subparagraph{} $Tr(X):=Cok(s^*)$ funktor $\underline{mod}(\Lambda)\rightarrow\underline{mod}(\Lambda^{op})$
+      \subparagraph{} $D():=Hom(-,\mathbb{K})$ kontravariantní funktor $\underline{mod}(\Lambda)\rightarrow\underline{mod}(\Lambda^{op})$     
+      
+      \paragraph{QPA} Implementováno \\*
+\begin{verbatim}
+mTrX=TransposeOfModule(mX);
+mDX=DualOfModule(mX);
+mDTrX=DualOfTranspose(mX);
+\end{verbatim}
+
+    \subsection{$\Lambda$-homomorfismus $\varphi_{P_0,\Omega}$ (ekvivalěntně lze pro $\varphi_{P_1,\Omega}$)}
+      \paragraph{$\Lambda$-homomorfismus $\varphi_{\Lambda, \Omega}$}
+        \subparagraph{} Zobrazení \\*        
+        \centerline{$\varphi_{\Lambda, \Omega}:Hom_\Lambda(\Lambda,\Omega)\rightarrow 
+        Hom_\Lambda(\Lambda,\Lambda)\otimes_\Lambda \Omega$} \\*
+        dané předpisem \\*
+        \centerline{$\varphi_{\Lambda, \Omega}(g):=1_\Lambda\otimes g(1_\Lambda)$}
+        je izomorfismem $\mathbb{K}$-modulů. 
+        \subparagraph{} Dále definujme zobrazení $\varphi_{\Lambda, \Omega}^n$  
+        tvořené diagonální $n\times n$-maticí jejíž všechny nenulové prvky jsou rovné 
+        $\varphi_{\Lambda, \Omega}$:\\*
+        \centerline{$
+          \varphi_{\Lambda, \Omega}^n:
+          Hom_\Lambda(\Lambda,\Omega)^n\rightarrow 
+          (Hom_\Lambda(\Lambda,\Lambda)\otimes_\Lambda \Omega)^n
+        $}
+        dané předpisem \\*
+        \centerline{$ \{f_i\}_{i=1}^n\mapsto  \{\varphi_{\Lambda,\Omega}(f_i)\}_{i=1}^n $}
+        
+      \paragraph{Rozložení $\Lambda^n\simeq P_0\oplus P_0'$ (ekvivaletně lze pro $\Lambda^n\simeq P_1\oplus P_1'$)}
+        \subparagraph{} Pokud $\Lambda$ může být zapsána jako 
+        $\Lambda=\Lambda e_1\oplus\Lambda e_2\oplus ... \oplus\Lambda e_m$
+        pak lze projektivní modul $P_0$ vyjádřit jako
+        $P_0\simeq(\Lambda e_1)^{n_1}\oplus(\Lambda e_2)^{n_2}\oplus ... \oplus(\Lambda 
+        e_m)^{n_m}$
+       Položme $n=max(n_i)$, pak \\*
+       \centerline{$\Lambda^n\simeq P_0\oplus(\Lambda e_1)^{n-n_1}\oplus(\Lambda e_2)^{n-n_2}\oplus ... \oplus(\Lambda e_m)^{n-n_m}$} 
+       Definujme \\*
+       \centerline{$P_0':=(\Lambda e_1)^{n-n_1}\oplus(\Lambda e_2)^{n-n_2}\oplus ... \oplus(\Lambda e_m)^{n-n_m}$} 
+       pak \\*
+       \centerline{$\Lambda^n\simeq P_0\oplus P_0'$} \\*
+       
+     \paragraph{QPA} S pomocí funkce $IndecProjectiveModules(A);$ spočteme 
+     moduly $\Lambda e_i$ a následně spočteme kolikrát je každý z nich obsažen v 
+     rozklad modulu $P$ na direktní součet nerozložitelných projektivních podmodulů. 
+     Číslo $n$ bude maximum z těchto čísel.
+     \paragraph{} Výsledkem je čtveřice \\*
+       \centerline{
+         [ [$\Lambda{e_1},$\Lambda{e_2},...,$\Lambda{e_m}$], n, P', [$n_1,n_2,...,n_m$], [$n-n_1,n-n_2,...,n-n_m$] ]
+       }\\*
+\begin{verbatim}
+
+SuppProjModule := function(P, A)
+  local PP, Ps, max, common, i, diff,
+        in_multiplicities, ou_multiplicities;
+
+  PP:= IndecProjectiveModules(A);
+  Ps:= ZeroModule(A);
+  in_multiplicities := [];
+  ou_multiplicities := [];
+  max := 0;
+
+  for i in [1..Length(PP)] do
+    Add(in_multiplicities, 0);
+
+    repeat
+      common := CommonDirectSummand(P, PP[i]);
+      if IsList(common) then
+        in_multiplicities[i] := in_multiplicities[i] + 1;
+        P := common[2];
+      fi;
+    until IsList(common) = false;
+
+    max := Maximum([max, in_multiplicities[i]]);
+  od;
+
+  Ps := [];
+  for i in [1..Length(PP)] do
+    diff := max - in_multiplicities[i];
+    ou_multiplicities[i] := diff;
+
+    for j in [1..diff] do
+      Add(Ps, PP[i]);
+    od;
+  od;
+  Ps := DirectSumOfModules(Ps);
+
+  return [PP, max, Ps, in_multiplicities, ou_multiplicities];
+end;
+ \end{verbatim}
+  
+     \paragraph{Konstrukce isomorfismu $P\oplus P'\simeq\Lambda^n$}
+        \subparagraph{}
+        Máme následující dva isomorfismy: \\*\\*
+          \centerline{$\Lambda^n \simeq (\Lambda e_1 \oplus ... \oplus \Lambda e_m)^n $}    
+          \centerline{$P\oplus P' 
+            \simeq 
+            ((\Lambda e_1)^{n_1}\oplus ... \oplus(\Lambda e_m)^{n_m})
+            \oplus
+            ((\Lambda e_1)^{n-n_1}\oplus ... \oplus(\Lambda e_m)^{n-n_m})
+          $}          
+          \\*\\*  
+          Pro $i=1,...,m$, $j=1,...,n$ ($n=max(n_i)$) označme kanonické projekce:   \\*
+          $p:P \oplus P' \rightarrow P$ \\*
+          $p':P \oplus P' \rightarrow P'$ \\*
+          $\rho_i:P \rightarrow \Lambda e_i$ \\*
+          $\rho_i':P' \rightarrow \Lambda e_i$ \\*
+          $\lambda_j:\Lambda^n \rightarrow \Lambda$ \\*
+          $\mu_{i,j}: \Lambda \rightarrow \Lambda e_i$ \\*
+          
+         Podíváme se nejprve na modul $P$, pro $P'$ bude platit ekvivalentní konstrukce. 
+         Zvolme libovolné $i=1,...,m$, aby modul $\Lambda e_i$ ležel v rozkladu $P$. 
+         Dále zvolme $j=1,..,m$ dostaneme diagram: \\*\\*
+         \centerline{\xymatrix{
+              P\oplus P'\ar@{->>}[r]^p 
+              & P\ar@{->>}[r]^{\rho_i}  
+              & \Lambda e_j \\
+              \Lambda^n\ar@{->>}[r]_{\lambda_j}
+              & \Lambda \ar@{->>}[ru]_{\mu_{i,j}}
+          }}   
+          Z projektivity $P$  pro každý takovýto diagram existuje Homorfismus    
+          $g_{i,j}:P \rightarrow \Lambda^n$ (resp. $g_{i,j}'$ pro $P'$) 
+          takový, že vzniklý čtverec komutuje. Dostaneme následující 
+          komutativní diagram: \\*\\*
+         \centerline{\xymatrix{
+              P\oplus P'\ar@{->>}[r]^p \ar@{->}[d]_{d_{i,j}p} 
+              & P\ar@{->>}[r]^{\rho_i}  \ar@{->}[dl]^{d_{i,j}} 
+              & \Lambda e_j \\
+              \Lambda^n\ar@{->>}[r]_{\lambda_i}
+              & \Lambda \ar@{->>}[ru]_{\mu_{i,j}}
+          }}  
+          Homomorfismus  $d_{i,j}p$ (resp. $d_{i,j}'p'$) je isomorfismus dvou 
+          modulů $\Lambda e_j$ obsažených v direktním součtu $P \oplus P'$ 
+          a direktním součtu $\Lambda^n$. Hledaný isomorfismus $P\oplus P'\simeq\Lambda^n$ 
+          je pak součet těchto $n\times m$ homomorfismů tedy 
+          $\sum_i\sum_j(d_{i,j})p+\sum_i\sum_j(d_{i,j})'p'$.
+                      
+     \paragraph{QPA} 
+       \begin{verbatim}
+# P1 = P
+# P2 = P'
+# P1_P2 = direktní součin P a P'
+IsomorphismProjAndAn := function(P1_P2, An)
+  local iso, used,
+        proj_P1, proj_P2, proj_P1_P2, proj_P1_and_P2,
+        proj_An, proj_A, proj_An_fin;
+
+  proj_P1_P2 := DirectSumProjections(P1_P2);
+  proj_P1 := DirectSumProjections( Range(proj_P1_P2[1]) );
+  proj_P2 := DirectSumProjections( Range(proj_P1_P2[2]) );
+
+  proj_An_fin := [];  # bude obsahovat všech m*n projekcí \Lambda^n -> \Lambda*e_i
+  proj_An := DirectSumProjections(An);
+  for f in proj_An do
+    proj_A := DirectSumProjections( Range(f) );
+
+    for g in proj_A do
+      Add(proj_An_fin, f * g);
+    od;
+  od;
+
+  iso := ZeroMapping(P1_P2, An);
+  used := [1..Length(proj_An_fin)];
+  proj_P1_and_P2 := [proj_P1, proj_P2];
+
+  for i in [1,2] do                         # přes moduly P a P'
+    for g in proj_P1_and_P2[i] do           # přes projekce P->\Lambda*e_i (resp. P')
+      for j in [1..Length(proj_An_fin)] do  # přes projekce \Lambda -> \Lambda*e_i
+        f := proj_An_fin[j];
+
+        # pokud mají obě (P->\Lambda e_i   &   \Lambda -> \Lambda*e_i) stejný 
+        # Range a druhá nebyla ještě použita, tak je zvedneme a přičteme k  výsledku
+        if (not used[j] = true) and Range(f) = Range(g) then
+          iso := iso + proj_P1_P2[i] * LiftingMorphismFromProjective(f, g);
+          used[j] := true;
+          break;
+        fi;
+      od;
+    od;
+  od;
+
+  return iso;
+end;      
+       \end{verbatim}
+
+     \paragraph{$\Lambda$-isomorfismus $\varphi_{P_0,\Omega}$ (ekvivaletně dostaneme $\varphi_{P_1,\Omega}$)} 
+         \subparagraph{} Máme diagram \\*          
+         \centerline{\xymatrix{            
+            (Hom_\Lambda(\Lambda,\Omega))^n  
+              \ar[r]^{ \varphi_{\Lambda, \Omega}^n}
+            & (Hom_\Lambda(\Lambda,\Lambda)\otimes_\Lambda\Omega)^n
+              \ar[d]^{\{g_i\otimes \omega_i\}_{i=1}^n\mapsto\sum_{i=1}^ng_i\rho_i\otimes \omega_i} \\
+           Hom_\Lambda(\Lambda^n,\Omega)
+              \ar[u]_{f\mapsto \{f\nu_i\}_{i=1}^n}
+            & Hom_\Lambda(\Lambda^n,\Lambda)\otimes_\Lambda\Omega
+              \ar[d]^{(-\circ\psi)_\Lambda\otimes1_\Omega} \\             
+            Hom_\Lambda(P_0\oplus P_0', \Omega)
+              \ar[u]_{(-\circ\psi^{-1})_\Omega}
+            & Hom_\Lambda(P_0\oplus P_0', \Lambda)\oplus_\Lambda\Omega
+              \ar[d]^{((-\circ\mu)_\Lambda\otimes1_\Omega} \\
+            Hom_\Lambda(P_0', \Omega)
+              \ar[u]_{(-\circ\pi)_\Omega}
+              \ar@{.>}[r]_{ \varphi_{P_0, \Omega}}
+            & Hom_\Lambda(P_0', \Lambda)\oplus_\Lambda\Omega \\
+         } }       
+         Pokud půjdeme z levého spodního rohu kolem dokola 
+         až do pravého spodního, pak složením homomorfismů dostaneme izomorfismus \\*
+         \centerline{$\varphi_{P_0,\Omega}:Hom_\Lambda(P_0,\Omega)\rightarrow Hom_\Lambda(P_0,\Lambda)\otimes_\Lambda \Omega$} 
+         s předpisem \\*
+         \centerline{$h\mapsto\sum_{i=1}^n \rho_i\psi\mu\otimes h\pi\psi^{-1}\nu_i(1_\Lambda)$}
+         kde \\*
+         \centerline{$ \rho_i: \Lambda^n\rightarrow\Lambda $ projekce} \\*
+         \centerline{$ \nu_i: \Lambda\rightarrow \Lambda^n $ inkluze} \\*
+         \centerline{$ \psi: P_0\oplus P_0' \simeq \Lambda^n $ isomorfismus} \\*
+         \centerline{$ \mu: P_0\rightarrow P_0\oplus P_0'$ inkluze} \\*
+         \centerline{$ \pi: P_0\oplus P_0'\rightarrow P_0$ projekce} \\* \\*
+         Ekvivalentně pro modul $P_1 a P_1'$.
+         
+     \paragraph{QPA} Potřebná kanonická zobrazení spočteme následovně (!!!!!!! pro P1 !!!!!!!):
+\begin{verbatim}
+supp := SuppProjModule(mP1, A);
+mP1s := supp[3];                 # modul P_1'
+PP   := supp[1];                 # moduly \Lambda*e_i
+n    := supp[2];        
+mA   := DirectSumOfModules(PP);  # \Lambda jako modul
+mP1_mP1s := DirectSumOfModules([mP1, mP1s]);
+---------------------------
+# modul \Lambda^n
+mAn := [];
+for i  in [1..n]  do mAn[i] := mA; od;
+mAn := DirectSumOfModules(mAn);
+---------------------------
+# prvek 1_\Lambda ... pocitame jako sumu vsech e_i
+1_mA := Zero(mA);
+incl := DirectSumInclusions(mA);
+for i in [1..Length(incl)] do
+  Ae_i := Source(incl[i]);
+  e_i := MinimalGeneratingSetOfModule(Ae_i)[1];
+  1_mA := 1_mA + ImageElm(incl[i], e_i);
+od;
+---------------------------
+# hledaná kanonická zpbrazení
+rho    := DirectSumProjections(mAn);
+nu     := DirectSumInclusions(mAn);
+psi_inv:= InverseOfIsomorphism ( IsomorphismProjAndAn(mP1_mP1s, mAn) );
+psi    := InverseOfIsomorphism (psi_inv);
+mu     := DirectSumInclusions(mP1_mP1s)[1];
+pi     := DirectSumProjections(mP1_mP1s)[1];
+
+# a složená
+mu_psi_rho := mu * psi * rho;
+omega_pi_psi_inv_nu := nu * psi_inv * pi * omega;
+  
+# omega * pi * psi^(-1) * nu(1_\Lambda)
+omega_pi_psi_inv_nu_1_A := List(omega_pi_psi_inv_nu, f -> ImageElm(f, 1_mA));
+
+---------------------------
+# Ještě spočteme moduly z pačné algebry, která budou dále potřeba
+
+# s*: P0* -> P1*
+# pouze jsem zkopíroval funkci pro výpočet Tr(X) a vrátil 
+# homomorfismus s* namísto Tr(X) = Cokernel(s*)
+s_star := SStar(mX);     
+
+# ostatní op-moduly
+mP1_star := Range(s_star);   # mP1* = Hom(mP1, \Lambda)
+mP0_star := Source(s_star);  # mP0* = Hom(mP0, \Lambda)
+A_op := OppositePathAlgebra(A);
+PP_op:= IndecProjectiveModules(A_op);   # op-moduly k A*e_i
+\end{verbatim}
+
+
+    \subsection{Výpočet homomorfismu $\rho_i\psi\mu$ jako prvku reprezentace P*} 
+       \paragraph{Teorie}
+         Máme isomorfismy: \\*\\*
+         \centerline{
+           $Hom_\Lambda (\Lambda e_i, \Lambda)\simeq e_i\Lambda$ daný předpisem $f \mapsto f(e_i)$
+         }
+         \\*\\*
+         \centerline{
+           $Hom_\Lambda (P,\Lambda) \simeq 
+             Hom_\Lambda (\bigotimes_{i=1}^m\bigotimes_{j=1}^{n_i}\Lambda e_i,\Lambda) \simeq
+             \bigotimes_{i=1}^m\bigotimes_{j=1}^{n_i}(Hom_\Lambda (\Lambda e_i,\Lambda))$
+         }
+         \centerline{
+           daný předpisem $f\mapsto\sum_{i=1}^m\sum_{j=1}^{n_i}f(e_i)$
+         }
+       
+        \paragraph{QPA}
+          Nejprve definujeme pomocnou funkci, kterou použijeme ještě několikrát později. Funkce vrátí
+          pole $algebra\_element$ velikosti m.
+          
+          Každé $algebra\_element[i]$ spočteme následovně:
+          
+          Uvažujme bázi $B$ modulu $\Lambda e_i$. Modul $\Lambda e_i$ je 
+          generovaný jedním prvkem a to $e_i$, takže všechny ostatní dostaneme 
+          působením algebry $\Lambda$ na něj. Položme $algebra\_element[i][j]=\lambda\in\Lambda$, 
+          kde $\lambda$ 
+          je prvkem algebry $\Lambda$, takovým že $e_i*\lambda=B[j]$ 
+          ($*$ značí působení algebry na modulu).
+       
+          \begin{verbatim}        
+ProjectiveBasisVectorGens := function(PP)
+  local basis_of_projectives, algebra_element, basis, e_i, A,
+        i, j, k, m, a, b;
+
+  A := RightActingAlgebra(PP[1]);
+
+  basis_of_projectives := BasisOfProjectives(A);
+  algebra_element := [];
+  for i in [1..Length(PP)] do
+    basis := BasisVectors(Basis(PP[i]));
+    e_i := MinimalGeneratingSetOfModule(PP[i])[1];
+    algebra_element[i] := [];
+
+    for j in [1..Length(basis)] do
+      for k in [1..Length(basis_of_projectives)] do
+        a := basis_of_projectives[i][k];
+
+        for m in [1..Length(a)] do
+          b := a[m];
+
+          if not a[m] = 0 then
+            if basis[j] = e_i^b then
+              algebra_element[i][j] := b;
+
+              break;
+            fi;
+          fi;
+        od;
+      od;
+    od;
+  od;
+
+  return algebra_element;
+end;
+
+         \end{verbatim}
+
+         A nyní už můžeme vyjádřit homomorfismus $f:P \rightarrow \Lambda$ jako 
+         prvek modulu $P^*$, vsupem je čtveřice $[f, P^*, PP, PP\_op]$, kde $PP$ 
+         jsou $\Lambda e\_i$ moduly a $PP\_op$ jejich op-moduly:
+         
+         
+       \begin{verbatim}
+                  
+ FromHomToPStar := function(f, P_star, PP, PP_op)
+  local proj, incl, proj2, image, range, e_i, e_i_j, coeffs, 
+        algebra_element, result, el, gen,
+        i, j, c;
+
+  proj := DirectSumProjections(mP1);
+  incl := DirectSumInclusions(mP1);
+  proj2 := DirectSumProjections(mA);
+  image := [];
+
+  for  i in [1..Length(proj)] do
+    # spocteme f(e_i)
+    range := Range(proj[i]);
+    e_i := MinimalGeneratingSetOfModule(range)[1];
+    e_i := ImageElm(incl[i], e_i);  # nejprve si e_i zobrazíme do P
+    e_i := ImageElm(f, e_i);        # a až poté ho zobrazíme morfismem f
+
+    # image[i] obsahuje Sum(f(e_i)) vnorenou do Ae_i
+    for j in [1..Length(proj2)] do
+      e_i_j := ImageElm(proj2[j], e_i);
+
+      if i = 1 then
+        image[j] := e_i_j;
+      else
+        image[j] := image[j] + e_i_j;
+      fi;
+    od;
+  od;
+
+  # spoctu vzdy souradnice image[i] vzhledem k bazi Ae_i
+  coeffs := [];
+  for i in [1..Length(PP)] do
+    coeffs[i] := Coefficients(Basis(PP[i]), image[i]);
+  od;
+
+  # algebra_element[i][j] obsahuje a\in\Lambda, ze j-ty bazovy vektor Ae_i je roven e_i*a
+  algebra_element := ProjectiveBasisVectorGens(PP);
+
+  # pro kazdy image[i] spoctu a\in\Lambda , ze image[i] = a
+  # a pocitam celkovou sumu OppositePathAlgebraElement(a) vnorenych do P*
+  incl := DirectSumInclusions(P_star);
+  result := Zero(P_star);
+  for i in [1..Length(coeffs)] do
+    for j in [1..Length(coeffs[i])] do
+      c := coeffs[i][j];
+      gen := MinimalGeneratingSetOfModule(PP_op[i])[1];
+
+      if not c = 0 then
+        el := c * gen ^ OppositePathAlgebraElement( algebra_element[i][j] );
+        result := result + ImageElm(incl[i], el);
+      fi;
+    od;
+  od;
+
+  return result;
+end;        
+       \end{verbatim}
+
+
+    \subsection{Tenzorový součin $P^*_0\otimes_\Lambda\Omega$ (resp. $P^*_1\otimes_\Lambda\Omega$)}
+      \paragraph{Teorie}
+         \subparagraph{}
+         Pro $M\in Mod(\Lambda)$ a $e\in \Lambda^{op}$ idempotent máme isomorfismus 
+vektorových prostorů:
+         \\*\\*
+         \centerline{$\Lambda^{op} e\otimes_\Lambda M\simeq eM$} \*
+         \centerline{$\lambda\otimes m\mapsto \lambda m$} \\*\\*
+         Dále pro moduly $N_i\in Mod(\Lambda^{op}),i=1,..,n$, $M\in Mod(\Lambda)$ platí 
+         \\*\\*
+         \centerline{$(\bigoplus_{i=1}^n N_i) \otimes_\Lambda M \simeq \bigoplus_{i=1}^n (N_i \otimes_\Lambda 
+         M)$}\\*\\*
+         Náš modul $P^*$ je projektivní, existuje tedy rozklad  \\*\\*
+         \centerline{$P^*\simeq(\Lambda^{op} e_1)^{w_1}\oplus(\Lambda^{op} e_2)^{w_2}\oplus ... \oplus(\Lambda^{op} 
+        e_m)^{w_m}$} \\*\\*
+        Ten zkombinujeme s dvěmi předchozími isomorfismy a dostaneme isomorfismus 
+        \textbf{vektorových prostorů}: \\*\\*
+        \centerline{$
+        P^*\otimes_\Lambda\Omega 
+        \simeq (\Lambda^{op} e_1)^{w_1}\oplus(\Lambda^{op} e_2)^{w_2}\oplus ... \oplus(\Lambda^{op} 
+        e_m)^{w_m}\otimes_\Lambda \Omega
+        $}
+        \centerline{$
+        \simeq \bigoplus_{i=1}^m (\Lambda^{op} e_i \otimes_\Lambda \Omega)^{w_i}
+        \simeq \bigoplus_{i=1}^m (e_i\Omega)^{w_i}
+        $}\\*\\*
+       Dále potřebujeme zkonstruovat $\Lambda$-balancované zobrazení \\*\\*
+       \centerline{$P^*\times\Omega\rightarrow \bigoplus_{i=1}^m (e_iM)^{w_i}$} 
+       \\*\\*
+        To bude ze vztahu výše dané předpisem: \\*\\*
+       \centerline{$
+       p\times\omega=
+       \sum_{i=1}^m\sum_{j=1}^{w_i}(\lambda_{i,j}\times\omega)
+       \mapsto
+       \sum_{i=1}^m\sum_{j=1}^{w_i}(\lambda_{i,j}\omega)
+       $, kde $\lambda_{i,j}\in\Lambda^{op}e_i$}\\*\\*
+       Prvky $\lambda_{i,j}$ spočteme projekcí $\pi_{i,j}:P^*\rightarrow \Lambda^{op} 
+       e_i$. Poté vezmeme ekvivaletní prvek algebry $\Lambda^{op} $ a jemu 
+       opačný prvek $\lambda_{i,j}^{op}:=OppsositePathAlgebraElement(\pi_{i,j}(\lambda_{i,j}))$ 
+       necháme vždy působit na prvek $\omega$ $\Lambda-modulu$ $\Omega$. Vektory 
+       výsledných prvků zobrazíme vnořením vektorových prostorů 
+       $\nu_{i,j}:
+       e_i\Omega\hookrightarrow 
+       \bigoplus_{i=1}^m\bigoplus_{j=1}^{w_i}e_i\Omega$ a sečteme:        
+       $\sum_{i=1}^m\sum_{j=1}^{w_i}(\nu_{i,j}(\lambda_{i,j}^{op}*\omega))$.\\*\\*
+
+         \centerline{\xymatrix{
+              & \lambda_{1,1}\in\Lambda^{op}e_1 
+              &  \ldots spocitame \ldots
+              & w*\lambda_{1,1}^{op}\in e_1\Omega
+                  \ar@{->>}[rd]^{\nu_{1,1}}  \\
+              p\in P^* 
+                  \ar@{->>}[ru]^{\pi_{1,1}} 
+                  \ar@{->>}[rd]_{\pi_{m,w_m}} 
+                   & \vdots & \vdots & \vdots &  
+                   \bigotimes_{i=1}^m\bigotimes_{j=1}^{w_i}e_i\Omega \\
+              & \lambda_{m,w_m}\in\Lambda^{op}e_m
+              &  \ldots spocitame \ldots
+              & w*\lambda_{m,w_m}^{op}\in e_m\Omega
+                  \ar@{->>}[ru]_{\nu_{m,w_m}}  \\
+          }}  
+                   
+      \paragraph{QPA}
+        \begin{verbatim}
+
+@TODO
+        \end{verbatim}
+
+
+
+    \subsection{Výpočet prvku $\phi_\Omega(w) \in Ker(1_{Tr(X)}\otimes i)$}
+      \paragraph{Teorie}
+        \subparagraph{}
+        Nejprve aplikujeme funktor $()^*$ na posloupnost \\*
+        *\centerline{ \xymatrix{ P_1 \ar@{->}[r]^{s}  &P_0 \ar@{->}[r]^t &X  \ar@{->}[r] &0 } }
+        a dostaneme následující exaktní posloupnost 
+        v $mod(\Lambda^{op})$, kde $\hat{t}$ značí kanonickou projekci $Hom_\Lambda(P_1,\Omega)$ 
+        do $Tr(X)$ \\*
+        **\centerline{$
+          Hom_\Lambda(P_0,\Lambda)\xrightarrow{(-\circ s)_\Lambda}
+          Hom_\Lambda(P_1,\Lambda)\xrightarrow{\hat{t}}
+          Tr(X) \rightarrow
+          0      
+        $}        
+        Dále použijeme funktory  \\*
+        \centerline{$Hom_\Lambda(-,\Omega):mod(\Lambda)\rightarrow mod(R)$} \\*
+        \centerline{$-\otimes_\Lambda \Omega:mod(\Lambda^{op})\rightarrow mod(R)$}
+        aplikací $-\otimes_\Lambda \Omega$ na posloupnost **
+        a $Hom_\Lambda(-,\Omega)$ na posloupnost *
+        dostaneme komutativní diagram s exaktnímu řádky \\*\\*
+        \centerline{ \xymatrix{
+          0  \ar@{->}[r] 
+          &Hom(X,\Omega) \ar@{->}[r]^{(-\circ t)_\Omega} 
+          &Hom(P_0,\Omega) \ar@{->}[r]^{(-\circ s)_\Omega}  \ar@{->}[d]^{\varphi_{P_0, \Omega}}
+          &Hom(P_1,\Omega)  \ar@{->}[d]^{\varphi_{P_1, \Omega}} \\
+          &
+          &Hom(P_0,\Lambda)\otimes_\Lambda\Omega \ar@{->}[r]^{(-\circ s)_\Lambda\otimes1_\Omega}
+          &Hom(P_1,\Lambda)\otimes_\Lambda\Omega \ar@{->}[r]^{\hat{t}\otimes1_\Omega}
+          &Tr(X)\otimes_\Lambda\Omega \ar@{->}[r]
+          &0
+        } }
+
+        \subparagraph{}Položme $\phi_\Omega:=[\hat{t}\otimes1_\Omega]\varphi_{P_1, \Omega}$, 
+        máme tedy následující dlouhou exaktní posloupnost \\*
+        \centerline{$ 
+          0\rightarrow 
+          Hom_\Lambda(X,\Omega)\xrightarrow{(-\circ t)}
+          Hom_\Lambda(P_0,\Omega)\xrightarrow{(-\circ s)}
+          Hom_\Lambda(P_1,\Omega)\xrightarrow{\phi_\Omega}
+          Tr(X)\otimes_\Lambda \Omega\rightarrow
+          0          
+        $} \\*\\*
+         a nenulový prvek \phi_\Omega(w) \in Ker(1_{Tr(X)}\otimes i)$ kde $\omega:P_1\rightarrow\Omega$ je 
+         projektivní pokrytí modulu $\Omega$ (sekce 1.2). 
+         
+         \subparagraph{} Zobrazení $\varphi_{P_1,\Omega}$ jsme určili v 
+         předchozí části: \\*\\*
+         \centerline{$\varphi_{P_1,\Omega}:Hom_\Lambda(P_1,\Omega)\rightarrow Hom_\Lambda(P_1,\Lambda)\otimes_\Lambda \Omega$} 
+         předpisem \\*
+         \centerline{$h\mapsto\sum_{i=1}^n \rho_i\psi\mu\otimes h\pi\psi^{-1}\nu_i(1_\Lambda)$}
+         kde \\*
+         \centerline{$ \rho_i: \Lambda^n\rightarrow\Lambda $ projekce} \\*
+         \centerline{$ \nu_i: \Lambda\rightarrow \Lambda^n $ inkluze} \\*
+         \centerline{$ \psi: P_1\oplus P_1' \simeq \Lambda^n $ isomorfismus} \\*
+         \centerline{$ \mu: P_1\rightarrow P_1\oplus P_1'$ inkluze} \\*
+         \centerline{$ \pi: P_1\oplus P_1'\rightarrow P_1$ projekce} \\*\\*
+         A tedy 
+         \centerline{$\phi_\Omega(w)
+         =[\hat{t}\otimes1_\Omega]\varphi_{P_1, \Omega}(w)
+         =[\hat{t}\otimes1_\Omega]\sum_{i=1}^n \rho_i\psi\mu\otimes w\pi\psi^{-1}\nu_i(1_\Lambda)
+         $} \\*\\*         
+         \centerline{$
+         =\sum_{i=1}^n \hat{t}(\rho_i\psi\mu)\otimes w\pi\psi^{-1}\nu_i(1_\Lambda)
+         $}
+              
+    \subsection{$\mathbb{K}$-Báze $Tr(X)\otimes_\Lambda\Omega$}
+      \paragraph{Teorie}
+         \subparagraph{} Doplníme prvek $\phi_\Omega(w)$ na bázi modulu $\mathbb{K}$-bázi 
+         $B_{Ker(1_{Tr(X)}\otimes i)}=\{\phi_\Omega(w), 
+         \omega_2,...,\omega_l\}$. Bázi dále rozšíříme na bázi $B_{Tr(X)\otimes_\Lambda\Omega}=\{\phi_\Omega(w), 
+         \omega_2,...,\omega_l\}$ celého $Tr(X)\otimes_\Lambda\Omega$.
+
+    \subsection{$\Lambda$-Homomorfismus $\xi$}
+      \paragraph{Teorie}
+         \subparagraph{} Definujme $\xi:\Omega\rightarrow DTr(X)$ následovně: pro  $a\in\Omega$ buď
+         $\xi(a)$ homomorfismus $\xi(a):Tr(X)\rightarrow \mathbb{K}$ daný předpisem:  \\*
+         \centerline{ 
+           $q\mapsto$ První $\mathbb{K}$-koeficient prvku $q\otimes a$ vzledem k bázi  $B_{Tr(X)\otimes_\Lambda\Omega}$
+         }         
+ 
+    \subsection{Hledané E}
+      \paragraph{Teorie}
+         \subparagraph{} E spočteme jako pushout homomorfismů $i$ a $\xi$. \\*
+        \centerline{ \xymatrix{
+          \Omega \ar[r]^\xi \ar[d]_i & DTr(X) \ar@{..}[d] \\ 
+          P_0 \ar@{..}[r] & E
+        } }
+
+      \paragraph{QPA}   
+        \begin{verbatim}E = PullBack(xi, i)\end{verbatim}
+      
+\end{document} 

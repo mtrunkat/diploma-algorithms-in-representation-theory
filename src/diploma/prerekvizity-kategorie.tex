@@ -1,0 +1,401 @@
+\section{Teorie kategorií}
+
+    \begin{dfn}
+      Kategorie $\mathcal C$ je trojice $\mathcal C=(Ob(\mathcal C), Hom(\mathcal C), 
+      \circ)$, kde $Ob(\mathcal C)$ je nazývána třída objektů $\mathcal C$, $Hom(\mathcal C)$ 
+      je nazývána třída morfismů a $\circ$ je binární operace na morfismech 
+      splňující:      
+      \begin{description}
+        \item[(a)] Každým\,\, dvěma\,\, objektům $X,Y\in Ob(\mathcal C)$\,\, přiřadíme\,\, množinu\,\, 
+          morfismů $Hom_{\mathcal C}(X,Y)$ nazývanou morfismy z $X$ do $Y$ takovou, že 
+          pro $(X,Y)\neq (Z,U)$ je $Hom_{\mathcal C}(X,Y) \cap Hom_{\mathcal C}(Z,U)= 
+          \emptyset$.
+        \item[(b)] Pro každou trojici $X,Y,Z\in Ob(\mathcal C)$ je operace
+          \begin{eqnarray}
+             Hom_{\mathcal C}(Y,Z) \times Hom_{\mathcal C}(X,Y)  &\to& Hom_{\mathcal C}(X,Z) \nonumber \\
+             (f,g) &\mapsto&  g\circ f \nonumber
+          \end{eqnarray}
+            nazvaná skládání morfismů, splňující následující dvě podmínky:
+          \begin{description}
+            \item[(i)] $h\circ(g\circ f)=(h\circ g)\circ f$ pro každou trojici $f\in Hom_{\mathcal 
+              C}(X,Y)$, $g\in Hom_{\mathcal C}(Y,Z)$ a $h\in Hom_{\mathcal 
+              C}(Z,U)$.
+            \item[(ii)] Pro každý objekt $X\in Ob(\mathcal C)$ existuje morfismus $1_X\in Hom_{\mathcal C}(X,X)$,
+              nazávaný identický morfismus na $X$, takový, že pro každé $f\in Hom_{\mathcal 
+              C}(X,Y)$, $g\in Hom_{\mathcal C}(Z,X)$ je $f\circ 1_X=f$ a $1_X\circ g=g$.         
+          \end{description}
+      \end{description}
+      
+      Namísto $f\in Hom_{\mathcal C}(X,Y)$ píšeme často jen $X\xrightarrow{\text{f}}Y$ 
+      nebo $f:X\to Y$. Diagram v kategorii $\mathcal C$ nazveme komutativním, 
+      pokud každé složení cest se stejným začátkem i koncem si je rovné. 
+      Například následující diagram s $X,Y,Z,U\in Ob(\mathcal C)$ je 
+      komutativní, pokud $g\circ f=i\circ h$: \\\\
+       \centerline{\xymatrix{
+         X \ar@{->}[r]^f \ar@{->}[d]^h 
+         & Y \ar@{->}[d]^g \\
+         X \ar@{->}[r]^i
+         & U 
+      }}\\\\
+    \end{dfn}
+    
+    \begin{dfn}
+      Kategorii $\mathcal C'$ nazveme podkategorií kategorie $\mathcal C$, pokud 
+      splňuje následující podmínky:
+      \begin{description}
+        \item[(a)] $Ob(\mathcal C')$ je podtřída Ob($\mathcal C)$.
+        \item[(b)] Pro $X,Y\in Ob(\mathcal C')$ je $Hom_{\mathcal C'}(X,Y)\subseteq Hom_{\mathcal C}(X,Y)$.
+        \item[(c)] Skládání morfismů v $\mathcal C'$ je stejné jako v $\mathcal C$. 
+        \item[(d)] Pro každý objekt $X\in Ob(\mathcal C')$ je identický 
+          morfismus $1_X\in Hom_{\mathcal C'}(X,X)$ stejný jako v kategorii $\mathcal  C$.
+      \end{description}
+      Podkategorii $\mathcal C'$ nazveme úplnou, pokud 
+      $Hom_{\mathcal C'}(X,Y)=Hom_{\mathcal C}(X,Y)$ 
+      pro všechny $X,Y\in Ob(\mathcal C')$
+    \end{dfn}
+    
+
+%    \begin{dfn}
+%     Nechť $X,Y\in Ob(\mathcal C')$ a $h:X\to Y$. Pak h nazveme
+%      \begin{description}
+%        \item[(a)] endomorfismus, pokud $X=Y$.
+%        \item[(b)] monomorfismus, pokud pro každé $f,g:Z\to X$ platí: 
+%          Je-li $h\circ f=h\circ g$, pak $f=g$.
+%        \item[(b)] epimorfismus, pokud pro každé $f,g:Y\to Z$ platí: 
+%          Je-li $f\circ h=g\circ h$, pak $f=g$.
+%        \item[(b)] izomorfismus, pokud existuje $v:Y\to X$ takové, že $vu=1_X$ a 
+%        $uv=1_Y$. Takové $v$ nazýváme inverzem $u$ a značíme ho $u^{-1}$.
+%      \end{description}
+%
+%      
+%      Pokud existuje izomorfismus dvou objektů $X,Y\in Ob(\mathcal C')$, pak je 
+%      nazýváme izomorfní a značíme je $X\simeq Y$.
+%    \end{dfn}
+
+      \begin{dfn}
+        Kategorii $\mathcal C$ nazveme aditivní, pokud splňuje následující 
+        podmínky:
+        \begin{description}
+          \item[(a)] Pro každou konečnou množinu $X,Y\in Ob(\mathcal C)$ 
+          existuje objekt $X\oplus Y\in \mathcal C$ (nazývaný direktní suma $X$ 
+          a $Y$) společně s morfismy 
+          $\nu_X\in Hom_{\mathcal C}(X,X\oplus Y)$, 
+          $\nu_Y\in Hom_{\mathcal C}(Y,X\oplus Y)$,
+          $\pi_X\in Hom_{\mathcal C}(X\oplus Y,X)$ a 
+          $\pi_Y\in Hom_{\mathcal C}(X\oplus Y,Y)$ takovými, že platí:          
+          \begin{eqnarray}
+            \pi_X\nu_X &=& 1_X \nonumber \\
+            \pi_Y\nu_Y  &=& 1_Y \nonumber \\
+            \pi_X\nu_Y &=& 0 \nonumber \\
+            \pi_Y\nu_X &=& 0 \nonumber \\
+             \pi_X\nu_X + \pi_Y\nu_Y &=& 1_{X\oplus Y} \nonumber 
+          \end{eqnarray}
+          Morfismy $\pi_X$ a $\pi_Y$ jsou nazývány kanonické projekce a $\nu_X$ 
+          a $\nu_Y$ kanonické inkluze.
+          
+          \item[(b)] Pro všechny $X,Y\in Ob(\mathcal C)$ má množina $Hom_{\mathcal C}(X,Y)$ 
+          strukturu abelovské grupy.
+          \item[(c)] Pro každou trojici objektů $X,Y,Z\in Ob(\mathcal C)$ je 
+          skládání morfismů \\\\
+          \centerline{$\circ:Hom_{\mathcal C}(Y,Z)\times Hom_{\mathcal C}(X,Y)\longrightarrow Hom_{\mathcal C}(X,Z)$} 
+          \\\\ bilineární operace.
+          \item[(d)] Existuje nulový objekt $0\in Ob(\mathcal C)$ takový, že pro 
+          všechny $X\in Ob(\mathcal C)$ je $| Hom_{\mathcal C}(X,0)|=| Hom_{\mathcal 
+          C}(0,X)|=1$.
+        \end{description}
+      \end{dfn}
+      
+      \begin{dfn}
+        Mějme aditivní kategorii $\mathcal C$. Opačná kategorie $\mathcal C^{op}$ 
+        ke kategorii $\mathcal C$ má stejné objekty $Ob(\mathcal C^{op})=Ob(\mathcal C)$, 
+        ale 
+        $Hom_{\mathcal C^{op}}(X,Y)=Hom_{\mathcal C}(Y,X)$ pro všechny 
+        $X,Y\in Ob(\mathcal C)$. Sčítání v $Hom_{\mathcal C^{op}}(X,Y)$ je definováno stejně jako
+        v $Hom_{\mathcal C}(Y,X)$. Skládání $\circ'$ v $\mathcal C'$ je 
+        definováno vztahem $g\circ' f=f\circ g$, kde $\circ$ je skládání v $\mathcal 
+        C$.
+      \end{dfn}
+    
+    \begin{dfn}
+      Nechť $\mathcal C$ je aditivní kategorie a $f\in Hom_{\mathcal C}(X,Y)$.
+      \begin{description}
+        \item[(a)] Jádro morfismu $f$ je objekt $Ker(f)\in Ob(\mathcal C)$ 
+          společně s morfismem $\nu_f\in Hom_{\mathcal C}(Ker(f),X)$ 
+          (nazývaným kanonické vnoření) takovým, že 
+          splňuje následující podnínky:
+          \begin{description}
+            \item[(i)] $f\nu_f=0$.
+            \item[(ii)] Pro každé $T\in Ob(\mathcal C)$ a $t\in Hom_{\mathcal C}(T,X)$ 
+            takové, že $ft=0$ existuje právě jedno $s\in Hom_{\mathcal C}(T,Ker(f))$ 
+            takové, že $t=\nu_f s$. \\\\
+            \centerline{\xymatrix{
+               Ker(f) \ar@{->}[r]^{\nu_f} 
+                 & X \ar@{->}[r]^f 
+                 & Y & &  \\
+               T \ar@{->}[ru]^t  \ar@{.>}[u]^s         
+             }}\\
+          \end{description}
+        \item[(b)] Kojádro morfismu $f$ je objekt $Cok(f)\in Ob(\mathcal C)$ 
+          společně s morfismem $\pi_f\in Hom_{\mathcal C}(X,Cok(f))$
+          (nazývaným kanonická projekce) takovým, že 
+          splňuje následující podnínky:
+          \begin{description}
+            \item[(i)] $\pi_ff=0$.
+            \item[(ii)] Pro každé $T\in Ob(\mathcal C)$ a $t\in Hom_{\mathcal C}(Y,T)$ 
+            takové, že $tf=0$ existuje právě jedno $s\in Hom_{\mathcal C}(Cok(f),T)$ 
+            takové, že $t=s\pi_f $. \\\\
+            \centerline{\xymatrix{
+               X \ar@{->}[r]^f 
+                 & Y \ar@{->}[r]^{\pi_f}  \ar@{->}[rd]^t
+                 & Cok(f) \ar@{.>}[d]^s   \\
+               & & T  & &        
+             }}\\
+          \end{description}
+      \end{description}
+    \end{dfn}
+      
+    \begin{dfn}
+      Aditivní kategorii $\mathcal C$ nazveme abelovskou, pokud pro každé $X,Y\in Ob(C)$ 
+        a $f\in Hom_C(X,Y)$ existují $Ker(f)$ i $Cok(f)$ a navíc 
+        $Cok(\nu_f)\simeq Ker(\pi_f)$, kde $\nu_f:Ker(f)\rightarrow X$ resp. $\pi_f:Y\rightarrow Cok(f)$ 
+        je kanonické vnoření resp. kanonická projekce.
+    \end{dfn}
+    
+    \begin{dfn}
+      Posloupnost objektů a morfismů \\\\
+            \centerline{\xymatrix{
+               \cdots \ar@{->}[r]^{f_{n+1}}
+                 & X_{n+1} \ar@{->}[r]^{f_n} 
+                 & X_n \ar@{->}[r]^{f_{n-1}}
+                 & X_{n-1} \ar@{->}[r]^{f_{n-2}}
+                 & \cdots
+             }}\\\\      v abelovské kategorii $\mathcal C$ nazveme exaktní, pokud pro 
+             všechna
+      $n$ je $Ker(f_{n-1})=Im(f_n)$. Krátká exaktní posloupnost je exaktní 
+      posloupnost tvaru $0\to X\to Y\to Z\to 0$.
+    \end{dfn}
+    
+    \begin{dfn}
+      Nechť jsou $\mathcal C$ a $\mathcal C'$ dvě kategorie.  Kovariantní funktor 
+      $F:\mathcal C \to \mathcal C'$ přiřazuje každému 
+      objektu $X\in Ob(\mathcal C)$ objekt $F(X)\in Ob(\mathcal C')$ a každému 
+      morfismu $h:X\to Y$ v $\mathcal C$ morfismus $F(h):F(X)\to F(Y)$ v $\mathcal C'$ 
+      takový, že: 
+      \begin{description}
+        \item[(a)] $T(1_X)=1_{T(X)}$ pro  každý $X\in Ob(\mathcal C)$.
+        \item[(b)] pro každou dvoji morfismů $f:X\to Y$ a $g:Y\to Z$ v $\mathcal C$ 
+        platí, že $T(g\circ f)=T(g)\circ T(f)$.
+      \end{description}
+      Kontravariantní funktor $F:\mathcal C \to \mathcal C'$ přiřazuje každému 
+      objektu $X\in Ob(\mathcal C)$ objekt $F(X)\in Ob(\mathcal C')$ a každému 
+      morfismu $h:X\to Y$ v $\mathcal C$ morfismus $F(h):F(Y)\to F(X)$ v $\mathcal C'$ 
+      takový, že: 
+      \begin{description}
+        \item[(a)] $T(1_X)=1_{T(X)}$ pro  každý $X\in Ob(\mathcal C)$.
+        \item[(b)] pro každou dvojici morfismů $f:X\to Y$ a $g:Y\to Z$ v $\mathcal C$ 
+        platí, že $T(g\circ f)=T(f)\circ T(g)$.
+      \end{description}
+    \end{dfn}
+    
+    \begin{dfn}
+      Nechť $T,T':\mathcal C\to \mathcal C'$ jsou dva kovariantní (resp. kontravariantní) 
+      funktory. Pak třída 
+      morfismů $\Psi=\{\Psi_X:T(X)\to T'(X)\}_{X\in Ob(\mathcal C)}$ je 
+      přirozenou transoformací $T$ do $T'$, pokud následující 
+      diagram v $\mathcal C'$ komutuje pro každý morfismus $f:X\to Y$: \\\\
+            \centerline{\xymatrix{
+               T(X) \ar@{->}[r]^{\Psi_X} \ar@{->}[d]_{T(f)}
+                 & T'(X) \ar@{->}[d]^{T'(f)} \\
+               T(Y) \ar@{->}[r]_{\Psi_Y} 
+                 & T'(Y)
+             }\\
+             resp.\\             
+             \xymatrix{
+               T(Y) \ar@{->}[r]^{\Psi_Y} \ar@{->}[d]_{T(f)}
+                 & T'(Y) \ar@{->}[d]^{T'(f)} \\
+               T(X) \ar@{->}[r]_{\Psi_X} 
+                 & T'(X)
+             }}
+             \\\\\\
+      Přirozenou transformaci $\Psi$ nazveme přirozenou ekvivalencí 
+      (nebo též přirozeným izomorfismem), pokud 
+      pro každé $X\in \mathcal C$ je $\Psi_X$ izomorfismus.
+      
+      Kovariantní funktor $T:\mathcal C\to \mathcal C'$ nazveme ekvivalencí 
+      kategorií, pokud existuje funktor $F:\mathcal C'\to \mathcal C$ a 
+      přirozené ekvivalence $\Psi:1_{\mathcal C}\to FT$ a $\Phi:1_{\mathcal C'}\to 
+      TF$, kde $1_{\mathcal C}$ a $1_{\mathcal C'}$ jsou funktory identity na $C$ resp. $C'$.
+      
+      Kontravariantní funktor $D:\mathcal C\to \mathcal D$ nazveme dualitou 
+      kategorií, pokud indukovaný kovariantní funktor $D:\mathcal C^{op}\to \mathcal D$ 
+      je ekvivalence kategorií.
+    \end{dfn}
+    
+    \begin{dfn}
+      Nechť $\mathcal C$ a $\mathcal D$ jsou abelovské kategorie a $F:\mathcal C\to\mathcal D$ 
+      kovariantní (resp. kontravariantní) funktor. A nechť  \\\\
+            \centerline{\xymatrix{
+               0 \ar@{->}[r] & A \ar@{->}[r] & B \ar@{->}[r] & C \ar@{->}[r] & 0
+             }}\\\\ je exaktní posloupnost v $\mathcal C$. Pak řekneme, že $F$ je
+      \begin{description}
+        \item[(a)] zleva exaktní, pokud následující posloupnost je exaktní v $\mathcal D$:\\\\
+            \centerline{\xymatrix{
+               0 \ar@{->}[r] & F(A) \ar@{->}[r] & F(B) \ar@{->}[r] & F(C)
+             }}\\\\
+             \centerline{(resp. \xymatrix{
+               0 \ar@{->}[r] & F(C) \ar@{->}[r] & F(B) \ar@{->}[r] & F(A) 
+             })}
+        \item[(b)] zprava exaktní, pokud následující posloupnost je exaktní v $\mathcal D$:\\\\
+            \centerline{\xymatrix{
+               F(A) \ar@{->}[r] & F(B) \ar@{->}[r] & F(C) \ar@{->}[r] & 0
+             }}\\\\
+             \centerline{(resp. \xymatrix{
+               F(C) \ar@{->}[r] & F(B) \ar@{->}[r] & F(A) \ar@{->}[r] & 0) 
+             })}
+        \item[(c)] exaktní, pokud následující posloupnost je exaktní v $\mathcal D$:\\\\
+            \centerline{\xymatrix{
+               0 \ar@{->}[r] & F(A) \ar@{->}[r] & F(B) \ar@{->}[r] & F(C) \ar@{->}[r] & 0
+             }}\\\\
+             \centerline{(resp. \xymatrix{
+               0 \ar@{->}[r] & F(C) \ar@{->}[r] & F(B) \ar@{->}[r] & F(A) \ar@{->}[r] & 0) 
+             })}
+      \end{description}
+    \end{dfn}
+    
+    \begin{dfn}
+      \begin{description}
+        \item
+        \item[(a)] $Set:=$ kategorie množin, kde morfismy jsou množinová 
+        zobrazení.
+        \item[(b)] $Ab:=$ kategorie abelovských grup, kde 
+        morfismy jsou homomorfismy abelovských grup. 
+        \item[(c)] $Mod(S):=$ kategorie $S$-modulů okruhu $S$, kde morfismy jsou 
+        homomorfismy $S$-modulů.
+      \end{description}
+    \end{dfn}
+    
+    \begin{lem}
+      Nechť $\mathcal C$ je kategorie a $X\in Ob(\mathcal C)$, pak
+      \begin{description}
+        \item[(a)] máme kovariantní funktor \\\\
+          \centerline{$Hom_{\mathcal C}(X,-):{\mathcal C}\rightarrow Set$,}\\\\
+          daný pro $Y,Z\in Ob({\mathcal C})$ a $f\in Hom_{\mathcal C}(Y,Z)$ předpisem:\\\\
+          \centerline{\begin{aligned}
+            Hom_{\mathcal C}(X,-)(Y) &:= & Hom_{\mathcal C}(X,Y)  \\
+            Hom_{\mathcal C}(X,-)(f)  &:= & Hom_{\mathcal C}(X,Y)&\rightarrow Hom_{\mathcal C}(X,Z) \\
+            & & g & \mapsto fg
+          \end{aligned}}
+        \item[(b)] máme kontravariantní funktor \\\\
+          \centerline{$Hom_{\mathcal C}(-,X):{\mathcal C}\rightarrow Set$,}\\\\
+          daný pro $Y,Z\in Ob({\mathcal C})$ a $f\in Hom_{\mathcal C}(Y,Z)$ předpisem:\\\\
+          \centerline{\begin{aligned}
+            Hom_{\mathcal C}(-,X)(Y) &:= & Hom_{\mathcal C}(Y,X)  \\
+            Hom_{\mathcal C}(-,X)(f)  &:= & Hom_{\mathcal C}(Z,X)&\rightarrow Hom_{\mathcal C}(Y,X) \\
+            & & g & \mapsto gf
+          \end{aligned}}
+        \item[(c)] pokud je ${\mathcal C}$ abelovská, pak jsou $Hom_{\mathcal C}(X,-)$ i $Hom_{\mathcal C}(-,X)$ 
+          zleva exaktní funktory z ${\mathcal C}$ do $Ab$ (Kategorie abelovských grup).
+      \end{description}
+      
+      Pro střučnost budeme v dalším textu zapisovat homomorfismus 
+      $Hom_{{\mathcal C}}(X,-)(f)$ jako $(f\circ-)_X$ a $Hom_{{\mathcal C}}(-,X)(f)$ jako 
+      $(-\circ f)_X$.
+    \end{lem}
+    
+    \begin{proof}
+      \begin{description}
+        \item
+        \item[(a)] Zřejmě $Hom_{\mathcal C}(X,Y)\in Set$ a \\\\
+          \centerline{$Hom_{\mathcal C}(X,-)(1_Y)=[g\mapsto 1_Yg=g]=1_{Hom_{\mathcal C}(X,Y)}$} 
+          \\\\
+          pro každé $Y\in \mathcal C$. Dále je-li $Y,Z,W\in \mathcal C$, $f_1\in Hom_{\mathcal C}(Y,Z)$ 
+          a $f_2\in Hom_{\mathcal C}(Z,W)$, pak platí 
+          \begin{eqnarray}
+            (Hom_{\mathcal C}(X,-)(f_2f_1))(g) 
+            &=& f_2f_1g \nonumber \\
+            &=& f_2(f_1g) \nonumber \\
+            &=& (Hom_{\mathcal C}(X,-)(f_2))(f_1g) \nonumber \\
+            &=& Hom_{\mathcal C}(X,-)(f_2)Hom_{\mathcal C}(X,-)(f_1)(g) \nonumber
+          \end{eqnarray}
+          pro každé $Hom_{\mathcal C}(X,Y)$ a tedy \\\\
+          \centerline{$Hom_{\mathcal C}(X,-)(f_2f_1)=Hom_{\mathcal C}(X,-)(f_2)Hom_{\mathcal 
+          C}(X,-)(f_1)$.}\\
+        \item[(b)] Dokáže se podobně jako (a).
+        \item[(c)] Že $Hom_{\mathcal C}(X,-)$ i $Hom_{\mathcal C}(-,X)$ jsou 
+          funktory $\mathcal C\to Ab$ je zřejmé, dokážeme exaktnost zleva $Hom_{\mathcal 
+          C}(X,-)$. Exaktnost zleva funktoru $Hom_{\mathcal C}(-,X)$ se dokáže ekvivalentně. 
+          
+          Mějme tedy krátkou exaktní posloupnost v $\mathcal C$: \\\\
+         \centerline{\xymatrix{
+           0 \ar@{->}[r] 
+           & A \ar@{->}[r]^f  
+           & B \ar@{->}[r]^g  
+           & C \ar@{->}[r] 
+           & 0
+        }.}\\\\
+        Potřebujeme dokázat, že následující posloupnost\\\\
+         \centerline{\xymatrix{
+           0 \ar@{->}[r] 
+           & Hom_{\mathcal C}(X,A) \ar@{->}[r]^{(f\circ -)_X} 
+           & Hom_{\mathcal C}(X,B) \ar@{->}[r]^{(g\circ -)_X}  
+           & Hom_{\mathcal C}(X,C) \ar@{->}[r] 
+        }}\\\\
+        je exaktní v $Ab$. Nejprve ukážeme, že $(f\circ -)_X$ je monomorfismus v 
+        $Ab$, což je v $Ab$ to samé jako jako injektivní. Nechť $h\in Hom_{\mathcal C}(X,A)$ 
+        je takové, že \\\\
+        \centerline{$(f\circ -)_X(h)=fh=0$} \\\\
+        Pak protože $f$ je monomorfismus, musí být $h=0$. Nechť $h\in \mathcal C}(X,B)$, pak \\\\
+        \centerline{$(f\circ -)_X(g\circ - )_X(h)=(f\circ -)_X(gh)=fgh=(fg\circ -)_X(h)$} 
+        \\\\
+        a tedy \\\\
+        \centerline{$(f\circ -)_X(g\circ -)_X=(fg\circ -)_X$.}\\\\
+        Z čehož plyne, že \\\\
+        \centerline{$Im((f\circ -)_X)\subseteq Ker((g\circ -)_X)$.}\\\\        
+        Nyní dokážeme opačnou inkluzi \\\\
+        \centerline{$Ker((g\circ -)_X) \subseteq Im((f\circ -)_X)$.}\\\\
+        Buď $h\in Ker((g\circ -)_X)$. Pak $gh=0$ a protože $f$ je jádro $g$, pak 
+        se $h$ faktorizuje skrze $f$, neboli existuje $j\in Hom_{\mathcal C}(X,A)$ 
+        takové, že \\\\
+        \centerline{$h=fj=(f\circ -)_X(j)$.} \\\\
+        A tedy $h\in Im((f\circ -)_X)$.
+      \end{description}
+    \end{proof} 
+    
+     \begin{pzn}
+       Buď $\mathcal C$ abelovská kategorie a $A,B,C,D\in Ob(\mathcal C)$ a $u,v,f,g$ 
+       momorfismy takové, že následující diagram komutuje: \\\\
+       \centerline{\xymatrix{
+       A \ar@{->}[r]^f \ar@{->}[d]^u & B \ar@{->}[d]^v  \\
+       C \ar@{->}[r]^g & D
+      }}\\\\\\
+      Protože je kategorie $\mathcal C$ abelovská, tak existují jádra i kojádra morfismů $f$ 
+      a $g$. A dá se dokázat, že existují i jednoznačně určené morfismy 
+      $u_{ker}:Ker(f)\to Ker(g)$ a $v_{cok}:Ker(f)\to Ker(g)$ takové, že následující diagram komutuje: \\\\
+       \centerline{\xymatrix{
+       0 \ar@{->}[r] 
+         & Ker(f) \ar@{->}[r]^{\nu_f} \ar@{.>}[d]^{u_{ker}}
+         & A \ar@{->}[r]^f \ar@{->}[d]^u 
+         & B \ar@{->}[d]^v \ar@{->}[r]^{\pi_f}
+         & Cok(f) \ar@{->}[r] \ar@{.>}[d]^{v_{cok}}
+         & 0 \\
+       0 \ar@{->}[r] 
+         & Ker(g)\ar@{->}[r]^{\nu_g} 
+         & C \ar@{->}[r]^g 
+         & D \ar@{->}[r]^{\pi_f}
+         & Cok(g) \ar@{->}[r] 
+         & 0
+      }}\\\\           
+    \end{pzn}
+    
+    \begin{dfn}
+      Zobrazení $u_{ker}$ (resp. $v_{cok}$) z předchozí poznámky nazýváme jádrový 
+      morfismus $u$ (resp. kojádrový morfismus $v$). Budeme je takto značit, ačkoli je toto značení 
+      nepopisuje jednoznačně, protože vždy závisí na diagramu, ke kterému se 
+      vztahují. V dalším textu bude ale vždy z kontextu jasné, o který doagram se jedná.
+    \end{dfn}
+      \clearpage
+
+
+
+
+ 
