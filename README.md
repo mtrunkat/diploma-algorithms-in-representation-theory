@@ -19,7 +19,7 @@ Department of Algebra, Faculty of Mathematics and Physics, Charles University
 
 1. Run **GAP**
 2. Load  **QPA** package via `LoadPackage("QPA");`
-3. Copy whole `src/algorithm.g` to command line to register `AlmostSplitSequence2` function along with other helper functions.
+3. Copy whole `src/code/algorithm.g` to command line to register `AlmostSplitSequence2` function along with other helper functions.
 4. Now you can use this function to compute a generator of `DTr(X) → E → X`:
 
 ```
